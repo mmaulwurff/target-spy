@@ -17,3 +17,6 @@ Features:
 
 Thanks:
 - Blue Shadow and Spaceman333 for ideas and examples of code.
+
+Credits:
+* [Mementwo font by Jimmy / Memento Mori 2 Team](https://forum.zdoom.org/viewtopic.php?f=37&t=33409#p632308).
