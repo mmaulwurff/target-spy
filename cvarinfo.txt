@@ -1,0 +1,12 @@
+user string m8f_ts_ResultString;
+user int    m8f_ts_ResultInt;
+
+user float  m8f_ts_y            = 0.02;
+user bool   m8f_ts_enabled      = true;
+user int    m8f_ts_min_health   = 300;
+user bool   m8f_ts_show_name    = true;
+user bool   m8f_ts_show_numbers = false;
+user bool   m8f_ts_show_bar     = true;
+user string m8f_ts_pip          = "#";
+
+user bool   m8f_ts_has_target;

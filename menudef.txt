@@ -1,0 +1,38 @@
+OptionValue "m8f_ts_y_values"
+{
+  0.02, "Top"
+  0.40, "Above crosshair"
+  0.60, "Below crosshair"
+  0.96, "Bottom"
+}
+
+OptionString "m8f_ts_pip_values"
+{
+  "#", "#"
+  "=", "="
+  "/", "/"
+  "+", "+"
+  "*", "*"
+  "@", "@"
+}
+
+OptionMenu "m8f_ts_Options"
+{
+  Title "Target Spy Options"
+
+  Option "Target Spy enabled",  "m8f_ts_enabled",      "OnOff"
+  Option "Show health bar",     "m8f_ts_show_bar",     "OnOff"
+  Option "Show health numbers", "m8f_ts_show_numbers", "OnOff"
+  Option "Show name",           "m8f_ts_show_name",    "OnOff"
+  Slider "Mimimal health",      "m8f_ts_min_health",   0, 10000, 100
+  Option "Vertical position",   "m8f_ts_y",            "m8f_ts_y_values"
+  Option "Bar symbol",          "m8f_ts_pip",          "m8f_ts_pip_values"
+
+  StaticText ""
+}
+
+AddOptionMenu "OptionsMenu"
+{
+  StaticText ""
+  Submenu "Target Spy Options", "m8f_ts_Options"
+}
