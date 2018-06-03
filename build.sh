@@ -12,6 +12,7 @@ zip target-spy.pk3 \
     menudef.txt \
     zscript.txt \
     README.txt \
+    MM2SFNTO.fon2 \
 && \
 gzdoom -glversion 3 -file \
        target-spy.pk3 \

@@ -8,5 +8,6 @@ user bool   m8f_ts_show_name    = true;
 user bool   m8f_ts_show_numbers = false;
 user bool   m8f_ts_show_bar     = true;
 user string m8f_ts_pip          = "#";
+user string m8f_ts_font         = "MM2SFNTO";
 
 user bool   m8f_ts_has_target;

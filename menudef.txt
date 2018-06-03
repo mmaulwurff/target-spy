@@ -16,6 +16,13 @@ OptionString "m8f_ts_pip_values"
   "@", "@"
 }
 
+OptionString "m8f_ts_font_values"
+{
+  "SMALLFONT", "Small font"
+  "CONFONT",   "Console font"
+  "MM2SFNTO",  "Mementwo"
+}
+
 OptionMenu "m8f_ts_Options"
 {
   Title "Target Spy Options"
@@ -27,6 +34,7 @@ OptionMenu "m8f_ts_Options"
   Slider "Mimimal health",      "m8f_ts_min_health",   0, 10000, 100
   Option "Vertical position",   "m8f_ts_y",            "m8f_ts_y_values"
   Option "Bar symbol",          "m8f_ts_pip",          "m8f_ts_pip_values"
+  Option "Font",                "m8f_ts_font",         "m8f_ts_font_values"
 
   StaticText ""
 }
