@@ -7,6 +7,7 @@
 #define msgIdBar msgId
 #define msgIdTag msgId + 1
 #define msgIdNum msgId + 2
+#define msgIdCrh msgId + 3
 
 #define newline 0.03
 
@@ -72,6 +73,21 @@ function void TS_SetupFont(int playerN)
   SetFont(font);
 }
 
+function void TS_DrawCrosshair(int color, int playerN)
+{
+  str crosshair = GetUserCVarString(playerN, "m8f_ts_crosshair");
+  if (StrLen(crosshair) < 4)
+    {
+      HudMessage(s:crosshair;
+                 HUDMSG_PLAIN, msgIdCrh, color, 0.5, 0.51, 0);
+    }
+  else
+    {
+      HudMessage(s:"";
+                 HUDMSG_PLAIN, msgIdCrh, CR_WHITE, 0.5, 0.51, 0);
+    }
+}
+
 script "target-spy" ENTER
 {
   int playerN = PlayerNumber();
@@ -98,14 +114,29 @@ script "target-spy" ENTER
 
       bool hasTarget = TS_TargetIsPresent(playerN);
       SetUserCVar(playerN, "m8f_ts_has_target", hasTarget);
-      if (!hasTarget) { Delay(5); continue; } // no target
+      if (!hasTarget) // no target
+        {
+          TS_DrawCrosshair(CR_GREEN, playerN);
+          Delay(5);
+          continue;
+        }
 
       int targetMaxHealth = TS_GetTargetMaxHealth(playerN);
       int minHealth = GetUserCVar(playerN, "m8f_ts_min_health");
-      if (targetMaxHealth < minHealth) { Delay(5); continue; } // not worth showing
+      if (targetMaxHealth < minHealth) // not worth showing
+        {
+          TS_DrawCrosshair(CR_GREEN, playerN);
+          Delay(5);
+          continue;
+        }
 
       int targetHealth = TS_GetTargetHealth(playerN);
-      if (targetHealth < 1) { Delay(5); continue; } // target is dead
+      if (targetHealth < 1) // target is dead
+        {
+          TS_DrawCrosshair(CR_GREEN, playerN);
+          Delay(5);
+          continue;
+        }
 
       int percent = targetHealth * 10 / targetMaxHealth;
       if (percent > 10) { percent = 11; }
@@ -142,6 +173,8 @@ script "target-spy" ENTER
                      HUDMSG_PLAIN, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
           y += newline;
         }
+
+      TS_DrawCrosshair(color, playerN);
 
       Delay(1);
     }

@@ -35,6 +35,9 @@ OptionMenu "m8f_ts_Options"
   Option "Vertical position",   "m8f_ts_y",            "m8f_ts_y_values"
   Option "Bar symbol",          "m8f_ts_pip",          "m8f_ts_pip_values"
   Option "Font",                "m8f_ts_font",         "m8f_ts_font_values"
+  TextField "Crosshair",        "m8f_ts_crosshair"
+  StaticText "Crosshair length must be no more than 3 characters.", "Black"
+  StaticText "Set this to None to disable crosshair", "Black"
 
   StaticText ""
 }
