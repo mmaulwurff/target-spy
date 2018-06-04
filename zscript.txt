@@ -16,6 +16,8 @@ class TSZScriptHelper : Actor
 
   static void TargetIsPresent(Actor a)
   {
+    if (!a) { return; }
+
     Actor target = GetTarget(a);
     bool isPresent = (target != null);
     SendResultInt(a, isPresent);
@@ -23,6 +25,8 @@ class TSZScriptHelper : Actor
 
   static void GetTargetHealth(Actor a)
   {
+    if (!a) { return; }
+
     Actor target = GetTarget(a);
     if (target == null) { SendResultInt(a, 0); return; }
 
@@ -32,6 +36,8 @@ class TSZScriptHelper : Actor
 
   static void GetTargetMaxHealth(Actor a)
   {
+    if (!a) { return; }
+
     Actor target = GetTarget(a);
     if (target == null) { SendResultInt(a, 0); return; }
 
@@ -41,6 +47,8 @@ class TSZScriptHelper : Actor
 
   static void GetTargetName(Actor a)
   {
+    if (!a) { return; }
+
     Actor target = GetTarget(a);
     if (target == null) { SendResultString(a, "unknown"); return; }
 
