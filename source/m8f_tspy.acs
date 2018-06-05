@@ -75,16 +75,15 @@ function void TS_SetupFont(int playerN)
 
 function void TS_DrawCrosshair(int color, int playerN)
 {
-  str crosshair = GetUserCVarString(playerN, "m8f_ts_crosshair");
-  if (StrLen(crosshair) < 4)
+  bool crosshairOn = GetUserCVar(playerN, "m8f_ts_crosshair_on");
+  if (crosshairOn)
     {
-      HudMessage(s:crosshair;
-                 HUDMSG_PLAIN, msgIdCrh, color, 0.5, 0.51, 0);
+      str crosshair = GetUserCVarString(playerN, "m8f_ts_crosshair");
+      HudMessage(s:crosshair; HUDMSG_PLAIN, msgIdCrh, color, 0.5, 0.51, 0);
     }
   else
     {
-      HudMessage(s:"";
-                 HUDMSG_PLAIN, msgIdCrh, CR_WHITE, 0.5, 0.51, 0);
+      HudMessage(s:""; HUDMSG_PLAIN, msgIdCrh, CR_WHITE, 0.5, 0.51, 0);
     }
 }
 
