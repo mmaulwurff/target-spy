@@ -6,16 +6,6 @@ OptionValue "m8f_ts_y_values"
   0.96, "Bottom"
 }
 
-OptionString "m8f_ts_pip_values"
-{
-  "#", "#"
-  "=", "="
-  "/", "/"
-  "+", "+"
-  "*", "*"
-  "@", "@"
-}
-
 OptionString "m8f_ts_font_values"
 {
   "SMALLFONT", "Small font"
@@ -33,10 +23,12 @@ OptionMenu "m8f_ts_Options"
   Option "Show name",           "m8f_ts_show_name",    "OnOff"
   Slider "Mimimal health",      "m8f_ts_min_health",   0, 10000, 100
   Option "Vertical position",   "m8f_ts_y",            "m8f_ts_y_values"
-  Option "Bar symbol",          "m8f_ts_pip",          "m8f_ts_pip_values"
   Option "Font",                "m8f_ts_font",         "m8f_ts_font_values"
   Option "Crosshair enabled",   "m8f_ts_crosshair_on", "OnOff"
   TextField "Crosshair",        "m8f_ts_crosshair"
+  TextField "Filled bar symbol","m8f_ts_pip"
+  TextField "Empty bar symbol", "m8f_ts_empty_pip"
+  StaticText "- (minus) symbol is reserved", "Black"
 
   StaticText ""
 }

@@ -51,18 +51,13 @@ function str TS_MakeHealthBar(int health, int maxHealth, int playerN)
   else if (pips >  length) { pips = length; }
 
   str pip = GetUserCVarString(playerN, "m8f_ts_pip");
+  str emptyPip = GetUserCVarString(playerN, "m8f_ts_empty_pip");
 
   str result = "";
 
   int i;
-  for (i = 0; i < pips; ++i)
-    {
-      result = StrParam(s:result, s:pip);
-    }
-  for (; i < length; ++i)
-    {
-      result = StrParam(s:result, c:'-');
-    }
+  for (i = 0; i < pips;   ++i) { result = StrParam(s:result, s:pip); }
+  for (     ; i < length; ++i) { result = StrParam(s:result, s:emptyPip); }
 
   return result;
 }
