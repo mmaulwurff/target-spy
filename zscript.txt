@@ -2,15 +2,17 @@ version "3.2.0"
 
 class TSZScriptHelper : Actor
 {
-  static void SendResultString(Actor a, string result)
+  static void SendResultString(PlayerInfo player, string result)
   {
-    CVar messageCVar = CVar.GetCVar("m8f_ts_ResultString", a.player);
+    if (!player) { return; }
+    CVar messageCVar = CVar.GetCVar("m8f_ts_ResultString", player);
     if (messageCVar) { messageCVar.SetString(result); }
   }
 
-  static void SendResultInt(Actor a, int result)
+  static void SendResultInt(PlayerInfo player, int result)
   {
-    CVar messageCVar = CVar.GetCVar("m8f_ts_ResultInt", a.player);
+    if (!player) { return; }
+    CVar messageCVar = CVar.GetCVar("m8f_ts_ResultInt", player);
     if (messageCVar) { messageCVar.SetInt(result); }
   }
 
@@ -20,7 +22,7 @@ class TSZScriptHelper : Actor
 
     Actor target = GetTarget(a);
     bool isPresent = (target != null);
-    SendResultInt(a, isPresent);
+    SendResultInt(a.player, isPresent);
   }
 
   static void GetTargetHealth(Actor a)
@@ -28,10 +30,10 @@ class TSZScriptHelper : Actor
     if (!a) { return; }
 
     Actor target = GetTarget(a);
-    if (target == null) { SendResultInt(a, 0); return; }
+    if (target == null) { SendResultInt(a.player, 0); return; }
 
     int targetHealth = target.Health;
-    SendResultInt(a, targetHealth);
+    SendResultInt(a.player, targetHealth);
   }
 
   static void GetTargetMaxHealth(Actor a)
@@ -39,10 +41,10 @@ class TSZScriptHelper : Actor
     if (!a) { return; }
 
     Actor target = GetTarget(a);
-    if (target == null) { SendResultInt(a, 0); return; }
+    if (target == null) { SendResultInt(a.player, 0); return; }
 
     int targetMaxHealth = target.SpawnHealth();
-    SendResultInt(a, targetMaxHealth);
+    SendResultInt(a.player, targetMaxHealth);
   }
 
   static void GetTargetName(Actor a)
@@ -50,13 +52,13 @@ class TSZScriptHelper : Actor
     if (!a) { return; }
 
     Actor target = GetTarget(a);
-    if (target == null) { SendResultString(a, "unknown"); return; }
+    if (target == null) { SendResultString(a.player, "unknown"); return; }
 
     string targetName = target.GetTag();
     targetName = SeparateCamelCase(targetName);
     targetName.Replace("_", " ");
 
-    SendResultString(a, targetName);
+    SendResultString(a.player, targetName);
   }
 
   static Actor GetTarget(Actor a)
