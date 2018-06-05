@@ -5,13 +5,13 @@ class TSZScriptHelper : Actor
   static void SendResultString(Actor a, string result)
   {
     CVar messageCVar = CVar.GetCVar("m8f_ts_ResultString", a.player);
-    messageCVar.SetString(result);
+    if (messageCVar) { messageCVar.SetString(result); }
   }
 
   static void SendResultInt(Actor a, int result)
   {
     CVar messageCVar = CVar.GetCVar("m8f_ts_ResultInt", a.player);
-    messageCVar.SetInt(result);
+    if (messageCVar) { messageCVar.SetInt(result); }
   }
 
   static void TargetIsPresent(Actor a)
