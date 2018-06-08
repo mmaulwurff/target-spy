@@ -4,6 +4,8 @@ acc source/m8f_tspy.acs acs/m8f_tspy.o \
 && \
 rm -f target-spy.pk3 \
 && \
+git log --pretty=format:"-%d %ai %s%n" > changelog.txt \
+&& \
 zip target-spy.pk3 \
     acs/m8f_tspy.o \
     source/m8f_tspy.acs \
@@ -12,6 +14,7 @@ zip target-spy.pk3 \
     menudef.txt \
     zscript.txt \
     README.txt \
+    changelog.txt \
     MM2SFNTO.fon2 \
 && \
 gzdoom -glversion 3 \
