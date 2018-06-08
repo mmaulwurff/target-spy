@@ -28,7 +28,6 @@ OptionMenu "m8f_ts_Options"
   TextField "Crosshair",        "m8f_ts_crosshair"
   TextField "Filled bar symbol","m8f_ts_pip"
   TextField "Empty bar symbol", "m8f_ts_empty_pip"
-  StaticText "- (minus) symbol is reserved", "Black"
 
   StaticText ""
 }

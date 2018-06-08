@@ -32,9 +32,16 @@ function int TS_GetTargetMaxHealth(int playerN)
   return targetHealth;
 }
 
-function str TS_GetTargetName(int playerN)
+function bool TS_IsFreedoom(void)
 {
-  ScriptCall("TSZScriptHelper", "GetTargetName");
+  str impName = StrParam(l:"CC_IMP");
+  str isFreedoom = (StrCmp(impName, "serpentipede") == 0);
+  return isFreedoom;
+}
+
+function str TS_GetTargetName(int playerN, bool isFreedoom)
+{
+  ScriptCall("TSZScriptHelper", "GetTargetName", isFreedoom);
   str targetName = GetUserCVarString(playerN, "m8f_ts_ResultString");
   return targetName;
 }
@@ -102,6 +109,8 @@ script "target-spy" ENTER
       CR_CYAN,
     };
 
+  bool isFreedoom = TS_IsFreeDoom();
+
   while (true)
     {
       if (!GetUserCVar(playerN, "m8f_ts_enabled")) { Delay(10); continue; }
@@ -155,7 +164,7 @@ script "target-spy" ENTER
 
       if (GetUserCVar(playerN, "m8f_ts_show_name"))
         {
-          str targetName = TS_GetTargetName(playerN);
+          str targetName = TS_GetTargetName(playerN, isFreedoom);
           HudMessage(s:targetName;
                      HUDMSG_PLAIN, msgIdTag, CR_WHITE, 0.5, y, MINIMAL_HOLD_TIME);
           y += newline;

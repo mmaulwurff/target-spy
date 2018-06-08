@@ -14,7 +14,9 @@ zip target-spy.pk3 \
     README.txt \
     MM2SFNTO.fon2 \
 && \
-gzdoom -glversion 3 -file \
+gzdoom -glversion 3 \
+       \ #-iwad ~/Programs/Games/wads/doom/freedoom2.wad \
+       -file \
        target-spy.pk3 \
        ~/Programs/Games/wads/maps/DOOMTEST.wad \
        "$1" \

@@ -47,17 +47,77 @@ class TSZScriptHelper : Actor
     SendResultInt(a.player, targetMaxHealth);
   }
 
-  static void GetTargetName(Actor a)
+  static void GetTargetName(Actor a, bool isFreedoom)
   {
-    if (!a) { return; }
+    if (!a || !a.player) { return; }
+
+    // must be sorted!
+    // when you add new lines, don't forget to update the size below!
+    static const string specialNames[] =
+      {
+        "Arachnotron_free"      , "Technospider",
+        "Archvile"              , "Arch-vile",
+        "Archvile_free"         , "Flame Bringer",
+        "BaronOfHell_free"      , "Pain Lord",
+        "Cacodemon_free"        , "Trilobite",
+        "ChaingunGuy"           , "Former Commando",
+        "ChaingunGuy_free"      , "Minigun Zombie",
+        "CommanderKeen_free"    , "Alien Spawn",
+        "Cyberdemon_free"       , "Assault Tripod",
+        "Demon_free"            , "Flesh Worm",
+        "DoomImp"               , "Imp",
+        "DoomImp_free"          , "Serpentipede",
+        "Fatso"                 , "Mancubus",
+        "Fatso_free"            , "Combat Slug",
+        "LostSoul_free"         , "Deadflare",
+        "PainElemental_free"    , "Summoner",
+        "Revenant_free"         , "Dark Soldier",
+        "ShotgunGuy"            , "Former Human Sergeant",
+        "ShotgunGuy_free"       , "Shotgun Zombie",
+        "SpiderMastermind_free" , "Large Technospider",
+        "WolfensteinSS_free"    , "Sailor",
+        "ZombieMan_free"        , "Zombie",
+        "Zombieman"             , "Former Human"
+      };
+    int size = 23;
 
     Actor target = GetTarget(a);
     if (target == null) { SendResultString(a.player, "unknown"); return; }
+
+    string targetClass = target.GetClassName();
+    if (isFreedoom) { targetClass.AppendFormat("_free"); }
+
+    let cache = TagCache.Get();
+    if (cache.cachedClass == targetClass)
+      {
+        SendResultString(a.player, cache.cachedTag);
+        return;
+      }
+
+    // binary search
+    int L = 0;
+    int R = size - 1;
+    while (L <= R)
+      {
+        int m = (L + R) / 2;
+        string current = specialNames[m * 2];
+        if      (current <  targetClass) { L = m + 1; continue; }
+        else if (current >  targetClass) { R = m - 1; continue; }
+        else if (current == targetClass)
+          {
+            cache.cachedClass = targetClass;
+            cache.cachedTag   = specialNames[m * 2 + 1];
+            SendResultString(a.player, cache.cachedTag);
+            return;
+          }
+      }
 
     string targetName = target.GetTag();
     targetName = SeparateCamelCase(targetName);
     targetName.Replace("_", " ");
 
+    cache.cachedClass = targetClass;
+    cache.cachedTag   = targetName;
     SendResultString(a.player, targetName);
   }
 
@@ -107,4 +167,27 @@ class TSZScriptHelper : Actor
     return (65 <= code && code <= 90);
   }
 
+}
+
+class TagCache : Thinker
+{
+  string cachedClass;
+  string cachedTag;
+
+  TagCache Init()
+  {
+    ChangeStatNum(STAT_INFO);
+    return self;
+  }
+
+  static TagCache Get()
+  {
+    ThinkerIterator it = ThinkerIterator.Create("TagCache", STAT_INFO);
+    let p = TagCache(it.Next());
+    if (p == null)
+      {
+        p = new("TagCache").Init();
+      }
+    return p;
+  }
 }
