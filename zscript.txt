@@ -67,6 +67,23 @@ class TSZScriptHelper : Actor
         "Demon_free"            , "Flesh Worm",
         "DoomImp"               , "Imp",
         "DoomImp_free"          , "Serpentipede",
+        "EVPArachnotron"        , "Arachnotron",
+        "EVPArchVile"           , "Arch-vile",
+        "EVPBaron"              , "Baron Of Hell",
+        "EVPCacodemon"          , "Cacodemon",
+        "EVPChaingunner"        , "Former Commando",
+        "EVPCyberdemon"         , "Cyberdemon",
+        "EVPDemon"              , "Demon",
+        "EVPHellKnight"         , "Hell Knight",
+        "EVPImp"                , "Imp",
+        "EVPLostSoul"           , "Lost Soul",
+        "EVPMancubus"           , "Mancubus",
+        "EVPPainElemental"      , "Pain Elemental",
+        "EVPRevenant"           , "Revenant",
+        "EVPShotgunner"         , "Former Human Sergeant",
+        "EVPSpectre"            , "Spectre",
+        "EVPSpiderMastermind"   , "Spider Mastermind",
+        "EVPZombieman"          , "Former Human",
         "Fatso"                 , "Mancubus",
         "Fatso_free"            , "Combat Slug",
         "LostSoul_free"         , "Deadflare",
@@ -79,7 +96,7 @@ class TSZScriptHelper : Actor
         "ZombieMan_free"        , "Zombie",
         "Zombieman"             , "Former Human"
       };
-    int size = 23;
+    int size = 40;
 
     Actor target = GetTarget(a);
     if (target == null) { SendResultString(a.player, "unknown"); return; }
