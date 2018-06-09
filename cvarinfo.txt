@@ -7,6 +7,7 @@ user int    m8f_ts_min_health   = 300;
 user bool   m8f_ts_show_name    = true;
 user bool   m8f_ts_show_numbers = false;
 user bool   m8f_ts_show_bar     = true;
+user bool   m8f_ts_show_info    = false;
 user string m8f_ts_pip          = "#";
 user string m8f_ts_empty_pip    = "-";
 user string m8f_ts_font         = "MM2SFNTO";

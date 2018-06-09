@@ -202,6 +202,18 @@ class TSZScriptHelper : Actor
     return (65 <= code && code <= 90);
   }
 
+  static void GetAdditionalTargetInfo(Actor a)
+  {
+    if (!a) { return; }
+
+    Actor target = GetTarget(a);
+    if (target == null) { SendResultString(a.player, ""); return; }
+
+    if      (target.bBOSS)     { SendResultString(a.player, "Boss"); }
+    else if (target.bFRIENDLY) { SendResultString(a.player, "Friendly"); }
+    else                       { SendResultString(a.player, ""); }
+  }
+
 }
 
 class TagCache : Thinker

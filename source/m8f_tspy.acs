@@ -10,6 +10,7 @@
 #define msgIdCrh msgId + 3
 #define msgIdCrT msgId + 4
 #define msgIdCrB msgId + 5
+#define msgIdInf msgId + 6
 
 #define newline 0.03
 
@@ -46,6 +47,13 @@ function str TS_GetTargetName(int playerN, bool isFreedoom)
   ScriptCall("TSZScriptHelper", "GetTargetName", isFreedoom);
   str targetName = GetUserCVarString(playerN, "m8f_ts_ResultString");
   return targetName;
+}
+
+function str TS_GetTargetInfo(int playerN)
+{
+  ScriptCall("TSZScriptHelper", "GetAdditionalTargetInfo");
+  str targetInfo = GetUserCVarString(playerN, "m8f_ts_ResultString");
+  return targetInfo;
 }
 
 function int TS_Log2(int value)
@@ -118,6 +126,7 @@ script "target-spy" ENTER
   bool showBar   = GetUserCVar(playerN, "m8f_ts_show_bar");
   bool showName  = GetUserCVar(playerN, "m8f_ts_show_name");
   bool showNums  = GetUserCVar(playerN, "m8f_ts_show_numbers");
+  bool showInfo  = GetUserCVar(playerN, "m8f_ts_show_info");
   bool crossOn   = GetUserCVar(playerN, "m8f_ts_crosshair_on");
   str  pip       = GetUserCVarString(playerN, "m8f_ts_pip");
   str  emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
@@ -155,6 +164,7 @@ script "target-spy" ENTER
           showBar   = GetUserCVar(playerN, "m8f_ts_show_bar");
           showName  = GetUserCVar(playerN, "m8f_ts_show_name");
           showNums  = GetUserCVar(playerN, "m8f_ts_show_numbers");
+          showInfo  = GetUserCVar(playerN, "m8f_ts_show_info");
           crossOn   = GetUserCVar(playerN, "m8f_ts_crosshair_on");
           pip       = GetUserCVarString(playerN, "m8f_ts_pip");
           emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
@@ -247,6 +257,14 @@ script "target-spy" ENTER
           str targetName = TS_GetTargetName(playerN, isFreedoom);
           HudMessage(s:targetName;
                      HUDMSG_PLAIN, msgIdTag, CR_WHITE, 0.5, y, MINIMAL_HOLD_TIME);
+          y += newline;
+        }
+
+      if (showInfo)
+        {
+          str targetInfo = TS_GetTargetInfo(playerN);
+          HudMessage(s:targetInfo;
+                     HUDMSG_PLAIN, msgIdInf, CR_WHITE, 0.5, y, MINIMAL_HOLD_TIME);
           y += newline;
         }
 
