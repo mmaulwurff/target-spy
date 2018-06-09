@@ -58,6 +58,24 @@ class TSZScriptHelper : Actor
         "Arachnotron_free"      , "Technospider",
         "Archvile"              , "Arch-vile",
         "Archvile_free"         , "Flame Bringer",
+        "BD_Arachnotron"        , "Arachnotron",
+        "BD_ArchVile"           , "Arch-vile",
+        "BD_BaronOfHell"        , "Baron Of Hell",
+        "BD_Cacodemon"          , "Cacodemon",
+        "BD_ChaingunGuy"        , "Former Commando",
+        "BD_CyberDemon"         , "Cyberdemon",
+        "BD_Demon"              , "Demon",
+        "BD_DoomImp"            , "Imp",
+        "BD_Fatso"              , "Mancubus",
+        "BD_HellKnight"         , "Hell Knight",
+        "BD_LostSoul"           , "Lost Soul",
+        "BD_PainElemental"      , "Pain Elemental",
+        "BD_Revenant"           , "Revenant",
+        "BD_ShotgunGuy"         , "Former Human Sergeant",
+        "BD_Spectre"            , "Spectre",
+        "BD_SpiderMastermind"   , "Spider Mastermind",
+        "BD_WolfensteinSS"      , "Wolfenstein SS",
+        "BD_ZombieMan"          , "Former Human",
         "BaronOfHell_free"      , "Pain Lord",
         "Cacodemon_free"        , "Trilobite",
         "ChaingunGuy"           , "Former Commando",
@@ -96,7 +114,7 @@ class TSZScriptHelper : Actor
         "ZombieMan_free"        , "Zombie",
         "Zombieman"             , "Former Human"
       };
-    int size = 40;
+    int size = 58;
 
     Actor target = GetTarget(a);
     if (target == null) { SendResultString(a.player, "unknown"); return; }
