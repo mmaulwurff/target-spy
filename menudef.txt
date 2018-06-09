@@ -22,7 +22,7 @@ OptionMenu "m8f_ts_Options"
   Option "Show health numbers", "m8f_ts_show_numbers", "OnOff"
   Option "Show name",           "m8f_ts_show_name",    "OnOff"
   Option "Health bar log scale","m8f_ts_bar_log_scale","OnOff"
-  Slider "Mimimal health",      "m8f_ts_min_health",   0, 10000, 100
+  Slider "Mimimal health",      "m8f_ts_min_health",   1, 10000, 100
   Option "Vertical position",   "m8f_ts_y",            "m8f_ts_y_values"
   Option "Font",                "m8f_ts_font",         "m8f_ts_font_values"
   Option "Crosshair enabled",   "m8f_ts_crosshair_on", "OnOff"
