@@ -1,6 +1,7 @@
 OptionValue "m8f_ts_y_values"
 {
   0.02, "Top"
+  0.10, "Between top and center"
   0.40, "Above crosshair"
   0.60, "Below crosshair"
   0.96, "Bottom"
