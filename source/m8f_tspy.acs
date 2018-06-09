@@ -8,6 +8,8 @@
 #define msgIdTag msgId + 1
 #define msgIdNum msgId + 2
 #define msgIdCrh msgId + 3
+#define msgIdCrT msgId + 4
+#define msgIdCrB msgId + 5
 
 #define newline 0.03
 
@@ -77,9 +79,15 @@ function str TS_MakeHealthBar(int health
                   s:StrLeft(emptyPipSource, length - pips));
 }
 
-function void TS_DrawCrosshair(int color, str crossHair)
+int cachedColor = -1;
+function void TS_DrawCrosshair(int color, str cross, str crossTop, str crossBot)
 {
-  HudMessage(s:crosshair; HUDMSG_PLAIN, msgIdCrh, color, 0.5, 0.51, 0);
+  if (cachedColor == color) { return; }
+
+  cachedColor = color;
+  HudMessage(s:crossTop; HUDMSG_PLAIN, msgIdCrT, color, 0.5, 0.48, 0);
+  HudMessage(s:cross;    HUDMSG_PLAIN, msgIdCrh, color, 0.5, 0.51, 0);
+  HudMessage(s:crossBot; HUDMSG_PLAIN, msgIdCrB, color, 0.5, 0.54, 0);
 }
 
 script "target-spy" ENTER
@@ -115,6 +123,8 @@ script "target-spy" ENTER
   str  emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
   str  font      = GetUserCVarString(playerN, "m8f_ts_font");
   str  crosshair = GetUserCVarString(playerN, "m8f_ts_crosshair");
+  str  crossTop  = GetUserCVarString(playerN, "m8f_ts_cross_top");
+  str  crossBot  = GetUserCVarString(playerN, "m8f_ts_cross_bottom");
 
   SetFont(font);
 
@@ -157,18 +167,28 @@ script "target-spy" ENTER
           for (i = 0; i < 50; ++i) pipSource      = StrParam(s:pipSource, s:pip);
           for (i = 0; i < 50; ++i) emptyPipSource = StrParam(s:emptyPipSource, s:emptyPip);
 
-          if (crossOn) crosshair = GetUserCVarString(playerN, "m8f_ts_crosshair");
+          if (crossOn)
+            {
+              crosshair = GetUserCVarString(playerN, "m8f_ts_crosshair");
+              crossTop  = GetUserCVarString(playerN, "m8f_ts_cross_top");
+              crossBot  = GetUserCVarString(playerN, "m8f_ts_cross_bottom");
+            }
           else HudMessage(s:""; HUDMSG_PLAIN, msgIdCrh, 0, 0, 0, 0);
 
           hpBarCacheHealth    = -1;
           hpBarCacheMaxHealth = -1;
+
+          cachedColor = -1;
         }
 
       bool hasTarget = TS_TargetIsPresent(playerN);
       SetUserCVar(playerN, "m8f_ts_has_target", hasTarget);
       if (!hasTarget) // no target
         {
-          if (crossOn) { TS_DrawCrosshair(CR_GREEN, crosshair); }
+          if (crossOn)
+            {
+              TS_DrawCrosshair(CR_GREEN, crosshair, crossTop, crossBot);
+            }
           Delay(5);
           continue;
         }
@@ -176,7 +196,10 @@ script "target-spy" ENTER
       int targetMaxHealth = TS_GetTargetMaxHealth(playerN);
       if (targetMaxHealth < minHealth) // not worth showing
         {
-          if (crossOn) { TS_DrawCrosshair(CR_GREEN, crosshair); }
+          if (crossOn)
+            {
+              TS_DrawCrosshair(CR_GREEN, crosshair, crossTop, crossBot);
+            }
           Delay(5);
           continue;
         }
@@ -184,7 +207,10 @@ script "target-spy" ENTER
       int targetHealth = TS_GetTargetHealth(playerN);
       if (targetHealth < 1) // target is dead
         {
-          if (crossOn) { TS_DrawCrosshair(CR_GREEN, crosshair); }
+          if (crossOn)
+            {
+              TS_DrawCrosshair(CR_GREEN, crosshair, crossTop, crossBot);
+            }
           Delay(5);
           continue;
         }
@@ -231,7 +257,10 @@ script "target-spy" ENTER
           y += newline;
         }
 
-      if (crossOn) { TS_DrawCrosshair(color, crosshair); }
+      if (crossOn)
+        {
+          TS_DrawCrosshair(color, crosshair, crossTop, crossBot);
+        }
 
       Delay(1);
     }

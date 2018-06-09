@@ -17,18 +17,29 @@ OptionMenu "m8f_ts_Options"
 {
   Title "Target Spy Options"
 
-  Option "Target Spy enabled",  "m8f_ts_enabled",      "OnOff"
-  Option "Show health bar",     "m8f_ts_show_bar",     "OnOff"
-  Option "Show health numbers", "m8f_ts_show_numbers", "OnOff"
-  Option "Show name",           "m8f_ts_show_name",    "OnOff"
-  Option "Health bar log scale","m8f_ts_bar_log_scale","OnOff"
-  Slider "Mimimal health",      "m8f_ts_min_health",   1, 10000, 100
-  Option "Vertical position",   "m8f_ts_y",            "m8f_ts_y_values"
-  Option "Font",                "m8f_ts_font",         "m8f_ts_font_values"
-  Option "Crosshair enabled",   "m8f_ts_crosshair_on", "OnOff"
-  TextField "Crosshair",        "m8f_ts_crosshair"
-  TextField "Filled bar symbol","m8f_ts_pip"
-  TextField "Empty bar symbol", "m8f_ts_empty_pip"
+  Option "Target Spy enabled"   , "m8f_ts_enabled"       , "OnOff"
+  Option "Font"                 , "m8f_ts_font"          , "m8f_ts_font_values"
+  Option "Show health bar"      , "m8f_ts_show_bar"      , "OnOff"
+  Option "Show health numbers"  , "m8f_ts_show_numbers"  , "OnOff"
+  Option "Show name"            , "m8f_ts_show_name"     , "OnOff"
+  Slider "Mimimal health"       , "m8f_ts_min_health"    , 1, 10000, 100
+  StaticText "Target spy will be hidden for targets", "Black"
+  StaticText "with max health less than this.", "Black"
+
+  StaticText ""
+  StaticText "Health bar", "Blue"
+  TextField "Filled bar symbol" , "m8f_ts_pip"
+  TextField "Empty bar symbol"  , "m8f_ts_empty_pip"
+  Option "Health bar log scale" , "m8f_ts_bar_log_scale" , "OnOff"
+  Option "Vertical position"    , "m8f_ts_y"             , "m8f_ts_y_values"
+
+  StaticText ""
+  StaticText "Crosshair", "Blue"
+  Option "Enabled"   , "m8f_ts_crosshair_on"  , "OnOff"
+  TextField "Top"    , "m8f_ts_cross_top"
+  TextField "Center" , "m8f_ts_crosshair"
+  TextField "Bottom" , "m8f_ts_cross_bottom"
+  StaticText "Enter space to disable crosshair parts.", "Black"
 
   StaticText ""
 }
