@@ -12,5 +12,6 @@ user string m8f_ts_empty_pip    = "-";
 user string m8f_ts_font         = "MM2SFNTO";
 user bool   m8f_ts_crosshair_on = false;
 user string m8f_ts_crosshair    = "> <";
+user bool   m8f_ts_bar_log_scale= false;
 
 user bool   m8f_ts_has_target;

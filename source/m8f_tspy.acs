@@ -46,10 +46,25 @@ function str TS_GetTargetName(int playerN, bool isFreedoom)
   return targetName;
 }
 
+function int TS_Log2(int value)
+{
+  if (value == 0) return 0;
+
+  int result = -1;
+  while (value)
+    {
+      ++result;
+      value /= 2;
+    }
+  return result;
+}
+
 function str TS_MakeHealthBar(int health, int maxHealth, int playerN)
 {
   int length;
-  if      (maxHealth >= 2000) { length = 30; }
+  bool logScale = GetUserCVar(playerN, "m8f_ts_bar_log_scale");
+  if      (logScale)          { length = TS_Log2(maxHealth) * 2; }
+  else if (maxHealth >= 2000) { length = 30; }
   else if (maxHealth >= 500)  { length = 20; }
   else                        { length = 10; }
 

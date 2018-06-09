@@ -24,5 +24,5 @@ gzdoom -glversion 3 \
        ~/Programs/Games/wads/maps/DOOMTEST.wad \
        "$1" \
        +map test \
-       -nomonsters \
+       \ #-nomonsters \
        +notarget
