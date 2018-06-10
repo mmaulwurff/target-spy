@@ -116,12 +116,15 @@ class TSZScriptHelper : Actor
       };
     int size = 58;
 
+    // protect agains no target
     Actor target = GetTarget(a);
     if (target == null) { SendResultString(a.player, "unknown"); return; }
 
+    // to give Freedoom monster special names
     string targetClass = target.GetClassName();
     if (isFreedoom) { targetClass.AppendFormat("_free"); }
 
+    // if monster name was found before, just return it
     let cache = TagCache.Get();
     if (cache.cachedClass == targetClass)
       {
@@ -129,6 +132,16 @@ class TSZScriptHelper : Actor
         return;
       }
 
+    // if monster name is set via actor tag, return it
+    string targetName = target.GetTag();
+    if (targetName != targetClass)
+      {
+        cache.SetCache(targetClass, targetName);
+        SendResultString(a.player, targetName);
+        return;
+      }
+
+    // try to find target tag in override list
     // binary search
     int L = 0;
     int R = size - 1;
@@ -140,19 +153,18 @@ class TSZScriptHelper : Actor
         else if (current >  targetClass) { R = m - 1; continue; }
         else if (current == targetClass)
           {
-            cache.cachedClass = targetClass;
-            cache.cachedTag   = specialNames[m * 2 + 1];
-            SendResultString(a.player, cache.cachedTag);
+            targetName = specialNames[m * 2 + 1];
+            cache.SetCache(targetClass, targetName);
+            SendResultString(a.player, targetName);
             return;
           }
       }
 
-    string targetName = target.GetTag();
+    // if target name is not found, compose tag from class name
     targetName = SeparateCamelCase(targetName);
     targetName.Replace("_", " ");
 
-    cache.cachedClass = targetClass;
-    cache.cachedTag   = targetName;
+    cache.SetCache(targetClass, targetName);
     SendResultString(a.player, targetName);
   }
 
@@ -220,6 +232,12 @@ class TagCache : Thinker
 {
   string cachedClass;
   string cachedTag;
+
+  void SetCache(string targetClass, string targetTag)
+  {
+    cachedClass = targetClass;
+    cachedTag   = targetTag;
+  }
 
   TagCache Init()
   {
