@@ -29,4 +29,5 @@ gzdoom -glversion 3 \
        "$1" \
        +map test \
        \ #-nomonsters \
-       +notarget
+       +notarget \
+       +summon doomimp
