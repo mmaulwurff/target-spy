@@ -196,7 +196,12 @@ script "target-spy" ENTER
               crossTop  = GetUserCVarString(playerN, "m8f_ts_cross_top");
               crossBot  = GetUserCVarString(playerN, "m8f_ts_cross_bottom");
             }
-          else HudMessage(s:""; msgFlags, msgIdCrh, 0, 0, 0, 0);
+          else
+            {
+              HudMessage(s:""; msgFlags, msgIdCrT, 0, 0, 0, 0);
+              HudMessage(s:""; msgFlags, msgIdCrh, 0, 0, 0, 0);
+              HudMessage(s:""; msgFlags, msgIdCrB, 0, 0, 0, 0);
+            }
 
           hpBarCacheHealth    = -1;
           hpBarCacheMaxHealth = -1;
