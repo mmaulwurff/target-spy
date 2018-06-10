@@ -1,6 +1,8 @@
+// storage to pass results from ZScript
 user string m8f_ts_ResultString;
 user int    m8f_ts_ResultInt;
 
+// options
 user float  m8f_ts_y            = 0.02;
 user bool   m8f_ts_enabled      = true;
 user int    m8f_ts_min_health   = 300;
@@ -18,5 +20,7 @@ user string m8f_ts_cross_bottom = "";
 user bool   m8f_ts_bar_log_scale= false;
 user int    m8f_ts_def_color_crs= 3; // green
 user int    m8f_ts_def_color_tag= 9; // white
+user bool   m8f_ts_alt_hp_color = false;
 
+// interface for other mods
 user bool   m8f_ts_has_target;
