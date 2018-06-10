@@ -128,6 +128,8 @@ script "target-spy" ENTER
   bool showNums  = GetUserCVar(playerN, "m8f_ts_show_numbers");
   bool showInfo  = GetUserCVar(playerN, "m8f_ts_show_info");
   bool crossOn   = GetUserCVar(playerN, "m8f_ts_crosshair_on");
+  int  crossCol  = GetUserCVar(playerN, "m8f_ts_def_color_crs");
+  int  nameCol   = GetUserCVar(playerN, "m8f_ts_def_color_tag");
   str  pip       = GetUserCVarString(playerN, "m8f_ts_pip");
   str  emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
   str  font      = GetUserCVarString(playerN, "m8f_ts_font");
@@ -166,6 +168,8 @@ script "target-spy" ENTER
           showNums  = GetUserCVar(playerN, "m8f_ts_show_numbers");
           showInfo  = GetUserCVar(playerN, "m8f_ts_show_info");
           crossOn   = GetUserCVar(playerN, "m8f_ts_crosshair_on");
+          crossCol  = GetUserCVar(playerN, "m8f_ts_def_color_crs");
+          nameCol   = GetUserCVar(playerN, "m8f_ts_def_color_tag");
           pip       = GetUserCVarString(playerN, "m8f_ts_pip");
           emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
           font      = GetUserCVarString(playerN, "m8f_ts_font");
@@ -197,7 +201,7 @@ script "target-spy" ENTER
         {
           if (crossOn)
             {
-              TS_DrawCrosshair(CR_GREEN, crosshair, crossTop, crossBot);
+              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot);
             }
           Delay(5);
           continue;
@@ -208,7 +212,7 @@ script "target-spy" ENTER
         {
           if (crossOn)
             {
-              TS_DrawCrosshair(CR_GREEN, crosshair, crossTop, crossBot);
+              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot);
             }
           Delay(5);
           continue;
@@ -219,7 +223,7 @@ script "target-spy" ENTER
         {
           if (crossOn)
             {
-              TS_DrawCrosshair(CR_GREEN, crosshair, crossTop, crossBot);
+              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot);
             }
           Delay(5);
           continue;
@@ -256,16 +260,19 @@ script "target-spy" ENTER
         {
           str targetName = TS_GetTargetName(playerN, isFreedoom);
           HudMessage(s:targetName;
-                     HUDMSG_PLAIN, msgIdTag, CR_WHITE, 0.5, y, MINIMAL_HOLD_TIME);
+                     HUDMSG_PLAIN, msgIdTag, nameCol, 0.5, y, MINIMAL_HOLD_TIME);
           y += newline;
         }
 
       if (showInfo)
         {
           str targetInfo = TS_GetTargetInfo(playerN);
-          HudMessage(s:targetInfo;
-                     HUDMSG_PLAIN, msgIdInf, CR_WHITE, 0.5, y, MINIMAL_HOLD_TIME);
-          y += newline;
+          if (StrLen(targetInfo) > 0)
+            {
+              HudMessage(s:targetInfo;
+                         HUDMSG_PLAIN, msgIdInf, nameCol, 0.5, y, MINIMAL_HOLD_TIME);
+              y += newline;
+            }
         }
 
       if (showNums)

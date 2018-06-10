@@ -53,6 +53,10 @@ OptionMenu "m8f_ts_Options"
   Command "Clear"    , "m8f_ts_cross_bottom \"\""
 
   StaticText ""
+  Option "Default crosshair color", "m8f_ts_def_color_crs", "TextColors"
+  Option "Tag color"              , "m8f_ts_def_color_tag", "TextColors"
+
+  StaticText ""
 }
 
 AddOptionMenu "OptionsMenu"
