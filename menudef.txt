@@ -17,6 +17,8 @@ OptionString "m8f_ts_font_values"
 OptionMenu "m8f_ts_Options"
 {
   Title "Target Spy Options"
+  StaticText "Changes apply after a short delay.", "Black"
+  StaticText ""
 
   Option "Target Spy enabled"   , "m8f_ts_enabled"       , "OnOff"
   Option "Font"                 , "m8f_ts_font"          , "m8f_ts_font_values"
@@ -37,11 +39,18 @@ OptionMenu "m8f_ts_Options"
 
   StaticText ""
   StaticText "Crosshair", "Blue"
-  Option "Enabled"   , "m8f_ts_crosshair_on"  , "OnOff"
+  Option "Enabled"   , "m8f_ts_crosshair_on", "OnOff"
+
   TextField "Top"    , "m8f_ts_cross_top"
+  Command "Clear"    , "m8f_ts_cross_top \"\""
+  StaticText ""
+
   TextField "Center" , "m8f_ts_crosshair"
+  Command "Clear"    , "m8f_ts_crosshair \"\""
+  StaticText ""
+
   TextField "Bottom" , "m8f_ts_cross_bottom"
-  StaticText "Enter space to disable crosshair parts.", "Black"
+  Command "Clear"    , "m8f_ts_cross_bottom \"\""
 
   StaticText ""
 }
