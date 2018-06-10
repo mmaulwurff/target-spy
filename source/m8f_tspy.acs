@@ -2,6 +2,7 @@
 #include "zcommon.acs"
 
 #define MINIMAL_HOLD_TIME 1873
+#define msgFlags HUDMSG_PLAIN | HUDMSG_NOTWITHFULLMAP | HUDMSG_NOTWITHOVERLAYMAP
 
 #define msgId    191900
 #define msgIdBar msgId
@@ -99,9 +100,9 @@ function void TS_DrawCrosshair(int color, str cross, str crossTop, str crossBot)
   if (cachedColor == color) { return; }
 
   cachedColor = color;
-  HudMessage(s:crossTop; HUDMSG_PLAIN, msgIdCrT, color, 0.5, 0.48, 0);
-  HudMessage(s:cross;    HUDMSG_PLAIN, msgIdCrh, color, 0.5, 0.51, 0);
-  HudMessage(s:crossBot; HUDMSG_PLAIN, msgIdCrB, color, 0.5, 0.54, 0);
+  HudMessage(s:crossTop; msgFlags, msgIdCrT, color, 0.5, 0.48, 0);
+  HudMessage(s:cross;    msgFlags, msgIdCrh, color, 0.5, 0.51, 0);
+  HudMessage(s:crossBot; msgFlags, msgIdCrB, color, 0.5, 0.54, 0);
 }
 
 script "target-spy" ENTER
@@ -195,7 +196,7 @@ script "target-spy" ENTER
               crossTop  = GetUserCVarString(playerN, "m8f_ts_cross_top");
               crossBot  = GetUserCVarString(playerN, "m8f_ts_cross_bottom");
             }
-          else HudMessage(s:""; HUDMSG_PLAIN, msgIdCrh, 0, 0, 0, 0);
+          else HudMessage(s:""; msgFlags, msgIdCrh, 0, 0, 0, 0);
 
           hpBarCacheHealth    = -1;
           hpBarCacheMaxHealth = -1;
@@ -261,7 +262,7 @@ script "target-spy" ENTER
             }
 
           HudMessage(s:hpBarCached;
-                     HUDMSG_PLAIN, msgIdBar, color, 0.5, y, MINIMAL_HOLD_TIME);
+                     msgFlags, msgIdBar, color, 0.5, y, MINIMAL_HOLD_TIME);
           y += newline;
         }
 
@@ -269,7 +270,7 @@ script "target-spy" ENTER
         {
           str targetName = TS_GetTargetName(playerN, isFreedoom);
           HudMessage(s:targetName;
-                     HUDMSG_PLAIN, msgIdTag, nameCol, 0.5, y, MINIMAL_HOLD_TIME);
+                     msgFlags, msgIdTag, nameCol, 0.5, y, MINIMAL_HOLD_TIME);
           y += newline;
         }
 
@@ -279,7 +280,7 @@ script "target-spy" ENTER
           if (StrLen(targetInfo) > 0)
             {
               HudMessage(s:targetInfo;
-                         HUDMSG_PLAIN, msgIdInf, nameCol, 0.5, y, MINIMAL_HOLD_TIME);
+                         msgFlags, msgIdInf, nameCol, 0.5, y, MINIMAL_HOLD_TIME);
               y += newline;
             }
         }
@@ -287,7 +288,7 @@ script "target-spy" ENTER
       if (showNums)
         {
           HudMessage(i:targetHealth, s:"/", i:targetMaxHealth;
-                     HUDMSG_PLAIN, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
+                     msgFlags, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
           y += newline;
         }
 
