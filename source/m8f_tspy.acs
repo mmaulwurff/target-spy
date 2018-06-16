@@ -95,14 +95,28 @@ function str TS_MakeHealthBar(int health
 }
 
 int cachedColor = -1;
-function void TS_DrawCrosshair(int color, str cross, str crossTop, str crossBot)
+function void TS_DrawCrosshair(int color, str cross, str crossTop, str crossBot,
+                               int playerN, int hasTarget)
 {
   if (cachedColor == color) { return; }
+
+  if (!hasTarget)
+    {
+      bool cross_only_on_target = GetUserCVar(playerN, "m8f_ts_cross_only_tg");
+      if (cross_only_on_target) { TS_HideCrosshair(); return; }
+    }
 
   cachedColor = color;
   HudMessage(s:crossTop; msgFlags, msgIdCrT, color, 0.5, 0.48, 0);
   HudMessage(s:cross;    msgFlags, msgIdCrh, color, 0.5, 0.51, 0);
   HudMessage(s:crossBot; msgFlags, msgIdCrB, color, 0.5, 0.54, 0);
+}
+
+function void TS_HideCrosshair(void)
+{
+  HudMessage(s:""; msgFlags, msgIdCrT, 0, 0, 0, 0);
+  HudMessage(s:""; msgFlags, msgIdCrh, 0, 0, 0, 0);
+  HudMessage(s:""; msgFlags, msgIdCrB, 0, 0, 0, 0);
 }
 
 script "target-spy" ENTER
@@ -160,6 +174,8 @@ script "target-spy" ENTER
   int hpBarCacheMaxHealth = -1;
   str hpBarCached;
 
+  bool oldHastarget = false;
+
   while (true)
     {
       if (!GetUserCVar(playerN, "m8f_ts_enabled")) { Delay(10); continue; }
@@ -198,9 +214,7 @@ script "target-spy" ENTER
             }
           else
             {
-              HudMessage(s:""; msgFlags, msgIdCrT, 0, 0, 0, 0);
-              HudMessage(s:""; msgFlags, msgIdCrh, 0, 0, 0, 0);
-              HudMessage(s:""; msgFlags, msgIdCrB, 0, 0, 0, 0);
+              TS_HideCrosshair();
             }
 
           hpBarCacheHealth    = -1;
@@ -210,12 +224,15 @@ script "target-spy" ENTER
         }
 
       bool hasTarget = TS_TargetIsPresent(playerN);
+      if (oldHasTarget != hasTarget) { cachedColor = -1; }
+      oldHasTarget = hasTarget;
       SetUserCVar(playerN, "m8f_ts_has_target", hasTarget);
+
       if (!hasTarget) // no target
         {
           if (crossOn)
             {
-              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot);
+              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot, playerN, false);
             }
           Delay(5);
           continue;
@@ -226,7 +243,7 @@ script "target-spy" ENTER
         {
           if (crossOn)
             {
-              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot);
+              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot, playerN, hasTarget);
             }
           Delay(5);
           continue;
@@ -237,7 +254,7 @@ script "target-spy" ENTER
         {
           if (crossOn)
             {
-              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot);
+              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot, playerN, hasTarget);
             }
           Delay(5);
           continue;
@@ -299,7 +316,7 @@ script "target-spy" ENTER
 
       if (crossOn)
         {
-          TS_DrawCrosshair(color, crosshair, crossTop, crossBot);
+          TS_DrawCrosshair(color, crosshair, crossTop, crossBot, playerN, hasTarget);
         }
 
       Delay(1);

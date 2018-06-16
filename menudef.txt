@@ -41,6 +41,7 @@ OptionMenu "m8f_ts_Options"
   StaticText ""
   StaticText "Crosshair", "Blue"
   Option "Enabled"   , "m8f_ts_crosshair_on", "OnOff"
+  Option "Only on target", "m8f_ts_cross_only_tg", "OnOff"
 
   TextField "Top"    , "m8f_ts_cross_top"
   Command "Clear"    , "m8f_ts_cross_top \"\""

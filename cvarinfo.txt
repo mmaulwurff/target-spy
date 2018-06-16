@@ -22,6 +22,7 @@ user int    m8f_ts_def_color_crs= 3; // green
 user int    m8f_ts_def_color_tag= 9; // white
 user bool   m8f_ts_alt_hp_color = false;
 user bool   m8f_ts_show_hidden  = true;
+user bool   m8f_ts_cross_only_tg=false;
 
 // interface for other mods
 user bool   m8f_ts_has_target;
