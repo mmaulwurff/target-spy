@@ -14,7 +14,8 @@ Features:
 - Weapon Menu integration: Target Spy can change laser sight color when on target.
 
 Thanks:
-- Blue Shadow and Spaceman333 for ideas and examples of code.
+- Blue Shadow for examples of code.
+- Spaceman333 and Rowsol for ideas.
 
 Credits:
 * [Mementwo font by Jimmy / Memento Mori 2 Team](https://forum.zdoom.org/viewtopic.php?f=37&t=33409#p632308).

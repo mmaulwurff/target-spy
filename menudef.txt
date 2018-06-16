@@ -1,7 +1,7 @@
 OptionValue "m8f_ts_y_values"
 {
   0.02, "Top"
-  0.10, "Between top and center"
+  0.10, "Below top"
   0.35, "Above crosshair"
   0.60, "Below crosshair"
   0.96, "Bottom"
@@ -57,6 +57,7 @@ OptionMenu "m8f_ts_Options"
   StaticText ""
   Option "Default crosshair color" , "m8f_ts_def_color_crs" , "TextColors"
   Option "Tag color"               , "m8f_ts_def_color_tag" , "TextColors"
+  Option "Weaker enemy tag color"  , "m8f_ts_def_cl_tag_wk" , "TextColors"
   Option "Green-red HP bar theme"  , "m8f_ts_alt_hp_color"  , "OnOff"
 
   StaticText ""

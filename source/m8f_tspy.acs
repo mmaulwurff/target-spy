@@ -151,6 +151,7 @@ script "target-spy" ENTER
   bool crossOn   = GetUserCVar(playerN, "m8f_ts_crosshair_on");
   int  crossCol  = GetUserCVar(playerN, "m8f_ts_def_color_crs");
   int  nameCol   = GetUserCVar(playerN, "m8f_ts_def_color_tag");
+  int  weakCol   = GetUserCVar(playerN, "m8f_ts_def_cl_tag_wk");
   bool altHpCols = GetUserCVar(playerN, "m8f_ts_alt_hp_color");
   str  pip       = GetUserCVarString(playerN, "m8f_ts_pip");
   str  emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
@@ -194,6 +195,7 @@ script "target-spy" ENTER
           crossOn   = GetUserCVar(playerN, "m8f_ts_crosshair_on");
           crossCol  = GetUserCVar(playerN, "m8f_ts_def_color_crs");
           nameCol   = GetUserCVar(playerN, "m8f_ts_def_color_tag");
+          weakCol   = GetUserCVar(playerN, "m8f_ts_def_cl_tag_wk");
           altHpCols = GetUserCVar(playerN, "m8f_ts_alt_hp_color");
           pip       = GetUserCVarString(playerN, "m8f_ts_pip");
           emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
@@ -288,11 +290,15 @@ script "target-spy" ENTER
           y += newline;
         }
 
+      int tagColor;
+      if (targetHealth < 100) { tagColor = weakCol; }
+      else                    { tagColor = nameCol; }
+
       if (showName)
         {
           str targetName = TS_GetTargetName(playerN, isFreedoom);
           HudMessage(s:targetName;
-                     msgFlags, msgIdTag, nameCol, 0.5, y, MINIMAL_HOLD_TIME);
+                     msgFlags, msgIdTag, tagColor, 0.5, y, MINIMAL_HOLD_TIME);
           y += newline;
         }
 
@@ -302,7 +308,7 @@ script "target-spy" ENTER
           if (StrLen(targetInfo) > 0)
             {
               HudMessage(s:targetInfo;
-                         msgFlags, msgIdInf, nameCol, 0.5, y, MINIMAL_HOLD_TIME);
+                         msgFlags, msgIdInf, tagColor, 0.5, y, MINIMAL_HOLD_TIME);
               y += newline;
             }
         }
