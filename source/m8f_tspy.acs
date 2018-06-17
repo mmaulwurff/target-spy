@@ -43,6 +43,12 @@ function bool TS_IsFreedoom(void)
   return isFreedoom;
 }
 
+function bool TS_IsTitlemap(void)
+{
+  str mapLumpName = StrParam(n:PRINTNAME_LEVEL);
+  return (StrICmp(mapLumpName, "TITLEMAP") == 0);
+}
+
 function str TS_GetTargetName(int playerN, bool isFreedoom)
 {
   ScriptCall("TSZScriptHelper", "GetTargetName", isFreedoom);
@@ -121,6 +127,8 @@ function void TS_HideCrosshair(void)
 
 script "target-spy" ENTER
 {
+  if (TS_IsTitlemap()) { terminate; }
+
   int colors[12] =
     {
       CR_RED,
