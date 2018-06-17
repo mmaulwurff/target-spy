@@ -12,6 +12,11 @@ OptionString "m8f_ts_font_values"
   "SMALLFONT", "Small font"
   "CONFONT",   "Console font"
   "MM2SFNTO",  "Mementwo"
+  "ESFONT",    "Enlightening"
+  "CYBERFNT",  "Cyberfonter"
+  "JenocideFontRed", "Jenocide"
+  "SMSKFONT",  "Solid Snake"
+  "GARGSMAL",  "Gargoyle Wing"
 }
 
 OptionMenu "m8f_ts_Options"

@@ -1,0 +1,9 @@
+CYBERFNT
+{
+  Template CYBFT%03d
+}
+
+JenocideFontRed
+{
+  Template JNCRD%03d
+}
