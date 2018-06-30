@@ -1,0 +1,4 @@
+gameinfo
+{
+  AddEventHandlers = "m8f_ts_EventHandler"
+}

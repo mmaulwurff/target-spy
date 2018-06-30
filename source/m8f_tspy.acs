@@ -4,14 +4,15 @@
 #define MINIMAL_HOLD_TIME 1873
 #define msgFlags HUDMSG_PLAIN | HUDMSG_NOTWITHFULLMAP | HUDMSG_NOTWITHOVERLAYMAP
 
-#define msgId    191900
-#define msgIdBar msgId
-#define msgIdTag msgId + 1
-#define msgIdNum msgId + 2
-#define msgIdCrh msgId + 3
-#define msgIdCrT msgId + 4
-#define msgIdCrB msgId + 5
-#define msgIdInf msgId + 6
+#define msgId        191900
+#define msgIdBar     msgId
+#define msgIdTag     msgId + 1
+#define msgIdNum     msgId + 2
+#define msgIdCrh     msgId + 3
+#define msgIdCrT     msgId + 4
+#define msgIdCrB     msgId + 5
+#define msgIdInf     msgId + 6
+#define msgIdConfirm msgId + 7
 
 #define newline 0.03
 
@@ -184,6 +185,7 @@ script "target-spy" ENTER
   str hpBarCached;
 
   bool oldHastarget = false;
+  bool oldShowKillConfirmed = false;
 
   while (true)
     {
@@ -233,6 +235,26 @@ script "target-spy" ENTER
           cachedColor = -1;
         }
 
+      int y = yStart;
+
+      int  killConfirmedCount = GetUserCVar(playerN, "m8f_ts_KillConfirmed");
+      bool showKillConfirmed  = (killConfirmedCount != 0);
+      if (showKillConfirmed != oldShowKillConfirmed);
+      {
+        if (killConfirmedCount)
+        {
+          SetUserCVar(playerN, "m8f_ts_KillConfirmed", killConfirmedCount - 1);
+          HudMessage(s:"Kill Confirmed";
+                     msgFlags, msgIdConfirm, nameCol, 0.5, y, 0);
+          y += newline;
+        }
+        else
+        {
+          HudMessage(s:""; msgFlags, msgIdConfirm, 0, 0, 0, 0);
+        }
+        oldShowKillConfirmed = showKillConfirmed;
+      }
+
       bool hasTarget = TS_TargetIsPresent(playerN);
       if (oldHasTarget != hasTarget) { cachedColor = -1; }
       oldHasTarget = hasTarget;
@@ -278,8 +300,6 @@ script "target-spy" ENTER
         {
           color = CR_BLACK;
         }
-
-      int y = yStart;
 
       if (showBar)
         {

@@ -22,6 +22,7 @@ class TSZScriptHelper : Actor
 
     Actor target = GetTarget(a);
     bool isPresent = (target != null);
+    if (isPresent) { m8f_ts_LastTarget.Get().lastTarget = target; }
     SendResultInt(a.player, isPresent);
   }
 
@@ -260,12 +261,42 @@ class TagCache : Thinker
 
   static TagCache Get()
   {
-    ThinkerIterator it = ThinkerIterator.Create("TagCache", STAT_INFO);
-    let p = TagCache(it.Next());
-    if (p == null)
-      {
-        p = new("TagCache").Init();
-      }
+    let it = ThinkerIterator.Create("TagCache", STAT_INFO);
+    let p  = TagCache(it.Next());
+    if (p == null) { p = new("TagCache").Init(); }
     return p;
+  }
+}
+
+class m8f_ts_LastTarget : Thinker
+{
+  Actor lastTarget;
+
+  m8f_ts_LastTarget Init()
+  {
+    ChangeStatNum(STAT_INFO);
+    lastTarget = null;
+    return self;
+  }
+
+  static m8f_ts_LastTarget Get()
+  {
+    let it = ThinkerIterator.Create("m8f_ts_LastTarget", STAT_INFO);
+    let p  = m8f_ts_LastTarget(it.Next());
+    if (p == null) { p = new("m8f_ts_LastTarget").Init(); }
+    return p;
+  }
+}
+
+class m8f_ts_EventHandler : EventHandler
+{
+  override void WorldThingDied(WorldEvent event)
+  {
+    PlayerInfo player = players[consolePlayer];
+    if (CVar.GetCVar("m8f_ts_show_confirm", player).GetInt()
+        && event.thing == m8f_ts_LastTarget.Get().lastTarget)
+    {
+      CVar.GetCVar("m8f_ts_KillConfirmed", player).SetInt(10);
+    }
   }
 }

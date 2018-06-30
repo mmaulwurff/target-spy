@@ -1,30 +1,32 @@
 // storage to pass results from ZScript
 user string m8f_ts_ResultString;
 user int    m8f_ts_ResultInt;
+user int    m8f_ts_KillConfirmed = 0;
 
 // options
-user float  m8f_ts_y            = 0.02;
-user bool   m8f_ts_enabled      = true;
-user int    m8f_ts_min_health   = 300;
-user bool   m8f_ts_show_name    = true;
-user bool   m8f_ts_show_numbers = false;
-user bool   m8f_ts_show_bar     = true;
-user bool   m8f_ts_show_info    = false;
-user string m8f_ts_pip          = "#";
-user string m8f_ts_empty_pip    = "-";
-user string m8f_ts_font         = "MM2SFNTO";
-user bool   m8f_ts_crosshair_on = false;
-user string m8f_ts_crosshair    = "> <";
-user string m8f_ts_cross_top    = "";
-user string m8f_ts_cross_bottom = "";
-user bool   m8f_ts_bar_log_scale= false;
-user int    m8f_ts_def_color_crs= 3; // green
-user int    m8f_ts_def_color_tag= 9; // white
-user int    m8f_ts_def_cl_tag_wk= 9; // white
-user bool   m8f_ts_alt_hp_color = false;
-user bool   m8f_ts_show_hidden  = true;
-user bool   m8f_ts_show_objects = true;
-user bool   m8f_ts_cross_only_tg=false;
+user float  m8f_ts_y             = 0.02;
+user bool   m8f_ts_enabled       = true;
+user int    m8f_ts_min_health    = 300;
+user bool   m8f_ts_show_name     = true;
+user bool   m8f_ts_show_numbers  = false;
+user bool   m8f_ts_show_bar      = true;
+user bool   m8f_ts_show_info     = false;
+user string m8f_ts_pip           = "#";
+user string m8f_ts_empty_pip     = "-";
+user string m8f_ts_font          = "MM2SFNTO";
+user bool   m8f_ts_crosshair_on  = false;
+user string m8f_ts_crosshair     = "> <";
+user string m8f_ts_cross_top     = "";
+user string m8f_ts_cross_bottom  = "";
+user bool   m8f_ts_bar_log_scale = false;
+user int    m8f_ts_def_color_crs = 3; // green
+user int    m8f_ts_def_color_tag = 9; // white
+user int    m8f_ts_def_cl_tag_wk = 9; // white
+user bool   m8f_ts_alt_hp_color  = false;
+user bool   m8f_ts_show_hidden   = true;
+user bool   m8f_ts_show_objects  = true;
+user bool   m8f_ts_cross_only_tg = false;
+user bool   m8f_ts_show_confirm  = false;
 
 // interface for other mods
 user bool   m8f_ts_has_target;
