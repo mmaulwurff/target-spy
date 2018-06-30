@@ -155,7 +155,7 @@ script "target-spy" ENTER
   bool logScale  = GetUserCVar(playerN, "m8f_ts_bar_log_scale");
   bool showBar   = GetUserCVar(playerN, "m8f_ts_show_bar");
   bool showName  = GetUserCVar(playerN, "m8f_ts_show_name");
-  bool showNums  = GetUserCVar(playerN, "m8f_ts_show_numbers");
+  int  showNums  = GetUserCVar(playerN, "m8f_ts_show_numbers");
   bool showInfo  = GetUserCVar(playerN, "m8f_ts_show_info");
   bool crossOn   = GetUserCVar(playerN, "m8f_ts_crosshair_on");
   int  crossCol  = GetUserCVar(playerN, "m8f_ts_def_color_crs");
@@ -292,14 +292,16 @@ script "target-spy" ENTER
           continue;
         }
 
+      int tagColor;
+      if (targetHealth < 100) { tagColor = weakCol; }
+      else                    { tagColor = nameCol; }
+
       int percent = targetHealth * 10 / targetMaxHealth;
       if (percent > 10) { percent = 11; }
 
       int color = colors[percent];
-      if (targetHealth < 35)
-        {
-          color = CR_BLACK;
-        }
+      if (targetHealth < 35) { color = CR_BLACK; }
+      if (altHpCols)         { color = tagColor; }
 
       if (showBar)
         {
@@ -317,10 +319,6 @@ script "target-spy" ENTER
                      msgFlags, msgIdBar, color, 0.5, y, MINIMAL_HOLD_TIME);
           y += newline;
         }
-
-      int tagColor;
-      if (targetHealth < 100) { tagColor = weakCol; }
-      else                    { tagColor = nameCol; }
 
       if (showName)
         {
@@ -341,11 +339,25 @@ script "target-spy" ENTER
             }
         }
 
-      if (showNums)
+      switch (showNums)
         {
+        case 0: break;
+
+        case 1:
           HudMessage(i:targetHealth, s:"/", i:targetMaxHealth;
                      msgFlags, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
           y += newline;
+          break;
+
+        case 2:
+          int percent100;
+          if (targetMaxHealth == 0) { percent100 = 100; }
+          else { percent100 = targetHealth * 100 / targetMaxHealth; }
+
+          HudMessage(i:percent100, s:"%";
+                     msgFlags, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
+          y += newline;
+          break;
         }
 
       if (crossOn)

@@ -19,6 +19,13 @@ OptionString "m8f_ts_font_values"
   "GARGSMAL",  "Gargoyle Wing"
 }
 
+OptionValue "m8f_ts_health_numbers_values"
+{
+  0, "Off"
+  1, "On: current/max"
+  2, "On: %"
+}
+
 OptionMenu "m8f_ts_Options"
 {
   Title "Target Spy Options"
@@ -28,7 +35,7 @@ OptionMenu "m8f_ts_Options"
   Option "Target Spy enabled"   , "m8f_ts_enabled"       , "OnOff"
   Option "Font"                 , "m8f_ts_font"          , "m8f_ts_font_values"
   Option "Show health bar"      , "m8f_ts_show_bar"      , "OnOff"
-  Option "Show health numbers"  , "m8f_ts_show_numbers"  , "OnOff"
+  Option "Show health numbers"  , "m8f_ts_show_numbers"  , "m8f_ts_health_numbers_values"
   Option "Show name"            , "m8f_ts_show_name"     , "OnOff"
   Option "Show additional info" , "m8f_ts_show_info"     , "OnOff"
   Option "Reveal stealth/shadow monsters", "m8f_ts_show_hidden", "OnOff"
