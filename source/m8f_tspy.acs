@@ -350,6 +350,12 @@ script "target-spy" ENTER
           break;
 
         case 2:
+          HudMessage(i:targetHealth;
+                     msgFlags, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
+          y += newline;
+          break;
+
+        case 3:
           int percent100;
           if (targetMaxHealth == 0) { percent100 = 100; }
           else { percent100 = targetHealth * 100 / targetMaxHealth; }

@@ -23,7 +23,8 @@ OptionValue "m8f_ts_health_numbers_values"
 {
   0, "Off"
   1, "On: current/max"
-  2, "On: %"
+  2, "On: current"
+  3, "On: %"
 }
 
 OptionMenu "m8f_ts_Options"
