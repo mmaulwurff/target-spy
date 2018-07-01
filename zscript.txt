@@ -20,9 +20,11 @@ class TSZScriptHelper : Actor
   {
     if (!a) { return; }
 
-    Actor target = GetTarget(a);
-    bool isPresent = (target != null);
-    if (isPresent) { m8f_ts_LastTarget.Get().lastTarget = target; }
+    Actor target    = GetTarget(a);
+    bool  isPresent = (target != null);
+
+    if (isPresent) { m8f_ts_TargetCache.Get().lastTarget = target; }
+
     SendResultInt(a.player, isPresent);
   }
 
@@ -174,7 +176,17 @@ class TSZScriptHelper : Actor
     let player = a.player;
     if (!player) { return null; }
 
+    // try an easy way to get a target (also works with autoaim)
     Actor target = player.mo.AimTarget();
+
+    // if target is not found by easy way, try the difficult way
+    if (target == null)
+      {
+        FTranslatedLineTarget victimTarget;
+        a.LineAttack(a.angle, 4000.0, a.pitch, 0, "none",
+                     "m8f_ts_InvisiblePuff", LAF_NOIMPACTDECAL, victimTarget);
+        target = victimTarget.linetarget;
+      }
 
     if (target && !target.bISMONSTER)
       {
@@ -268,22 +280,22 @@ class TagCache : Thinker
   }
 }
 
-class m8f_ts_LastTarget : Thinker
+class m8f_ts_TargetCache : Thinker
 {
   Actor lastTarget;
 
-  m8f_ts_LastTarget Init()
+  m8f_ts_TargetCache Init()
   {
     ChangeStatNum(STAT_INFO);
     lastTarget = null;
     return self;
   }
 
-  static m8f_ts_LastTarget Get()
+  static m8f_ts_TargetCache Get()
   {
-    let it = ThinkerIterator.Create("m8f_ts_LastTarget", STAT_INFO);
-    let p  = m8f_ts_LastTarget(it.Next());
-    if (p == null) { p = new("m8f_ts_LastTarget").Init(); }
+    let it = ThinkerIterator.Create("m8f_ts_TargetCache", STAT_INFO);
+    let p  = m8f_ts_TargetCache(it.Next());
+    if (p == null) { p = new("m8f_ts_TargetCache").Init(); }
     return p;
   }
 }
@@ -294,9 +306,29 @@ class m8f_ts_EventHandler : EventHandler
   {
     PlayerInfo player = players[consolePlayer];
     if (CVar.GetCVar("m8f_ts_show_confirm", player).GetInt()
-        && event.thing == m8f_ts_LastTarget.Get().lastTarget)
+        && event.thing == m8f_ts_TargetCache.Get().lastTarget)
     {
       CVar.GetCVar("m8f_ts_KillConfirmed", player).SetInt(10);
     }
   }
+}
+
+class m8f_ts_InvisiblePuff : Actor
+{
+  Default
+  {
+    Mass 0;
+    Radius 1;
+    Height 2;
+    +NOBLOCKMAP;
+    +NOGRAVITY;
+    +BLOODLESSIMPACT;
+    +PUFFONACTORS;
+    +DONTSPLASH;
+    +NOTRIGGER;
+    +FORCEXYBILLBOARD;
+    +NOTONAUTOMAP;
+  }
+
+  States { Spawn: TNT1 A 0; Stop; }
 }
