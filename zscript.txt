@@ -81,7 +81,8 @@ class TSZScriptHelper : Actor
       };
     int size = 17;
 
-    Inventory token = target.FindInventory("champion_Token", true);
+    string tokenClass = "champion_Token";
+    Inventory token = target.FindInventory(tokenClass, true);
     if (!token) { return name; }
 
     string tokenClassName = token.GetClassName();
