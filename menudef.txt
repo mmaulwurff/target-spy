@@ -76,6 +76,10 @@ OptionMenu "m8f_ts_Options"
   Option "Green-red HP bar theme"  , "m8f_ts_alt_hp_color"  , "OnOff"
 
   StaticText ""
+  StaticText "Cross-mod options", "Blue"
+  Option "Special names for Champions by Mikk-" , "m8f_ts_show_champion", "OnOff"
+
+  StaticText ""
 }
 
 AddOptionMenu "OptionsMenu"

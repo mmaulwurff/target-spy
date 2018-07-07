@@ -27,6 +27,7 @@ user bool   m8f_ts_show_hidden   = true;
 user bool   m8f_ts_show_objects  = true;
 user bool   m8f_ts_cross_only_tg = false;
 user bool   m8f_ts_show_confirm  = false;
+user bool   m8f_ts_show_champion = true;
 
 // interface for other mods
 user bool   m8f_ts_has_target;
