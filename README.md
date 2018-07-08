@@ -4,12 +4,14 @@ This mods provides simple health bar for targeted monsters.
 
 ## Features
 * ASCII target health bar (optional);
-* current and max target health numbers (optional);
+* current and max target health numbers (optional, configurable);
 * target name (optional);
 * proper names for Doom and Freedoom monsters;
 * configurable position;
 * different colors for overhealed, injured, and almost dead target;
 * doesn't touch monster TIDs (cannot break scripts);
+* optional "Kill Confirmed" message;
+* in addition to enemy targets, info on pickups and other objects can be shown;
 * Weapon Menu integration: Target Spy can be configured to be displayed only in zoom mode;
 * Weapon Menu integration: Target Spy can change laser sight color when on target.
 

@@ -50,7 +50,7 @@ OptionMenu "m8f_ts_Options"
   Option "Reveal stealth/shadow monsters", "m8f_ts_show_hidden", "OnOff"
   Option "Show for objects"     , "m8f_ts_show_objects"  , "m8f_ts_show_objects_values"
   Option "Kill Confirmation"    , "m8f_ts_show_confirm"  , "OnOff"
-  Slider "Mimimal health"       , "m8f_ts_min_health"    , 1, 10000, 100
+  Slider "Minimal health"       , "m8f_ts_min_health"    , 1, 10000, 100
   StaticText "Target spy will be hidden for targets", "Black"
   StaticText "with max health less than this.", "Black"
 
