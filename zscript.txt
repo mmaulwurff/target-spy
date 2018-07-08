@@ -46,8 +46,34 @@ class TSZScriptHelper : Actor
     Actor target = GetTarget(a);
     if (target == null) { SendResultInt(a.player, 0); return; }
 
+    if (!target.bSHOOTABLE)
+      {
+        SendResultInt(a.player, 0);
+        return;
+      }
+
     int targetMaxHealth = target.SpawnHealth();
     SendResultInt(a.player, targetMaxHealth);
+  }
+
+  static string AddAdditionalInfo(Actor a, Actor target, string name)
+  {
+    Inventory inv = Inventory(target);
+    if (inv)
+      {
+        int amount = inv.amount;
+        if (amount == 1)
+          {
+            BasicArmorPickup armor = BasicArmorPickup(inv);
+            if (armor) { amount = armor.SaveAmount; }
+          }
+        if (amount == 1) { return name; }
+        else             { return StringStruct.Format("%s (%i)", name, amount); }
+      }
+    else
+      {
+        return PrependChampionColor(a, target, name);
+      }
   }
 
   static string PrependChampionColor(Actor a, Actor target, string name)
@@ -183,24 +209,24 @@ class TSZScriptHelper : Actor
     Actor target = GetTarget(a);
     if (target == null) { SendResultString(player, "unknown"); return; }
 
-    // to give Freedoom monster special names
+    // to give Freedoom monsters special names
     string targetClass = target.GetClassName();
     if (isFreedoom) { targetClass.AppendFormat("_free"); }
 
-    // if monster name was found before, just return it
+    // if target name was found before, just return it
     let cache = TagCache.Get();
     if (cache.cachedClass == targetClass)
       {
-        SendResultString(player, PrependChampionColor(a, target, cache.cachedTag));
+        SendResultString(player, AddAdditionalInfo(a, target, cache.cachedTag));
         return;
       }
 
-    // if monster name is set via actor tag, return it
+    // if target name is set via actor tag, return it
     string targetName = target.GetTag();
     if (targetName != targetClass)
       {
         cache.SetCache(targetClass, targetName);
-        SendResultString(player, PrependChampionColor(a, target, targetName));
+        SendResultString(player, AddAdditionalInfo(a, target, targetName));
         return;
       }
 
@@ -218,7 +244,7 @@ class TSZScriptHelper : Actor
           {
             targetName = specialNames[m * 2 + 1];
             cache.SetCache(targetClass, targetName);
-            SendResultString(player, PrependChampionColor(a, target, targetName));
+            SendResultString(player, AddAdditionalInfo(a, target, targetName));
             return;
           }
       }
@@ -228,7 +254,7 @@ class TSZScriptHelper : Actor
     targetName.Replace("_", " ");
 
     cache.SetCache(targetClass, targetName);
-    SendResultString(player, PrependChampionColor(a, target, targetName));
+    SendResultString(player, AddAdditionalInfo(a, target, targetName));
   }
 
   static Actor GetTarget(Actor a)
@@ -248,16 +274,41 @@ class TSZScriptHelper : Actor
         target = victimTarget.linetarget;
       }
 
-    if (target && !target.bISMONSTER)
+    int showObjects = CVar.GetCVar("m8f_ts_show_objects", player).GetInt();
+
+    if (target == null && showObjects > 1)
       {
-        bool showObjects = CVar.GetCVar("m8f_ts_show_objects", player).GetInt();
-        if (!showObjects) { return null; }
+        FTranslatedLineTarget ftlt;
+        a.AimLineAttack(a.angle, 2048.0, ftlt, 0,
+                        ALF_CHECKNONSHOOTABLE | ALF_FORCENOSMART);
+        target = ftlt.linetarget;
       }
 
-    if (target && (target.bSHADOW || target.bSTEALTH))
+    // give up
+    if (target == null) { return null; }
+
+    if (target.bISMONSTER)
       {
-        bool showHidden = CVar.GetCVar("m8f_ts_show_hidden", player).GetInt();
-        if (!showHidden) { return null; }
+        if (target.bSHADOW || target.bSTEALTH)
+          {
+            bool showHidden = CVar.GetCVar("m8f_ts_show_hidden", player).GetInt();
+            if (!showHidden) { return null; }
+          }
+      }
+    else // not monsters
+      {
+        switch (showObjects)
+          {
+          case 0: return null;
+          case 1:
+            if (target.bSHOOTABLE) { return target; }
+            else                   { return null;   }
+          case 2:
+            if (target.bSHOOTABLE || target is "Inventory") { return target; }
+            else                                            { return null;   }
+          case 3:
+            return target;
+          }
       }
 
     return target;

@@ -270,8 +270,10 @@ script "target-spy" ENTER
           continue;
         }
 
-      int targetMaxHealth = TS_GetTargetMaxHealth(playerN);
-      if (targetMaxHealth < minHealth) // not worth showing
+      int  targetMaxHealth = TS_GetTargetMaxHealth(playerN);
+      bool showHealth      = (targetMaxHealth != 0);
+
+      if (targetMaxHealth < minHealth && targetMaxHealth != 0) // not worth showing
         {
           if (crossOn)
             {
@@ -296,14 +298,15 @@ script "target-spy" ENTER
       if (targetHealth < 100) { tagColor = weakCol; }
       else                    { tagColor = nameCol; }
 
-      int percent = targetHealth * 10 / targetMaxHealth;
+      int percent = 10;
+      if (showHealth)   { percent = targetHealth * 10 / targetMaxHealth; }
       if (percent > 10) { percent = 11; }
 
       int color = colors[percent];
       if (targetHealth < 35) { color = CR_BLACK; }
       if (altHpCols)         { color = tagColor; }
 
-      if (showBar)
+      if (showBar && showHealth)
         {
           if (targetHealth    != hpBarCacheHealth ||
               targetMaxHealth != hpBarCacheMaxHealth)
@@ -339,31 +342,34 @@ script "target-spy" ENTER
             }
         }
 
-      switch (showNums)
+      if (showHealth)
         {
-        case 0: break;
+          switch (showNums)
+            {
+            case 0: break;
 
-        case 1:
-          HudMessage(i:targetHealth, s:"/", i:targetMaxHealth;
-                     msgFlags, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
-          y += newline;
-          break;
+            case 1:
+              HudMessage(i:targetHealth, s:"/", i:targetMaxHealth;
+                         msgFlags, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
+              y += newline;
+              break;
 
-        case 2:
-          HudMessage(i:targetHealth;
-                     msgFlags, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
-          y += newline;
-          break;
+            case 2:
+              HudMessage(i:targetHealth;
+                         msgFlags, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
+              y += newline;
+              break;
 
-        case 3:
-          int percent100;
-          if (targetMaxHealth == 0) { percent100 = 100; }
-          else { percent100 = targetHealth * 100 / targetMaxHealth; }
+            case 3:
+              int percent100;
+              if (targetMaxHealth == 0) { percent100 = 100; }
+              else { percent100 = targetHealth * 100 / targetMaxHealth; }
 
-          HudMessage(i:percent100, s:"%";
-                     msgFlags, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
-          y += newline;
-          break;
+              HudMessage(i:percent100, s:"%";
+                         msgFlags, msgIdNum, color, 0.5, y, MINIMAL_HOLD_TIME);
+              y += newline;
+              break;
+            }
         }
 
       if (crossOn)

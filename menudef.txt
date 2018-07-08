@@ -27,6 +27,14 @@ OptionValue "m8f_ts_health_numbers_values"
   3, "On: %"
 }
 
+OptionValue "m8f_ts_show_objects_values"
+{
+  0, "Off"
+  1, "Shootable only"
+  2, "Shootable and Inventory"
+  3, "Everything"
+}
+
 OptionMenu "m8f_ts_Options"
 {
   Title "Target Spy Options"
@@ -40,7 +48,7 @@ OptionMenu "m8f_ts_Options"
   Option "Show name"            , "m8f_ts_show_name"     , "OnOff"
   Option "Show additional info" , "m8f_ts_show_info"     , "OnOff"
   Option "Reveal stealth/shadow monsters", "m8f_ts_show_hidden", "OnOff"
-  Option "Show for objects"     , "m8f_ts_show_objects"  , "OnOff"
+  Option "Show for objects"     , "m8f_ts_show_objects"  , "m8f_ts_show_objects_values"
   Option "Kill Confirmation"    , "m8f_ts_show_confirm"  , "OnOff"
   Slider "Mimimal health"       , "m8f_ts_min_health"    , 1, 10000, 100
   StaticText "Target spy will be hidden for targets", "Black"
