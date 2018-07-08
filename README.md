@@ -16,8 +16,19 @@ This mods provides simple health bar for targeted monsters.
 * Weapon Menu integration: Target Spy can change laser sight color when on target.
 
 ## Thanks
-- Blue Shadow for examples of code.
-- Spaceman333 and Rowsol for ideas.
+* Blue Shadow for examples of code.
+* Spaceman333 and Rowsol for ideas.
+* Churrupez for bug reports.
+
+## Info
+
+Author: m8f (mmaulwurff@gmail.com)
+
+License: GPLv3 (see copying.txt).
+License doesn't apply to fonts included in the archive. See credits.
+
+[Gitlab](https://gitlab.com/mmaulwurff/target-spy)
+[Forum topic](https://forum.zdoom.org/viewtopic.php?f=43&t=60784&p=1057216#p1057216)
 
 ## Credits
 * [Mementwo font by Jimmy / Memento Mori 2 Team](https://forum.zdoom.org/viewtopic.php?f=37&t=33409#p632308).
