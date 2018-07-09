@@ -326,6 +326,11 @@ class TSZScriptHelper : Actor
       }
     else // not monsters
       {
+        for (int i = 0; i < blackListSize; ++i)
+          {
+            if (target is blackList[i]) { return null; }
+          }
+
         switch (showObjects)
           {
           case 0: return null;
@@ -336,10 +341,6 @@ class TSZScriptHelper : Actor
             if (target.bSHOOTABLE || target is "Inventory") { return target; }
             else                                            { return null;   }
           case 3:
-            for (int i = 0; i < blackListSize; ++i)
-              {
-                if (target is blackList[i]) { return null; }
-              }
             return target;
           }
       }

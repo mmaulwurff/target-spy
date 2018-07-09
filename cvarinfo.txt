@@ -6,7 +6,7 @@ user int    m8f_ts_KillConfirmed = 0;
 // options
 user float  m8f_ts_y             = 0.02;
 user bool   m8f_ts_enabled       = true;
-user int    m8f_ts_min_health    = 300;
+user int    m8f_ts_min_health    = 0;
 user bool   m8f_ts_show_name     = true;
 user int    m8f_ts_show_numbers  = 0;
 user bool   m8f_ts_show_bar      = true;
@@ -28,6 +28,7 @@ user int    m8f_ts_show_objects  = 1;
 user bool   m8f_ts_cross_only_tg = false;
 user bool   m8f_ts_show_confirm  = false;
 user bool   m8f_ts_show_champion = true;
+user bool   m8f_ts_show_corpses  = false;
 
 // interface for other mods
 user bool   m8f_ts_has_target;

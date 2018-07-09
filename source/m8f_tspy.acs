@@ -175,6 +175,7 @@ script "target-spy" ENTER
   bool showName  = GetUserCVar(playerN, "m8f_ts_show_name");
   int  showNums  = GetUserCVar(playerN, "m8f_ts_show_numbers");
   bool showInfo  = GetUserCVar(playerN, "m8f_ts_show_info");
+  bool showCorps = GetUserCVar(playerN, "m8f_ts_show_corpses");
   bool crossOn   = GetUserCVar(playerN, "m8f_ts_crosshair_on");
   int  crossCol  = GetUserCVar(playerN, "m8f_ts_def_color_crs");
   int  nameCol   = GetUserCVar(playerN, "m8f_ts_def_color_tag");
@@ -220,6 +221,7 @@ script "target-spy" ENTER
           showName  = GetUserCVar(playerN, "m8f_ts_show_name");
           showNums  = GetUserCVar(playerN, "m8f_ts_show_numbers");
           showInfo  = GetUserCVar(playerN, "m8f_ts_show_info");
+          showCorps = GetUserCVar(playerN, "m8f_ts_show_corpses");
           crossOn   = GetUserCVar(playerN, "m8f_ts_crosshair_on");
           crossCol  = GetUserCVar(playerN, "m8f_ts_def_color_crs");
           nameCol   = GetUserCVar(playerN, "m8f_ts_def_color_tag");
@@ -302,7 +304,7 @@ script "target-spy" ENTER
         }
 
       int targetHealth = TS_GetTargetHealth(playerN);
-      if (targetHealth < 1) // target is dead
+      if (targetHealth < 1 && !showCorps) // target is dead
         {
           if (crossOn)
             {
@@ -341,11 +343,19 @@ script "target-spy" ENTER
           y += newline;
         }
 
+      int nameColor  = tagColor;
+      if (targetHealth < 1) { nameColor = color; }
+
       if (showName)
         {
           str targetName = TS_GetTargetName(playerN, isFreedoom);
+          if (targetHealth < 1)
+            {
+              targetName = StrParam(s:"Remains of ", s:targetName);
+              nameColor  = color;
+            }
           HudMessage(s:targetName;
-                     msgFlags, msgIdTag, tagColor, 0.5, y, MINIMAL_HOLD_TIME);
+                     msgFlags, msgIdTag, nameColor, 0.5, y, MINIMAL_HOLD_TIME);
           y += newline;
         }
 
@@ -355,7 +365,7 @@ script "target-spy" ENTER
           if (StrLen(targetInfo) > 0)
             {
               HudMessage(s:targetInfo;
-                         msgFlags, msgIdInf, tagColor, 0.5, y, MINIMAL_HOLD_TIME);
+                         msgFlags, msgIdInf, nameColor, 0.5, y, MINIMAL_HOLD_TIME);
               y += newline;
             }
         }
