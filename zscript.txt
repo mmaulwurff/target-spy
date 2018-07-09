@@ -277,6 +277,17 @@ class TSZScriptHelper : Actor
 
   static Actor GetTarget(Actor a)
   {
+
+    static const string blackList[] =
+      {
+        "m8f_aas_token",
+        "AutoautosaveToken",
+        "AutoautosaveAlertToken",
+        "AutoautosaveAlerter",
+        "AutoautosaveBossAlerter"
+      };
+    int blackListSize = 5;
+
     let player = a.player;
     if (!player) { return null; }
 
@@ -325,6 +336,10 @@ class TSZScriptHelper : Actor
             if (target.bSHOOTABLE || target is "Inventory") { return target; }
             else                                            { return null;   }
           case 3:
+            for (int i = 0; i < blackListSize; ++i)
+              {
+                if (target is blackList[i]) { return null; }
+              }
             return target;
           }
       }
