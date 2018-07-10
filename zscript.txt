@@ -285,9 +285,10 @@ class TSZScriptHelper : Actor
         "AutoautosaveToken",
         "AutoautosaveAlertToken",
         "AutoautosaveAlerter",
-        "AutoautosaveBossAlerter"
+        "AutoautosaveBossAlerter",
+        "UGGib_Corpse_Shootable"
       };
-    int blackListSize = 5;
+    int blackListSize = 6;
 
     let player = a.player;
     if (!player) { return null; }
