@@ -8,7 +8,7 @@ This mods provides simple health bar for targeted monsters.
 * target name (optional);
 * proper names for Doom and Freedoom monsters;
 * configurable position;
-* different colors for overhealed, injured, and almost dead target;
+* different colors for overhealed, injured, and almost dead target (configurable);
 * doesn't touch monster TIDs (cannot break scripts);
 * optional "Kill Confirmed" message;
 * in addition to enemy targets, info on pickups and other objects can be shown;
@@ -17,8 +17,7 @@ This mods provides simple health bar for targeted monsters.
 
 ## Thanks
 * Blue Shadow for examples of code.
-* Spaceman333 and Rowsol for ideas.
-* Churrupez for bug reports.
+* Spaceman333, Rowsol, Churrupez, Cyanide, and isaacpop23 for ideas and bug reports.
 
 ## Info
 

@@ -185,6 +185,7 @@ script "target-spy" ENTER
   bool altHpCols = GetUserCVar(playerN, "m8f_ts_alt_hp_color");
   int  stepMult  = GetUserCVar(playerN, "m8f_ts_step_mult");
   bool almDeadCr = GetUserCVar(playerN, "m8f_ts_alm_dead_cr");
+  int  crAlmDead = GetUserCVar(playerN, "m8f_ts_cr_alm_dead");
   str  pip       = GetUserCVarString(playerN, "m8f_ts_pip");
   str  emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
   str  font      = GetUserCVarString(playerN, "m8f_ts_font");
@@ -231,6 +232,7 @@ script "target-spy" ENTER
           nameCol   = GetUserCVar(playerN, "m8f_ts_def_color_tag");
           weakCol   = GetUserCVar(playerN, "m8f_ts_def_cl_tag_wk");
           altHpCols = GetUserCVar(playerN, "m8f_ts_alt_hp_color");
+          crAlmDead = GetUserCVar(playerN, "m8f_ts_cr_alm_dead");
           stepMult  = GetUserCVar(playerN, "m8f_ts_step_mult");
           almDeadCr = GetUserCVar(playerN, "m8f_ts_alm_dead_cr");
           pip       = GetUserCVarString(playerN, "m8f_ts_pip");
@@ -343,7 +345,8 @@ script "target-spy" ENTER
       if (percent > 10) { percent = 11; }
 
       int color = colors[percent];
-      if (targetHealth < 35 && almDeadCr) { color = CR_BLACK; }
+      if (targetHealth < 35 && almDeadCr) { color = crAlmDead; }
+      if (targetHealth < 1)               { color = crAlmDead; }
       if (altHpCols)                      { color = tagColor; }
 
       if (showBar && showHealth)
@@ -363,7 +366,7 @@ script "target-spy" ENTER
           y += newline;
         }
 
-      int nameColor  = tagColor;
+      int nameColor = tagColor;
       if (targetHealth < 1) { nameColor = color; }
 
       if (showName)

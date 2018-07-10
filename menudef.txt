@@ -31,7 +31,7 @@ OptionValue "m8f_ts_show_objects_values"
 {
   0, "Off"
   1, "Shootable only"
-  2, "Shootable and Inventory"
+  2, "Except decorations"
   3, "Everything"
 }
 
@@ -106,7 +106,7 @@ OptionMenu "m8f_ts_ColorSetup"
 
   StaticText ""
   Option "Show special color for almost dead" , "m8f_ts_alm_dead_cr", "OnOff"
-  Option "Almost dead color", "m8f_ts_cr_alm_dead", "TextColors"
+  Option "Dead/Almost dead color", "m8f_ts_cr_alm_dead", "TextColors"
 
   StaticText ""
   StaticText "Color for %", "Blue"
