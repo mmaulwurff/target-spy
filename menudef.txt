@@ -43,6 +43,7 @@ OptionMenu "m8f_ts_Options"
   StaticText ""
   Option "Target Spy enabled"   , "m8f_ts_enabled" , "OnOff"
   Option "Font"                 , "m8f_ts_font"    , "m8f_ts_font_values"
+  Slider "Newline step"         , "m8f_ts_step_mult", 0.1, 10.0, 0.1, 1
   TextField "Minimal health"    , "m8f_ts_min_health"
   StaticText "Target spy will be hidden for targets" , "Black"
   StaticText "with max health less than this."       , "Black"

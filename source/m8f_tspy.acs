@@ -32,7 +32,7 @@
 #define msgIdInf     msgId + 6
 #define msgIdConfirm msgId + 7
 
-#define newline 0.03
+#define defaultNewline 0.03
 
 function bool TS_TargetIsPresent(int playerN)
 {
@@ -181,6 +181,7 @@ script "target-spy" ENTER
   int  nameCol   = GetUserCVar(playerN, "m8f_ts_def_color_tag");
   int  weakCol   = GetUserCVar(playerN, "m8f_ts_def_cl_tag_wk");
   bool altHpCols = GetUserCVar(playerN, "m8f_ts_alt_hp_color");
+  int  stepMult = GetUserCVar(playerN, "m8f_ts_step_mult");
   str  pip       = GetUserCVarString(playerN, "m8f_ts_pip");
   str  emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
   str  font      = GetUserCVarString(playerN, "m8f_ts_font");
@@ -227,6 +228,7 @@ script "target-spy" ENTER
           nameCol   = GetUserCVar(playerN, "m8f_ts_def_color_tag");
           weakCol   = GetUserCVar(playerN, "m8f_ts_def_cl_tag_wk");
           altHpCols = GetUserCVar(playerN, "m8f_ts_alt_hp_color");
+          stepMult  = GetUserCVar(playerN, "m8f_ts_step_mult");
           pip       = GetUserCVarString(playerN, "m8f_ts_pip");
           emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
           font      = GetUserCVarString(playerN, "m8f_ts_font");
@@ -255,7 +257,8 @@ script "target-spy" ENTER
           cachedColor = -1;
         }
 
-      int y = yStart;
+      int y       = yStart;
+      int newline = FixedMul(defaultNewline, stepMult);
 
       int  killConfirmedCount = GetUserCVar(playerN, "m8f_ts_KillConfirmed");
       bool showKillConfirmed  = (killConfirmedCount != 0);
