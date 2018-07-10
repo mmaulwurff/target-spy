@@ -32,6 +32,9 @@ user bool   m8f_ts_show_corpses  = false;
 user float  m8f_ts_step_mult     = 1.0;
 user bool   m8f_ts_alm_dead_cr   = true;
 user bool   m8f_class_as_tag     = false;
+user float  m8f_ts_cross_offset  = 0.0;
+user float  m8f_ts_top_offset    = 0.0;
+user float  m8f_ts_bot_offset    = 0.0;
 
 user int    m8f_ts_cr_0          =  6; // red
 user int    m8f_ts_cr_1          =  6; // red

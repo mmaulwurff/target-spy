@@ -121,7 +121,8 @@ function str TS_MakeHealthBar(int health
 
 int cachedColor = -1;
 function void TS_DrawCrosshair(int color, str cross, str crossTop, str crossBot,
-                               int playerN, int hasTarget)
+                               int playerN, int hasTarget,
+                               int crossOff, int topOff, int botOff)
 {
   if (cachedColor == color) { return; }
 
@@ -132,9 +133,9 @@ function void TS_DrawCrosshair(int color, str cross, str crossTop, str crossBot,
     }
 
   cachedColor = color;
-  HudMessage(s:crossTop; msgFlags, msgIdCrT, color, 0.5, 0.48, 0);
-  HudMessage(s:cross;    msgFlags, msgIdCrh, color, 0.5, 0.51, 0);
-  HudMessage(s:crossBot; msgFlags, msgIdCrB, color, 0.5, 0.54, 0);
+  HudMessage(s:crossTop; msgFlags, msgIdCrT, color, 0.5, 0.48 + topOff  , 0);
+  HudMessage(s:cross   ; msgFlags, msgIdCrh, color, 0.5, 0.51 + crossOff, 0);
+  HudMessage(s:crossBot; msgFlags, msgIdCrB, color, 0.5, 0.54 + botOff  , 0);
 }
 
 function void TS_HideCrosshair(void)
@@ -186,6 +187,9 @@ script "target-spy" ENTER
   int  stepMult  = GetUserCVar(playerN, "m8f_ts_step_mult");
   bool almDeadCr = GetUserCVar(playerN, "m8f_ts_alm_dead_cr");
   int  crAlmDead = GetUserCVar(playerN, "m8f_ts_cr_alm_dead");
+  int  crossOff  = GetUserCVar(playerN, "m8f_ts_cross_offset");
+  int  topOff    = GetUserCVar(playerN, "m8f_ts_top_offset");
+  int  botOff    = GetUserCVar(playerN, "m8f_ts_bot_offset");
   str  pip       = GetUserCVarString(playerN, "m8f_ts_pip");
   str  emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
   str  font      = GetUserCVarString(playerN, "m8f_ts_font");
@@ -196,9 +200,9 @@ script "target-spy" ENTER
   SetFont(font);
 
   int optionsUpdateCounter = 0;
-  int optionsUpdatePeriod  = 35;
+  int optionsUpdatePeriod  = 35 * 2;
 
-  str pipSource = "";
+  str pipSource      = "";
   str emptyPipSource = "";
   int i;
   for (i = 0; i < 50; ++i) pipSource      = StrParam(s:pipSource, s:pip);
@@ -235,6 +239,9 @@ script "target-spy" ENTER
           crAlmDead = GetUserCVar(playerN, "m8f_ts_cr_alm_dead");
           stepMult  = GetUserCVar(playerN, "m8f_ts_step_mult");
           almDeadCr = GetUserCVar(playerN, "m8f_ts_alm_dead_cr");
+          crossOff  = GetUserCVar(playerN, "m8f_ts_cross_offset");
+          topOff    = GetUserCVar(playerN, "m8f_ts_top_offset");
+          botOff    = GetUserCVar(playerN, "m8f_ts_bot_offset");
           pip       = GetUserCVarString(playerN, "m8f_ts_pip");
           emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
           font      = GetUserCVarString(playerN, "m8f_ts_font");
@@ -306,7 +313,9 @@ script "target-spy" ENTER
         {
           if (crossOn)
             {
-              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot, playerN, false);
+              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot,
+                               playerN, false,
+                               crossOff, topOff, botOff);
             }
           Delay(5);
           continue;
@@ -319,7 +328,9 @@ script "target-spy" ENTER
         {
           if (crossOn)
             {
-              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot, playerN, hasTarget);
+              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot,
+                               playerN, hasTarget,
+                               crossOff, topOff, botOff);
             }
           Delay(5);
           continue;
@@ -330,7 +341,9 @@ script "target-spy" ENTER
         {
           if (crossOn)
             {
-              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot, playerN, hasTarget);
+              TS_DrawCrosshair(crossCol, crosshair, crossTop, crossBot,
+                               playerN, hasTarget,
+                               crossOff, topOff, botOff);
             }
           Delay(5);
           continue;
@@ -425,7 +438,9 @@ script "target-spy" ENTER
 
       if (crossOn)
         {
-          TS_DrawCrosshair(color, crosshair, crossTop, crossBot, playerN, hasTarget);
+          TS_DrawCrosshair(color, crosshair, crossTop, crossBot,
+                           playerN, hasTarget,
+                           crossOff, topOff, botOff);
         }
 
       Delay(1);

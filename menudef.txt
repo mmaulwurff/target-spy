@@ -68,7 +68,22 @@ OptionMenu "m8f_ts_Options"
   Option "Vertical position"    , "m8f_ts_y"             , "m8f_ts_y_values"
 
   StaticText ""
-  StaticText "Crosshair", "Blue"
+  Submenu "Color Setup"      , "m8f_ts_ColorSetup"
+  Submenu "Crosshairs Setup" , "m8f_ts_Crosshairs"
+
+  StaticText ""
+  StaticText "Cross-mod options", "Blue"
+  Option "Special names for Champions" , "m8f_ts_show_champion", "OnOff"
+  StaticText "Champions is a monster mod by Mikk-", "Black"
+
+  StaticText ""
+}
+
+OptionMenu "m8f_ts_Crosshairs"
+{
+  Title "Target Spy Crosshairs setup"
+
+  StaticText ""
   Option "Enabled"   , "m8f_ts_crosshair_on", "OnOff"
   Option "Only on target", "m8f_ts_cross_only_tg", "OnOff"
 
@@ -84,12 +99,9 @@ OptionMenu "m8f_ts_Options"
   Command "Clear"    , "m8f_ts_cross_bottom \"\""
 
   StaticText ""
-  Submenu "Color Setup", "m8f_ts_ColorSetup"
-
-  StaticText ""
-  StaticText "Cross-mod options", "Blue"
-  Option "Special names for Champions" , "m8f_ts_show_champion", "OnOff"
-  StaticText "Champions is a monster mod by Mikk-", "Black"
+  Slider "Top part offset"    , "m8f_ts_top_offset"   , -0.1, 0.1, 0.005, 3
+  Slider "Middle part offset" , "m8f_ts_cross_offset" , -0.1, 0.1, 0.005, 3
+  Slider "Bottom part offset" , "m8f_ts_bot_offset"   , -0.1, 0.1, 0.005, 3
 
   StaticText ""
 }
