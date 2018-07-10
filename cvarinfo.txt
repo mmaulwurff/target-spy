@@ -30,6 +30,7 @@ user bool   m8f_ts_show_confirm  = false;
 user bool   m8f_ts_show_champion = true;
 user bool   m8f_ts_show_corpses  = false;
 user float  m8f_ts_step_mult     = 1.0;
+user bool   m8f_ts_alm_dead_cr   = true;
 
 // interface for other mods
 user bool   m8f_ts_has_target;

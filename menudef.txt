@@ -83,15 +83,28 @@ OptionMenu "m8f_ts_Options"
   Command "Clear"    , "m8f_ts_cross_bottom \"\""
 
   StaticText ""
+  Submenu "Target Spy Color Setup", "m8f_ts_ColorSetup"
+
+  StaticText ""
+  StaticText "Cross-mod options", "Blue"
+  Option "Special names for Champions" , "m8f_ts_show_champion", "OnOff"
+  StaticText "Champions is a monster mod by Mikk-", "Black"
+
+  StaticText ""
+}
+
+OptionMenu "m8f_ts_ColorSetup"
+{
+  Title "Target Spy Color Setup"
+
+  StaticText ""
   Option "Default crosshair color" , "m8f_ts_def_color_crs" , "TextColors"
   Option "Tag color"               , "m8f_ts_def_color_tag" , "TextColors"
   Option "Weaker enemy tag color"  , "m8f_ts_def_cl_tag_wk" , "TextColors"
   Option "Green-red HP bar theme"  , "m8f_ts_alt_hp_color"  , "OnOff"
 
   StaticText ""
-  StaticText "Cross-mod options", "Blue"
-  Option "Special names for Champions" , "m8f_ts_show_champion", "OnOff"
-  StaticText "Champions is a monster mod by Mikk-", "Black"
+  Option "Show special color for almost dead" , "m8f_ts_alm_dead_cr", "OnOff"
 
   StaticText ""
 }
