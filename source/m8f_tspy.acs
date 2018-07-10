@@ -146,26 +146,28 @@ function void TS_HideCrosshair(void)
 
 script "target-spy" ENTER
 {
+  int playerN = PlayerNumber();
+  SetUserCVar(playerN, "m8f_ts_version", 11);
+
   if (TS_IsTitlemap()) { terminate; }
 
   int colors[12] =
     {
-      CR_RED,
-      CR_RED,
-      CR_RED,
-      CR_ORANGE,
-      CR_ORANGE,
-      CR_ORANGE,
-      CR_GOLD,
-      CR_GOLD,
-      CR_GOLD,
-      CR_TAN,
-      CR_TAN,
-      CR_CYAN,
+      GetUserCVar(playerN, "m8f_ts_cr_0" ),
+      GetUserCVar(playerN, "m8f_ts_cr_1" ),
+      GetUserCVar(playerN, "m8f_ts_cr_2" ),
+      GetUserCVar(playerN, "m8f_ts_cr_3" ),
+      GetUserCVar(playerN, "m8f_ts_cr_4" ),
+      GetUserCVar(playerN, "m8f_ts_cr_5" ),
+      GetUserCVar(playerN, "m8f_ts_cr_6" ),
+      GetUserCVar(playerN, "m8f_ts_cr_7" ),
+      GetUserCVar(playerN, "m8f_ts_cr_8" ),
+      GetUserCVar(playerN, "m8f_ts_cr_9" ),
+      GetUserCVar(playerN, "m8f_ts_cr_10"),
+      GetUserCVar(playerN, "m8f_ts_cr_10")
     };
 
   bool isFreedoom = TS_IsFreeDoom();
-  int  playerN    = PlayerNumber();
 
   // options
   int  minHealth = GetUserCVar(playerN, "m8f_ts_min_health");
@@ -234,6 +236,19 @@ script "target-spy" ENTER
           pip       = GetUserCVarString(playerN, "m8f_ts_pip");
           emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
           font      = GetUserCVarString(playerN, "m8f_ts_font");
+
+          colors[ 0] = GetUserCVar(playerN, "m8f_ts_cr_0" );
+          colors[ 1] = GetUserCVar(playerN, "m8f_ts_cr_1" );
+          colors[ 2] = GetUserCVar(playerN, "m8f_ts_cr_2" );
+          colors[ 3] = GetUserCVar(playerN, "m8f_ts_cr_3" );
+          colors[ 4] = GetUserCVar(playerN, "m8f_ts_cr_4" );
+          colors[ 5] = GetUserCVar(playerN, "m8f_ts_cr_5" );
+          colors[ 6] = GetUserCVar(playerN, "m8f_ts_cr_6" );
+          colors[ 7] = GetUserCVar(playerN, "m8f_ts_cr_7" );
+          colors[ 8] = GetUserCVar(playerN, "m8f_ts_cr_8" );
+          colors[ 9] = GetUserCVar(playerN, "m8f_ts_cr_9" );
+          colors[10] = GetUserCVar(playerN, "m8f_ts_cr_10");
+          colors[11] = GetUserCVar(playerN, "m8f_ts_cr_11");
 
           SetFont(font);
 

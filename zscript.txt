@@ -169,7 +169,7 @@ class TSZScriptHelper : Actor
         "BD_ArchVile"           , "Arch-vile",
         "BD_BaronOfHell"        , "Baron Of Hell",
         "BD_Cacodemon"          , "Cacodemon",
-        "BD_ChaingunGuy"        , "Former Commando",
+        "BD_ChaingunGuy"        , "Chaingunner",
         "BD_CyberDemon"         , "Cyberdemon",
         "BD_Demon"              , "Demon",
         "BD_DoomImp"            , "Imp",
@@ -178,14 +178,13 @@ class TSZScriptHelper : Actor
         "BD_LostSoul"           , "Lost Soul",
         "BD_PainElemental"      , "Pain Elemental",
         "BD_Revenant"           , "Revenant",
-        "BD_ShotgunGuy"         , "Former Human Sergeant",
+        "BD_ShotgunGuy"         , "Sergeant",
         "BD_Spectre"            , "Spectre",
         "BD_SpiderMastermind"   , "Spider Mastermind",
         "BD_WolfensteinSS"      , "Wolfenstein SS",
-        "BD_ZombieMan"          , "Former Human",
         "BaronOfHell_free"      , "Pain Lord",
         "Cacodemon_free"        , "Trilobite",
-        "ChaingunGuy"           , "Former Commando",
+        "ChaingunGuy"           , "Chaingunner",
         "ChaingunGuy_free"      , "Minigun Zombie",
         "CommanderKeen_free"    , "Alien Spawn",
         "Cyberdemon_free"       , "Assault Tripod",
@@ -196,7 +195,7 @@ class TSZScriptHelper : Actor
         "EVPArchVile"           , "Arch-vile",
         "EVPBaron"              , "Baron Of Hell",
         "EVPCacodemon"          , "Cacodemon",
-        "EVPChaingunner"        , "Former Commando",
+        "EVPChaingunner"        , "Chaingunner",
         "EVPCyberdemon"         , "Cyberdemon",
         "EVPDemon"              , "Demon",
         "EVPHellKnight"         , "Hell Knight",
@@ -205,30 +204,32 @@ class TSZScriptHelper : Actor
         "EVPMancubus"           , "Mancubus",
         "EVPPainElemental"      , "Pain Elemental",
         "EVPRevenant"           , "Revenant",
-        "EVPShotgunner"         , "Former Human Sergeant",
+        "EVPShotgunner"         , "Sergeant",
         "EVPSpectre"            , "Spectre",
         "EVPSpiderMastermind"   , "Spider Mastermind",
-        "EVPZombieman"          , "Former Human",
         "Fatso"                 , "Mancubus",
         "Fatso_free"            , "Combat Slug",
         "LostSoul_free"         , "Deadflare",
         "PainElemental_free"    , "Summoner",
         "Revenant_free"         , "Dark Soldier",
-        "ShotgunGuy"            , "Former Human Sergeant",
+        "ShotgunGuy"            , "Sergeant",
         "ShotgunGuy_free"       , "Shotgun Zombie",
         "SpiderMastermind_free" , "Large Technospider",
         "WolfensteinSS_free"    , "Sailor",
-        "ZombieMan_free"        , "Zombie",
-        "Zombieman"             , "Former Human"
+        "ZombieMan_free"        , "Zombie"
       };
-    int size = 58;
+    int size = 55;
 
     // protect agains no target
     Actor target = GetTarget(a);
     if (target == null) { SendResultString(player, "unknown"); return; }
 
-    // to give Freedoom monsters special names
     string targetClass = target.GetClassName();
+
+    bool showInternalNames = CVar.GetCVar("m8f_class_as_tag", player).GetInt();
+    if (showInternalNames) { SendResultString(player, targetClass); return; }
+
+    // to give Freedoom monsters special names
     if (isFreedoom) { targetClass.AppendFormat("_free"); }
 
     // if target name was found before, just return it

@@ -31,6 +31,25 @@ user bool   m8f_ts_show_champion = true;
 user bool   m8f_ts_show_corpses  = false;
 user float  m8f_ts_step_mult     = 1.0;
 user bool   m8f_ts_alm_dead_cr   = true;
+user bool   m8f_class_as_tag     = false;
+
+user int    m8f_ts_cr_0          =  6; // red
+user int    m8f_ts_cr_1          =  6; // red
+user int    m8f_ts_cr_2          =  6; // red
+user int    m8f_ts_cr_3          =  8; // orange
+user int    m8f_ts_cr_4          =  8; // orange
+user int    m8f_ts_cr_5          =  8; // orange
+user int    m8f_ts_cr_6          =  5; // gold
+user int    m8f_ts_cr_7          =  5; // gold
+user int    m8f_ts_cr_8          =  5; // gold
+user int    m8f_ts_cr_9          =  1; // tan
+user int    m8f_ts_cr_10         =  1; // tan
+user int    m8f_ts_cr_11         = 21; // cyan
+
+user int    m8f_ts_cr_alm_dead   = 12; // black
 
 // interface for other mods
 user bool   m8f_ts_has_target;
+
+// logs
+user int m8f_ts_version;
