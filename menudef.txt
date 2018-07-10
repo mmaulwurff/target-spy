@@ -114,7 +114,6 @@ OptionMenu "m8f_ts_ColorSetup"
   Option "Default crosshair color" , "m8f_ts_def_color_crs" , "TextColors"
   Option "Tag color"               , "m8f_ts_def_color_tag" , "TextColors"
   Option "Weaker enemy tag color"  , "m8f_ts_def_cl_tag_wk" , "TextColors"
-  Option "Green-red HP bar theme"  , "m8f_ts_alt_hp_color"  , "OnOff"
 
   StaticText ""
   Option "Show special color for almost dead" , "m8f_ts_alm_dead_cr", "OnOff"
@@ -134,6 +133,12 @@ OptionMenu "m8f_ts_ColorSetup"
   Option " 90%"       , "m8f_ts_cr_9"  , "TextColors"
   Option "100%"       , "m8f_ts_cr_10" , "TextColors"
   Option "Overhealed" , "m8f_ts_cr_11" , "TextColors"
+
+  StaticText ""
+  StaticText "Alternative two-color theme", "Blue"
+  Option "Enabled"      , "m8f_ts_alt_hp_color" , "OnOff"
+  Option "Filled color" , "m8f_ts_green_color"  , "TextColors"
+  Option "Empty color"  , "m8f_ts_red_color"    , "TextColors"
 
   StaticText ""
 }

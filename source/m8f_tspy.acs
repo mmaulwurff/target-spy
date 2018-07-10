@@ -98,7 +98,9 @@ function str TS_MakeHealthBar(int health
                               , bool logScale
                               , str pipSource
                               , str emptyPipSource
-                              , bool greenRedTheme)
+                              , bool greenRedTheme
+                              , int greenColor
+                              , int redColor)
 {
   int length;
   if      (logScale)          { length = TS_Log2(maxHealth) * 2; }
@@ -112,8 +114,16 @@ function str TS_MakeHealthBar(int health
 
   str pipColor;
   str emptyColor;
-  if (greenRedTheme) { pipColor = "\cd"; emptyColor = "\cg"; }
-  else               { pipColor = "";    emptyColor = "";    }
+  if (greenRedTheme)
+    {
+      pipColor   = StrParam(s:"\c", c:'a' + greenColor);
+      emptyColor = StrParam(s:"\c", c:'a' + redColor);
+    }
+  else
+    {
+      pipColor   = "";
+      emptyColor = "";
+    }
 
   return StrParam(s:pipColor,   s:StrLeft(pipSource,      pips),
                   s:emptyColor, s:StrLeft(emptyPipSource, length - pips));
@@ -190,6 +200,9 @@ script "target-spy" ENTER
   int  crossOff  = GetUserCVar(playerN, "m8f_ts_cross_offset");
   int  topOff    = GetUserCVar(playerN, "m8f_ts_top_offset");
   int  botOff    = GetUserCVar(playerN, "m8f_ts_bot_offset");
+  int  greenCr   = GetUserCVar(playerN, "m8f_ts_green_color");
+  int  redCr     = GetUserCVar(playerN, "m8f_ts_red_color");
+
   str  pip       = GetUserCVarString(playerN, "m8f_ts_pip");
   str  emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
   str  font      = GetUserCVarString(playerN, "m8f_ts_font");
@@ -242,6 +255,9 @@ script "target-spy" ENTER
           crossOff  = GetUserCVar(playerN, "m8f_ts_cross_offset");
           topOff    = GetUserCVar(playerN, "m8f_ts_top_offset");
           botOff    = GetUserCVar(playerN, "m8f_ts_bot_offset");
+          greenCr   = GetUserCVar(playerN, "m8f_ts_green_color");
+          redCr     = GetUserCVar(playerN, "m8f_ts_red_color");
+
           pip       = GetUserCVarString(playerN, "m8f_ts_pip");
           emptyPip  = GetUserCVarString(playerN, "m8f_ts_empty_pip");
           font      = GetUserCVarString(playerN, "m8f_ts_font");
@@ -369,7 +385,7 @@ script "target-spy" ENTER
             {
               hpBarCached = TS_MakeHealthBar(targetHealth, targetMaxHealth,
                                              logScale, pipSource, emptyPipSource,
-                                             altHpCols);
+                                             altHpCols, greenCr, redCr);
               hpBarCacheHealth    = targetHealth;
               hpBarCacheMaxHealth = targetMaxHealth;
             }

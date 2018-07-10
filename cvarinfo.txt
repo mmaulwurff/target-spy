@@ -35,6 +35,8 @@ user bool   m8f_class_as_tag     = false;
 user float  m8f_ts_cross_offset  = 0.0;
 user float  m8f_ts_top_offset    = 0.0;
 user float  m8f_ts_bot_offset    = 0.0;
+user int    m8f_ts_green_color   = 3;
+user int    m8f_ts_red_color     = 6;
 
 user int    m8f_ts_cr_0          =  6; // red
 user int    m8f_ts_cr_1          =  6; // red
