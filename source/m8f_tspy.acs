@@ -366,8 +366,8 @@ script "target-spy" ENTER
         }
 
       int tagColor;
-      if (targetHealth < 100) { tagColor = weakCol; }
-      else                    { tagColor = nameCol; }
+      if (targetMaxHealth < 100) { tagColor = weakCol; }
+      else                       { tagColor = nameCol; }
 
       int percent = 10;
       if (showHealth)   { percent = targetHealth * 10 / targetMaxHealth; }
@@ -376,7 +376,7 @@ script "target-spy" ENTER
       int color = colors[percent];
       if (targetHealth < 35 && almDeadCr) { color = crAlmDead; }
       if (targetHealth < 1)               { color = crAlmDead; }
-      if (altHpCols)                      { color = tagColor; }
+      if (altHpCols && targetHealth > 0)  { color = tagColor;  }
 
       if (showBar && showHealth)
         {
