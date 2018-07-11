@@ -278,7 +278,6 @@ class TSZScriptHelper : Actor
 
   static Actor GetTarget(Actor a)
   {
-
     static const string blackList[] =
       {
         "m8f_aas_token",
@@ -286,9 +285,10 @@ class TSZScriptHelper : Actor
         "AutoautosaveAlertToken",
         "AutoautosaveAlerter",
         "AutoautosaveBossAlerter",
-        "UGGib_Corpse_Shootable"
+        "UGGib_Corpse_Shootable",
+        "VoidField"
       };
-    int blackListSize = 6;
+    int blackListSize = 7;
 
     let player = a.player;
     if (!player) { return null; }
@@ -318,6 +318,11 @@ class TSZScriptHelper : Actor
     // give up
     if (target == null) { return null; }
 
+    for (int i = 0; i < blackListSize; ++i)
+      {
+        if (target is blackList[i]) { return null; }
+      }
+
     if (target.bISMONSTER)
       {
         if (target.bSHADOW || target.bSTEALTH)
@@ -328,11 +333,6 @@ class TSZScriptHelper : Actor
       }
     else // not monsters
       {
-        for (int i = 0; i < blackListSize; ++i)
-          {
-            if (target is blackList[i]) { return null; }
-          }
-
         switch (showObjects)
           {
           case 0: return null;
