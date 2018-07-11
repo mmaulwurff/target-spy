@@ -390,13 +390,32 @@ class TSZScriptHelper : Actor
   static void GetAdditionalTargetInfo(Actor a)
   {
     if (!a) { return; }
+    PlayerInfo player =  a.player;
+    if (!player) { return; }
 
     Actor target = GetTarget(a);
-    if (target == null) { SendResultString(a.player, ""); return; }
+    if (target == null) { SendResultString(player, ""); return; }
 
-    if      (target.bBOSS)     { SendResultString(a.player, "Boss"); }
-    else if (target.bFRIENDLY) { SendResultString(a.player, "Friendly"); }
-    else                       { SendResultString(a.player, ""); }
+    string result = "";
+
+    if (target.bFRIENDLY)
+      {
+        result = "Friendly";
+      }
+
+    if (target.bINVULNERABLE)
+      {
+        if (result.Length() > 0) { result.AppendFormat(" "); }
+        result.AppendFormat("Invulnerable");
+      }
+
+    if (target.bBOSS)
+      {
+        if (result.Length() > 0) { result.AppendFormat(" "); }
+        result.AppendFormat("Boss");
+      }
+
+    SendResultString(player, result);
   }
 
 }
