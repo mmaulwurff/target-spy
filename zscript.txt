@@ -418,6 +418,20 @@ class TSZScriptHelper : Actor
     SendResultString(player, result);
   }
 
+  static void CustomTargetColor(Actor a)
+  {
+    if (!a) { return; }
+    PlayerInfo player =  a.player;
+    if (!player) { return; }
+
+    Actor target = GetTarget(a);
+    if (target == null) { SendResultInt(player, 0); return; }
+
+    string customColorTokenClass = "tr_color_token";
+    int customColor = target.CountInv(customColorTokenClass);
+    SendResultInt(player, customColor);
+  }
+
 }
 
 class TagCache : Thinker

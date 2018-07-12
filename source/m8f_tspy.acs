@@ -55,6 +55,13 @@ function int TS_GetTargetMaxHealth(int playerN)
   return targetHealth;
 }
 
+function int TS_GetCustomTargetColor(int playerN)
+{
+  ScriptCall("TSZScriptHelper", "CustomTargetColor");
+  int customColor = GetUserCVar(playerN, "m8f_ts_ResultInt");
+  return customColor;
+}
+
 function bool TS_IsFreedoom(void)
 {
   str impName = StrParam(l:"CC_IMP");
@@ -368,6 +375,8 @@ script "target-spy" ENTER
       int tagColor;
       if (targetMaxHealth < 100) { tagColor = weakCol; }
       else                       { tagColor = nameCol; }
+      int customColor = TS_GetCustomTargetColor(playerN);
+      if (customColor)           { tagColor = customColor; }
 
       int percent = 10;
       if (showHealth)   { percent = targetHealth * 10 / targetMaxHealth; }
