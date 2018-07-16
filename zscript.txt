@@ -432,6 +432,18 @@ class TSZScriptHelper : Actor
     SendResultInt(player, customColor);
   }
 
+  static void HealTarget(Actor a, int amount)
+  {
+    if (!a) { return; }
+    PlayerInfo player =  a.player;
+    if (!player) { return; }
+
+    Actor target = GetTarget(a);
+    if (target == null) { return; }
+
+    Console.Printf("%d", (target.Health * 10) / target.SpawnHealth());
+    target.Health += amount;
+  }
 }
 
 class TagCache : Thinker

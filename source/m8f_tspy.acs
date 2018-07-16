@@ -34,6 +34,16 @@
 
 #define defaultNewline 0.03
 
+script "TS_HealTarget" (void)
+{
+  ScriptCall("TSZScriptHelper", "HealTarget", 1);
+}
+
+script "TS_DamageTarget" (void)
+{
+  ScriptCall("TSZScriptHelper", "HealTarget", -1);
+}
+
 function bool TS_TargetIsPresent(int playerN)
 {
   ScriptCall("TSZScriptHelper", "TargetIsPresent");
@@ -182,7 +192,7 @@ script "target-spy" ENTER
       GetUserCVar(playerN, "m8f_ts_cr_8" ),
       GetUserCVar(playerN, "m8f_ts_cr_9" ),
       GetUserCVar(playerN, "m8f_ts_cr_10"),
-      GetUserCVar(playerN, "m8f_ts_cr_10")
+      GetUserCVar(playerN, "m8f_ts_cr_11")
     };
 
   bool isFreedoom = TS_IsFreeDoom();
@@ -379,8 +389,11 @@ script "target-spy" ENTER
       if (customColor)           { tagColor = customColor; }
 
       int percent = 10;
-      if (showHealth)   { percent = targetHealth * 10 / targetMaxHealth; }
-      if (percent > 10) { percent = 11; }
+      if (showHealth)
+        {
+          if (targetHealth > targetMaxHealth) { percent = 11; }
+          else { percent = targetHealth * 10 / targetMaxHealth; }
+        }
 
       int color = colors[percent];
       if (targetHealth < 35 && almDeadCr) { color = crAlmDead; }
