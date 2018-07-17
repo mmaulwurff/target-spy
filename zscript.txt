@@ -103,53 +103,16 @@ class TSZScriptHelper : Actor
     bool showChampion = CVar.GetCVar("m8f_ts_show_champion", player).GetInt();
     if (!showChampion) { return name; }
 
-    static const string championTokens[] =
-      {
-        "champion_BlackToken"     , "Brutal",
-        "champion_BlueToken"      , "Retaliating",
-        "champion_BronzeToken"    , "Tough",
-        "champion_CyanToken"      , "Vortex",
-        "champion_DarkGreenToken" , "Toxic",
-        "champion_DarkRedToken"   , "Reanimating",
-        "champion_GoldToken"      , "Golden",
-        "champion_GreenToken"     , "Phasing",
-        "champion_GreyToken"      , "Nimble",
-        "champion_IndigoToken"    , "Fissile",
-        "champion_OrangeToken"    , "Exploding",
-        "champion_PinkToken"      , "Healer",
-        "champion_RedToken"       , "Sturdy",
-        "champion_SilverToken"    , "Reflective",
-        "champion_VioletToken"    , "Relentless",
-        "champion_WhiteToken"     , "Restraining",
-        "champion_YellowToken"    , "Fast"
-      };
-    int size = 17;
-
     string tokenClass = "champion_Token";
     Inventory token = target.FindInventory(tokenClass, true);
     if (!token) { return name; }
 
     string tokenClassName = token.GetClassName();
-    string championColor  = "Champion"; // default, if token is not found
+    string championTag    = m8f_ts_Data.get().championTokens.get(tokenClassName);
+    if (championTag.Length() == 0) { championTag = "Champion"; }
 
-    // binary search
-    int L = 0;
-    int R = size - 1;
-    while (L <= R)
-      {
-        int m = (L + R) / 2;
-        string current = championTokens[m * 2];
-        if      (current <  tokenClassName) { L = m + 1; continue; }
-        else if (current >  tokenClassName) { R = m - 1; continue; }
-        else if (current == tokenClassName)
-          {
-            championColor = championTokens[m * 2 + 1];
-            championColor.AppendFormat(" %s", name);
-            return championColor;
-          }
-      }
-
-    return championColor;
+    championTag.AppendFormat(" %s", name);
+    return championTag;
   }
 
   static void GetTargetName(Actor a, bool isFreedoom)
@@ -157,68 +120,6 @@ class TSZScriptHelper : Actor
     if (!a) { return; }
     PlayerInfo player =  a.player;
     if (!player) { return; }
-
-    // must be sorted!
-    // when you add new lines, don't forget to update the size below!
-    static const string specialNames[] =
-      {
-        "Arachnotron_free"      , "Technospider",
-        "Archvile"              , "Arch-vile",
-        "Archvile_free"         , "Flame Bringer",
-        "BD_Arachnotron"        , "Arachnotron",
-        "BD_ArchVile"           , "Arch-vile",
-        "BD_BaronOfHell"        , "Baron Of Hell",
-        "BD_Cacodemon"          , "Cacodemon",
-        "BD_ChaingunGuy"        , "Chaingunner",
-        "BD_CyberDemon"         , "Cyberdemon",
-        "BD_Demon"              , "Demon",
-        "BD_DoomImp"            , "Imp",
-        "BD_Fatso"              , "Mancubus",
-        "BD_HellKnight"         , "Hell Knight",
-        "BD_LostSoul"           , "Lost Soul",
-        "BD_PainElemental"      , "Pain Elemental",
-        "BD_Revenant"           , "Revenant",
-        "BD_ShotgunGuy"         , "Sergeant",
-        "BD_Spectre"            , "Spectre",
-        "BD_SpiderMastermind"   , "Spider Mastermind",
-        "BD_WolfensteinSS"      , "Wolfenstein SS",
-        "BaronOfHell_free"      , "Pain Lord",
-        "Cacodemon_free"        , "Trilobite",
-        "ChaingunGuy"           , "Chaingunner",
-        "ChaingunGuy_free"      , "Minigun Zombie",
-        "CommanderKeen_free"    , "Alien Spawn",
-        "Cyberdemon_free"       , "Assault Tripod",
-        "Demon_free"            , "Flesh Worm",
-        "DoomImp"               , "Imp",
-        "DoomImp_free"          , "Serpentipede",
-        "EVPArachnotron"        , "Arachnotron",
-        "EVPArchVile"           , "Arch-vile",
-        "EVPBaron"              , "Baron Of Hell",
-        "EVPCacodemon"          , "Cacodemon",
-        "EVPChaingunner"        , "Chaingunner",
-        "EVPCyberdemon"         , "Cyberdemon",
-        "EVPDemon"              , "Demon",
-        "EVPHellKnight"         , "Hell Knight",
-        "EVPImp"                , "Imp",
-        "EVPLostSoul"           , "Lost Soul",
-        "EVPMancubus"           , "Mancubus",
-        "EVPPainElemental"      , "Pain Elemental",
-        "EVPRevenant"           , "Revenant",
-        "EVPShotgunner"         , "Sergeant",
-        "EVPSpectre"            , "Spectre",
-        "EVPSpiderMastermind"   , "Spider Mastermind",
-        "Fatso"                 , "Mancubus",
-        "Fatso_free"            , "Combat Slug",
-        "LostSoul_free"         , "Deadflare",
-        "PainElemental_free"    , "Summoner",
-        "Revenant_free"         , "Dark Soldier",
-        "ShotgunGuy"            , "Sergeant",
-        "ShotgunGuy_free"       , "Shotgun Zombie",
-        "SpiderMastermind_free" , "Large Technospider",
-        "WolfensteinSS_free"    , "Sailor",
-        "ZombieMan_free"        , "Zombie"
-      };
-    int size = 55;
 
     // protect agains no target
     Actor target = GetTarget(a);
@@ -242,30 +143,20 @@ class TSZScriptHelper : Actor
 
     // if target name is set via actor tag, return it
     string targetName = target.GetTag();
-    if (targetName != targetClass)
+    if (targetName != targetClass && !isFreedoom)
       {
         cache.SetCache(targetClass, targetName);
         SendResultString(player, AddAdditionalInfo(a, target, targetName));
         return;
       }
 
-    // try to find target tag in override list
-    // binary search
-    int L = 0;
-    int R = size - 1;
-    while (L <= R)
+    string specialName = m8f_ts_Data.get().specialNames.get(targetClass);
+    if (specialName.Length() != 0)
       {
-        int m = (L + R) / 2;
-        string current = specialNames[m * 2];
-        if      (current <  targetClass) { L = m + 1; continue; }
-        else if (current >  targetClass) { R = m - 1; continue; }
-        else if (current == targetClass)
-          {
-            targetName = specialNames[m * 2 + 1];
-            cache.SetCache(targetClass, targetName);
-            SendResultString(player, AddAdditionalInfo(a, target, targetName));
-            return;
-          }
+        targetName = specialName;
+        cache.SetCache(targetClass, targetName);
+        SendResultString(player, AddAdditionalInfo(a, target, targetName));
+        return;
       }
 
     // if target name is not found, compose tag from class name
@@ -523,4 +414,228 @@ class m8f_ts_InvisiblePuff : Actor
   }
 
   States { Spawn: TNT1 A 0; Stop; }
+}
+
+class m8f_ts_StringSet
+{
+  Array<string> values;
+
+  void print()
+  {
+    uint size = values.size();
+    Console.Printf("Size: %d", size);
+    for (int i = 0; i < size; ++i)
+      {
+        Console.Printf(values[i]);
+      }
+  }
+
+  void push(string s)
+  {
+    // array is sorted
+    uint size = values.size();
+    uint i    = 0;
+    for (; i < size && values[i] < s; ++i);
+    values.insert(i, s);
+  }
+
+  bool contains(string s)
+  {
+    // binary search
+    int size = values.size();
+    int L    = 0;
+    int R    = size - 1;
+
+    while (L <= R)
+      {
+        int m = (L + R) / 2;
+        string current = values[m];
+        if      (current <  s) { L = m + 1; }
+        else if (current >  s) { R = m - 1; }
+        else if (current == s) { return true; }
+      }
+    return false;
+  }
+}
+
+class m8f_ts_StringMap
+{
+  Array<string> keys;
+  Array<string> values;
+
+  void print()
+  {
+    uint size = values.size();
+    Console.Printf("Size: %d", size);
+    for (int i = 0; i < size; ++i)
+      {
+        Console.Printf("%s: %s", keys[i], values[i]);
+      }
+  }
+
+  void push(string key, string value)
+  {
+    // array is sorted
+    uint size = values.size();
+    uint i    = 0;
+    for (; i < size && keys[i] < key; ++i);
+    keys.insert(i, key);
+    values.insert(i, value);
+  }
+
+  string get(string key)
+  {
+    // binary search
+    int size = values.size();
+    int L    = 0;
+    int R    = size - 1;
+
+    while (L <= R)
+      {
+        int m = (L + R) / 2;
+        string current = keys[m];
+        if      (current <  key) { L = m + 1; }
+        else if (current >  key) { R = m - 1; }
+        else if (current == key) { return values[m]; }
+      }
+    return "";
+  }
+}
+
+class m8f_ts_StringSetTester : Actor
+{
+  States { Spawn: TNT1 A 0; TNT1 A 0
+    {
+
+      let set = new("m8f_ts_StringSet");
+      set.push("3three");
+      set.push("2two");
+      set.push("1one");
+      set.push("4");
+      set.push("2two");
+      set.print();
+
+      Console.Printf("%d", set.contains("4"));
+      Console.Printf("%d", set.contains("5"));
+      Console.Printf("%d", set.contains("2two"));
+
+    } stop; }
+}
+
+class m8f_ts_StringMapTester : Actor
+{
+  States { Spawn: TNT1 A 0; TNT1 A 0
+    {
+
+      let set = new("m8f_ts_StringMap");
+      set.push("3", "three");
+      set.push("2", "two");
+      set.push("1", "one");
+      set.push("4", "four");
+      set.push("2", "two");
+      set.print();
+
+      Console.Printf("%s", set.get("4"));
+      Console.Printf("%s", set.get("5"));
+      Console.Printf("%s", set.get("2two"));
+      Console.Printf("%s", set.get("2"));
+
+    } stop; }
+}
+
+class m8f_ts_Data : Thinker
+{
+  m8f_ts_StringMap championTokens;
+  m8f_ts_StringMap specialNames;
+
+  m8f_ts_Data init()
+  {
+    championTokens = new("m8f_ts_StringMap");
+    specialNames   = new("m8f_ts_StringMap");
+
+    championTokens.push( "champion_BlackToken"     , "Brutal"      );
+    championTokens.push( "champion_BlueToken"      , "Retaliating" );
+    championTokens.push( "champion_BronzeToken"    , "Tough"       );
+    championTokens.push( "champion_CyanToken"      , "Vortex"      );
+    championTokens.push( "champion_DarkGreenToken" , "Toxic"       );
+    championTokens.push( "champion_DarkRedToken"   , "Reanimating" );
+    championTokens.push( "champion_GoldToken"      , "Golden"      );
+    championTokens.push( "champion_GreenToken"     , "Phasing"     );
+    championTokens.push( "champion_GreyToken"      , "Nimble"      );
+    championTokens.push( "champion_IndigoToken"    , "Fissile"     );
+    championTokens.push( "champion_OrangeToken"    , "Exploding"   );
+    championTokens.push( "champion_PinkToken"      , "Healer"      );
+    championTokens.push( "champion_RedToken"       , "Sturdy"      );
+    championTokens.push( "champion_SilverToken"    , "Reflective"  );
+    championTokens.push( "champion_VioletToken"    , "Relentless"  );
+    championTokens.push( "champion_WhiteToken"     , "Restraining" );
+    championTokens.push( "champion_YellowToken"    , "Fast"        );
+
+    specialNames.push( "Arachnotron_free"      , "Technospider"       );
+    specialNames.push( "Archvile"              , "Arch-vile"          );
+    specialNames.push( "Archvile_free"         , "Flame Bringer"      );
+    specialNames.push( "BD_Arachnotron"        , "Arachnotron"        );
+    specialNames.push( "BD_ArchVile"           , "Arch-vile"          );
+    specialNames.push( "BD_BaronOfHell"        , "Baron Of Hell"      );
+    specialNames.push( "BD_Cacodemon"          , "Cacodemon"          );
+    specialNames.push( "BD_ChaingunGuy"        , "Chaingunner"        );
+    specialNames.push( "BD_CyberDemon"         , "Cyberdemon"         );
+    specialNames.push( "BD_Demon"              , "Demon"              );
+    specialNames.push( "BD_DoomImp"            , "Imp"                );
+    specialNames.push( "BD_Fatso"              , "Mancubus"           );
+    specialNames.push( "BD_HellKnight"         , "Hell Knight"        );
+    specialNames.push( "BD_LostSoul"           , "Lost Soul"          );
+    specialNames.push( "BD_PainElemental"      , "Pain Elemental"     );
+    specialNames.push( "BD_Revenant"           , "Revenant"           );
+    specialNames.push( "BD_ShotgunGuy"         , "Sergeant"           );
+    specialNames.push( "BD_Spectre"            , "Spectre"            );
+    specialNames.push( "BD_SpiderMastermind"   , "Spider Mastermind"  );
+    specialNames.push( "BD_WolfensteinSS"      , "Wolfenstein SS"     );
+    specialNames.push( "BaronOfHell_free"      , "Pain Lord"          );
+    specialNames.push( "Cacodemon_free"        , "Trilobite"          );
+    specialNames.push( "ChaingunGuy"           , "Chaingunner"        );
+    specialNames.push( "ChaingunGuy_free"      , "Minigun Zombie"     );
+    specialNames.push( "CommanderKeen_free"    , "Alien Spawn"        );
+    specialNames.push( "Cyberdemon_free"       , "Assault Tripod"     );
+    specialNames.push( "Demon_free"            , "Flesh Worm"         );
+    specialNames.push( "DoomImp"               , "Imp"                );
+    specialNames.push( "DoomImp_free"          , "Serpentipede"       );
+    specialNames.push( "EVPArachnotron"        , "Arachnotron"        );
+    specialNames.push( "EVPArchVile"           , "Arch-vile"          );
+    specialNames.push( "EVPBaron"              , "Baron Of Hell"      );
+    specialNames.push( "EVPCacodemon"          , "Cacodemon"          );
+    specialNames.push( "EVPChaingunner"        , "Chaingunner"        );
+    specialNames.push( "EVPCyberdemon"         , "Cyberdemon"         );
+    specialNames.push( "EVPDemon"              , "Demon"              );
+    specialNames.push( "EVPHellKnight"         , "Hell Knight"        );
+    specialNames.push( "EVPImp"                , "Imp"                );
+    specialNames.push( "EVPLostSoul"           , "Lost Soul"          );
+    specialNames.push( "EVPMancubus"           , "Mancubus"           );
+    specialNames.push( "EVPPainElemental"      , "Pain Elemental"     );
+    specialNames.push( "EVPRevenant"           , "Revenant"           );
+    specialNames.push( "EVPShotgunner"         , "Sergeant"           );
+    specialNames.push( "EVPSpectre"            , "Spectre"            );
+    specialNames.push( "EVPSpiderMastermind"   , "Spider Mastermind"  );
+    specialNames.push( "Fatso"                 , "Mancubus"           );
+    specialNames.push( "Fatso_free"            , "Combat Slug"        );
+    specialNames.push( "LostSoul_free"         , "Deadflare"          );
+    specialNames.push( "PainElemental_free"    , "Summoner"           );
+    specialNames.push( "Revenant_free"         , "Dark Soldier"       );
+    specialNames.push( "ShotgunGuy"            , "Sergeant"           );
+    specialNames.push( "ShotgunGuy_free"       , "Shotgun Zombie"     );
+    specialNames.push( "SpiderMastermind_free" , "Large Technospider" );
+    specialNames.push( "WolfensteinSS_free"    , "Sailor"             );
+    specialNames.push( "ZombieMan_free"        , "Zombie"             );
+
+    return self;
+  }
+
+  static m8f_ts_Data get()
+  {
+    let it = ThinkerIterator.Create("m8f_ts_Data", STAT_INFO);
+    let p  = m8f_ts_Data(it.Next());
+
+    if (p != null) { return p; }
+    else           { return new("m8f_ts_Data").init(); }
+  }
 }
