@@ -169,18 +169,6 @@ class TSZScriptHelper : Actor
 
   static Actor GetTarget(Actor a)
   {
-    static const string blackList[] =
-      {
-        "m8f_aas_token",
-        "AutoautosaveToken",
-        "AutoautosaveAlertToken",
-        "AutoautosaveAlerter",
-        "AutoautosaveBossAlerter",
-        "UGGib_Corpse_Shootable",
-        "VoidField"
-      };
-    int blackListSize = 7;
-
     let player = a.player;
     if (!player) { return null; }
 
@@ -209,14 +197,13 @@ class TSZScriptHelper : Actor
     // give up
     if (target == null) { return null; }
 
+    let    data          = m8f_ts_Data.get();
     string targetClass   = target.GetClassName();
-    bool   targetIsSlave = m8f_ts_Data.get().slaveActors.contains(targetClass);
+    bool   targetIsSlave = data.slaveActors.contains(targetClass);
     if (targetIsSlave) { return target.Master; }
 
-    for (int i = 0; i < blackListSize; ++i)
-      {
-        if (target is blackList[i]) { return null; }
-      }
+    bool isInBlackList = data.blackList.contains(targetClass);
+    if (isInBlackList) { return null; }
 
     if (target.bISMONSTER)
       {
@@ -552,12 +539,14 @@ class m8f_ts_Data : Thinker
   m8f_ts_StringMap championTokens;
   m8f_ts_StringMap specialNames;
   m8f_ts_StringSet slaveActors;
+  m8f_ts_StringSet blackList;
 
   m8f_ts_Data init()
   {
     championTokens = new("m8f_ts_StringMap");
     specialNames   = new("m8f_ts_StringMap");
     slaveActors    = new("m8f_ts_StringSet");
+    blackList      = new("m8f_ts_StringSet");
 
     championTokens.push( "champion_BlackToken"     , "Brutal"      );
     championTokens.push( "champion_BlueToken"      , "Retaliating" );
@@ -650,6 +639,14 @@ class m8f_ts_Data : Thinker
     slaveActors.push( "HeadshotTargetPainElemental" );
     slaveActors.push( "HeadshotTargetDemon"         );
     slaveActors.push( "HeadshotTargetCyberdemon"    );
+
+    blackList.push( "m8f_aas_token"           );
+    blackList.push( "AutoautosaveToken"       );
+    blackList.push( "AutoautosaveAlertToken"  );
+    blackList.push( "AutoautosaveAlerter"     );
+    blackList.push( "AutoautosaveBossAlerter" );
+    blackList.push( "UGGib_Corpse_Shootable"  );
+    blackList.push( "VoidField"               );
 
     return self;
   }
