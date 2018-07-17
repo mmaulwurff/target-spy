@@ -209,6 +209,10 @@ class TSZScriptHelper : Actor
     // give up
     if (target == null) { return null; }
 
+    string targetClass   = target.GetClassName();
+    bool   targetIsSlave = m8f_ts_Data.get().slaveActors.contains(targetClass);
+    if (targetIsSlave) { return target.Master; }
+
     for (int i = 0; i < blackListSize; ++i)
       {
         if (target is blackList[i]) { return null; }
@@ -547,11 +551,13 @@ class m8f_ts_Data : Thinker
 {
   m8f_ts_StringMap championTokens;
   m8f_ts_StringMap specialNames;
+  m8f_ts_StringSet slaveActors;
 
   m8f_ts_Data init()
   {
     championTokens = new("m8f_ts_StringMap");
     specialNames   = new("m8f_ts_StringMap");
+    slaveActors    = new("m8f_ts_StringSet");
 
     championTokens.push( "champion_BlackToken"     , "Brutal"      );
     championTokens.push( "champion_BlueToken"      , "Retaliating" );
@@ -626,6 +632,24 @@ class m8f_ts_Data : Thinker
     specialNames.push( "SpiderMastermind_free" , "Large Technospider" );
     specialNames.push( "WolfensteinSS_free"    , "Sailor"             );
     specialNames.push( "ZombieMan_free"        , "Zombie"             );
+
+    slaveActors.push( "HeadshotTargetZombie"        );
+    slaveActors.push( "HeadshotTargetEliteZombie"   );
+    slaveActors.push( "HeadshotTargetImp"           );
+    slaveActors.push( "HeadshotTargetAngryImp"      );
+    slaveActors.push( "HeadshotTargetNoble"         );
+    slaveActors.push( "HeadshotTargetEliteNoble"    );
+    slaveActors.push( "HeadshotTargetBossNoble"     );
+    slaveActors.push( "HeadshotTargetArchvile"      );
+    slaveActors.push( "HeadshotTargetEliteArchvile" );
+    slaveActors.push( "HeadshotTargetRevenant"      );
+    slaveActors.push( "HeadshotTargetEliteRevenant" );
+    slaveActors.push( "HeadshotTargetMancubus"      );
+    slaveActors.push( "HeadshotTargetSoulCommander" );
+    slaveActors.push( "HeadshotTargetCacodemon"     );
+    slaveActors.push( "HeadshotTargetPainElemental" );
+    slaveActors.push( "HeadshotTargetDemon"         );
+    slaveActors.push( "HeadshotTargetCyberdemon"    );
 
     return self;
   }
