@@ -318,6 +318,7 @@ script "target-spy" ENTER
 
       int y       = yStart;
       int newline = FixedMul(defaultNewline, stepMult);
+      if (y >= 0.95) { newline = -newline; }
 
       int  killConfirmedCount = GetUserCVar(playerN, "m8f_ts_KillConfirmed");
       bool showKillConfirmed  = (killConfirmedCount != 0);

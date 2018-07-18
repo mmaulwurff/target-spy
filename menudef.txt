@@ -4,7 +4,7 @@ OptionValue "m8f_ts_y_values"
   0.10, "Below top"
   0.35, "Above crosshair"
   0.60, "Below crosshair"
-  0.96, "Bottom"
+  1.0,  "Bottom"
 }
 
 OptionString "m8f_ts_font_values"
