@@ -647,6 +647,12 @@ class m8f_ts_Data : Thinker
     blackList.push( "AutoautosaveBossAlerter" );
     blackList.push( "UGGib_Corpse_Shootable"  );
     blackList.push( "VoidField"               );
+    blackList.push( "Cow"                     );
+    blackList.push( "WinterCow"               );
+    blackList.push( "SpaceCow"                );
+    blackList.push( "SpaceCowFloating"        );
+    blackList.push( "CowboyCow"               );
+    blackList.push( "MummyCow"                );
 
     return self;
   }
