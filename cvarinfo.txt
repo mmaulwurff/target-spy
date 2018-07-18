@@ -24,6 +24,7 @@ user int    m8f_ts_def_color_tag = 9; // white
 user int    m8f_ts_def_cl_tag_wk = 9; // white
 user bool   m8f_ts_alt_hp_color  = false;
 user bool   m8f_ts_show_hidden   = true;
+user bool   m8f_ts_show_friends  = true;
 user int    m8f_ts_show_objects  = 1;
 user bool   m8f_ts_cross_only_tg = false;
 user bool   m8f_ts_show_confirm  = false;

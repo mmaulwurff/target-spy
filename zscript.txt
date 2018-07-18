@@ -212,6 +212,11 @@ class TSZScriptHelper : Actor
             bool showHidden = CVar.GetCVar("m8f_ts_show_hidden", player).GetInt();
             if (!showHidden) { return null; }
           }
+        if (target.bFRIENDLY)
+          {
+            bool showFriends = CVar.GetCVar("m8f_ts_show_friends", player).GetInt();
+            if (!showFriends) { return null; }
+          }
       }
     else // not monsters
       {
