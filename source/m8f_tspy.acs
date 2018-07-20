@@ -44,9 +44,9 @@ script "TS_DamageTarget" (void)
   ScriptCall("TSZScriptHelper", "HealTarget", -1);
 }
 
-function bool TS_TargetIsPresent(int playerN)
+function bool TS_TargetIsPresent(int playerN, int gType)
 {
-  ScriptCall("TSZScriptHelper", "TargetIsPresent");
+  ScriptCall("TSZScriptHelper", "TargetIsPresent", gType);
   bool isPresent = GetUserCVar(playerN, "m8f_ts_ResultInt");
   return isPresent;
 }
@@ -72,11 +72,20 @@ function int TS_GetCustomTargetColor(int playerN)
   return customColor;
 }
 
-function bool TS_IsFreedoom(void)
+function int TS_GameType(void)
 {
-  str impName = StrParam(l:"CC_IMP");
-  str isFreedoom = (StrCmp(impName, "serpentipede") == 0);
-  return isFreedoom;
+  str  checkString = StrParam(l:"E1TEXT");
+  str  rekkrString = "You've been through war.";
+  int  rekkrLength = StrLen(rekkrString);
+  bool isRekkr     = StrICmp(rekkrString, StrLeft(checkString, rekkrLength)) == 0;
+  if (isRekkr) { return 2; }
+
+  Log(s:"free");
+  str  impName    = StrParam(l:"CC_IMP");
+  bool isFreedoom = (StrCmp(impName, "serpentipede") == 0);
+  if (isFreedoom) { return 1; }
+
+  return 0;
 }
 
 function bool TS_IsTitlemap(void)
@@ -195,7 +204,7 @@ script "target-spy" ENTER
       GetUserCVar(playerN, "m8f_ts_cr_11")
     };
 
-  bool isFreedoom = TS_IsFreeDoom();
+  int dehackedGameType = TS_GameType();
 
   // options
   int  minHealth = GetUserCVar(playerN, "m8f_ts_min_health");
@@ -338,7 +347,7 @@ script "target-spy" ENTER
         oldShowKillConfirmed = showKillConfirmed;
       }
 
-      bool hasTarget = TS_TargetIsPresent(playerN);
+      bool hasTarget = TS_TargetIsPresent(playerN, dehackedGameType);
       if (oldHasTarget != hasTarget) { cachedColor = -1; }
       oldHasTarget = hasTarget;
       SetUserCVar(playerN, "m8f_ts_has_target", hasTarget);
@@ -423,7 +432,7 @@ script "target-spy" ENTER
 
       if (showName)
         {
-          str targetName = TS_GetTargetName(playerN, isFreedoom);
+          str targetName = TS_GetTargetName(playerN, dehackedGameType);
           if (targetHealth < 1)
             {
               targetName = StrParam(s:"Remains of ", s:targetName);

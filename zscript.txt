@@ -34,11 +34,11 @@ class TSZScriptHelper : Actor
     if (messageCVar) { messageCVar.SetInt(result); }
   }
 
-  static void TargetIsPresent(Actor a)
+  static void TargetIsPresent(Actor a, int gameType)
   {
     if (!a) { return; }
 
-    Actor target    = GetTarget(a);
+    Actor target    = GetTarget(a, gameType);
     bool  isPresent = (target != null);
 
     if (isPresent) { m8f_ts_TargetCache.Get().lastTarget = target; }
@@ -115,7 +115,7 @@ class TSZScriptHelper : Actor
     return championTag;
   }
 
-  static void GetTargetName(Actor a, bool isFreedoom)
+  static void GetTargetName(Actor a, int gameType)
   {
     if (!a) { return; }
     PlayerInfo player =  a.player;
@@ -130,8 +130,11 @@ class TSZScriptHelper : Actor
     bool showInternalNames = CVar.GetCVar("m8f_class_as_tag", player).GetInt();
     if (showInternalNames) { SendResultString(player, targetClass); return; }
 
-    // to give Freedoom monsters special names
-    if (isFreedoom) { targetClass.AppendFormat("_free"); }
+    switch (gameType)
+      {
+      case 1: targetClass.AppendFormat("_free" ); break; // Freedoom
+      case 2: targetClass.AppendFormat("_rekkr"); break; // Rekkr
+      }
 
     // if target name was found before, just return it
     let cache = TagCache.Get();
@@ -143,7 +146,7 @@ class TSZScriptHelper : Actor
 
     // if target name is set via actor tag, return it
     string targetName = target.GetTag();
-    if (targetName != targetClass && !isFreedoom)
+    if (targetName != targetClass && !(gameType != 0))
       {
         cache.SetCache(targetClass, targetName);
         SendResultString(player, AddAdditionalInfo(a, target, targetName));
@@ -167,7 +170,7 @@ class TSZScriptHelper : Actor
     SendResultString(player, AddAdditionalInfo(a, target, targetName));
   }
 
-  static Actor GetTarget(Actor a)
+  static Actor GetTarget(Actor a, int gameType = 0)
   {
     let player = a.player;
     if (!player) { return null; }
@@ -204,6 +207,19 @@ class TSZScriptHelper : Actor
 
     bool isInBlackList = data.blackList.contains(targetClass);
     if (isInBlackList) { return null; }
+
+    switch (gameType)
+      {
+      case 1: targetClass.AppendFormat("_free" ); break; // Freedoom
+      case 2: targetClass.AppendFormat("_rekkr"); break; // Rekkr
+      }
+
+    // everything without name in REKKR is "blacklisted"
+    if (targetClass.IndexOf("_rekkr") != -1)
+      {
+        string specialName = data.specialNames.get(targetClass);
+        if (specialName.length() == 0) { return null; }
+      }
 
     if (target.bISMONSTER)
       {
@@ -571,61 +587,128 @@ class m8f_ts_Data : Thinker
     championTokens.push( "champion_WhiteToken"     , "Restraining" );
     championTokens.push( "champion_YellowToken"    , "Fast"        );
 
-    specialNames.push( "Arachnotron_free"      , "Technospider"       );
-    specialNames.push( "Archvile"              , "Arch-vile"          );
-    specialNames.push( "Archvile_free"         , "Flame Bringer"      );
-    specialNames.push( "BD_Arachnotron"        , "Arachnotron"        );
-    specialNames.push( "BD_ArchVile"           , "Arch-vile"          );
-    specialNames.push( "BD_BaronOfHell"        , "Baron Of Hell"      );
-    specialNames.push( "BD_Cacodemon"          , "Cacodemon"          );
-    specialNames.push( "BD_ChaingunGuy"        , "Chaingunner"        );
-    specialNames.push( "BD_CyberDemon"         , "Cyberdemon"         );
-    specialNames.push( "BD_Demon"              , "Demon"              );
-    specialNames.push( "BD_DoomImp"            , "Imp"                );
-    specialNames.push( "BD_Fatso"              , "Mancubus"           );
-    specialNames.push( "BD_HellKnight"         , "Hell Knight"        );
-    specialNames.push( "BD_LostSoul"           , "Lost Soul"          );
-    specialNames.push( "BD_PainElemental"      , "Pain Elemental"     );
-    specialNames.push( "BD_Revenant"           , "Revenant"           );
-    specialNames.push( "BD_ShotgunGuy"         , "Sergeant"           );
-    specialNames.push( "BD_Spectre"            , "Spectre"            );
-    specialNames.push( "BD_SpiderMastermind"   , "Spider Mastermind"  );
-    specialNames.push( "BD_WolfensteinSS"      , "Wolfenstein SS"     );
-    specialNames.push( "BaronOfHell_free"      , "Pain Lord"          );
-    specialNames.push( "Cacodemon_free"        , "Trilobite"          );
-    specialNames.push( "ChaingunGuy"           , "Chaingunner"        );
-    specialNames.push( "ChaingunGuy_free"      , "Minigun Zombie"     );
-    specialNames.push( "CommanderKeen_free"    , "Alien Spawn"        );
-    specialNames.push( "Cyberdemon_free"       , "Assault Tripod"     );
-    specialNames.push( "Demon_free"            , "Flesh Worm"         );
-    specialNames.push( "DoomImp"               , "Imp"                );
-    specialNames.push( "DoomImp_free"          , "Serpentipede"       );
-    specialNames.push( "EVPArachnotron"        , "Arachnotron"        );
-    specialNames.push( "EVPArchVile"           , "Arch-vile"          );
-    specialNames.push( "EVPBaron"              , "Baron Of Hell"      );
-    specialNames.push( "EVPCacodemon"          , "Cacodemon"          );
-    specialNames.push( "EVPChaingunner"        , "Chaingunner"        );
-    specialNames.push( "EVPCyberdemon"         , "Cyberdemon"         );
-    specialNames.push( "EVPDemon"              , "Demon"              );
-    specialNames.push( "EVPHellKnight"         , "Hell Knight"        );
-    specialNames.push( "EVPImp"                , "Imp"                );
-    specialNames.push( "EVPLostSoul"           , "Lost Soul"          );
-    specialNames.push( "EVPMancubus"           , "Mancubus"           );
-    specialNames.push( "EVPPainElemental"      , "Pain Elemental"     );
-    specialNames.push( "EVPRevenant"           , "Revenant"           );
-    specialNames.push( "EVPShotgunner"         , "Sergeant"           );
-    specialNames.push( "EVPSpectre"            , "Spectre"            );
-    specialNames.push( "EVPSpiderMastermind"   , "Spider Mastermind"  );
-    specialNames.push( "Fatso"                 , "Mancubus"           );
-    specialNames.push( "Fatso_free"            , "Combat Slug"        );
-    specialNames.push( "LostSoul_free"         , "Deadflare"          );
-    specialNames.push( "PainElemental_free"    , "Summoner"           );
-    specialNames.push( "Revenant_free"         , "Dark Soldier"       );
-    specialNames.push( "ShotgunGuy"            , "Sergeant"           );
-    specialNames.push( "ShotgunGuy_free"       , "Shotgun Zombie"     );
-    specialNames.push( "SpiderMastermind_free" , "Large Technospider" );
-    specialNames.push( "WolfensteinSS_free"    , "Sailor"             );
-    specialNames.push( "ZombieMan_free"        , "Zombie"             );
+    specialNames.push( "Arachnotron_free"        , "Technospider"       );
+    specialNames.push( "Archvile"                , "Arch-vile"          );
+    specialNames.push( "Archvile_free"           , "Flame Bringer"      );
+    specialNames.push( "BD_Arachnotron"          , "Arachnotron"        );
+    specialNames.push( "BD_ArchVile"             , "Arch-vile"          );
+    specialNames.push( "BD_BaronOfHell"          , "Baron Of Hell"      );
+    specialNames.push( "BD_Cacodemon"            , "Cacodemon"          );
+    specialNames.push( "BD_ChaingunGuy"          , "Chaingunner"        );
+    specialNames.push( "BD_CyberDemon"           , "Cyberdemon"         );
+    specialNames.push( "BD_Demon"                , "Demon"              );
+    specialNames.push( "BD_DoomImp"              , "Imp"                );
+    specialNames.push( "BD_Fatso"                , "Mancubus"           );
+    specialNames.push( "BD_HellKnight"           , "Hell Knight"        );
+    specialNames.push( "BD_LostSoul"             , "Lost Soul"          );
+    specialNames.push( "BD_PainElemental"        , "Pain Elemental"     );
+    specialNames.push( "BD_Revenant"             , "Revenant"           );
+    specialNames.push( "BD_ShotgunGuy"           , "Sergeant"           );
+    specialNames.push( "BD_Spectre"              , "Spectre"            );
+    specialNames.push( "BD_SpiderMastermind"     , "Spider Mastermind"  );
+    specialNames.push( "BD_WolfensteinSS"        , "Wolfenstein SS"     );
+    specialNames.push( "BaronOfHell_free"        , "Pain Lord"          );
+    specialNames.push( "Cacodemon_free"          , "Trilobite"          );
+    specialNames.push( "ChaingunGuy"             , "Chaingunner"        );
+    specialNames.push( "ChaingunGuy_free"        , "Minigun Zombie"     );
+    specialNames.push( "CommanderKeen_free"      , "Alien Spawn"        );
+    specialNames.push( "Cyberdemon_free"         , "Assault Tripod"     );
+    specialNames.push( "Demon_free"              , "Flesh Worm"         );
+    specialNames.push( "DoomImp"                 , "Imp"                );
+    specialNames.push( "DoomImp_free"            , "Serpentipede"       );
+    specialNames.push( "EVPArachnotron"          , "Arachnotron"        );
+    specialNames.push( "EVPArchVile"             , "Arch-vile"          );
+    specialNames.push( "EVPBaron"                , "Baron Of Hell"      );
+    specialNames.push( "EVPCacodemon"            , "Cacodemon"          );
+    specialNames.push( "EVPChaingunner"          , "Chaingunner"        );
+    specialNames.push( "EVPCyberdemon"           , "Cyberdemon"         );
+    specialNames.push( "EVPDemon"                , "Demon"              );
+    specialNames.push( "EVPHellKnight"           , "Hell Knight"        );
+    specialNames.push( "EVPImp"                  , "Imp"                );
+    specialNames.push( "EVPLostSoul"             , "Lost Soul"          );
+    specialNames.push( "EVPMancubus"             , "Mancubus"           );
+    specialNames.push( "EVPPainElemental"        , "Pain Elemental"     );
+    specialNames.push( "EVPRevenant"             , "Revenant"           );
+    specialNames.push( "EVPShotgunner"           , "Sergeant"           );
+    specialNames.push( "EVPSpectre"              , "Spectre"            );
+    specialNames.push( "EVPSpiderMastermind"     , "Spider Mastermind"  );
+    specialNames.push( "Fatso"                   , "Mancubus"           );
+    specialNames.push( "Fatso_free"              , "Combat Slug"        );
+    specialNames.push( "LostSoul_free"           , "Deadflare"          );
+    specialNames.push( "PainElemental_free"      , "Summoner"           );
+    specialNames.push( "Revenant_free"           , "Dark Soldier"       );
+    specialNames.push( "ShotgunGuy"              , "Sergeant"           );
+    specialNames.push( "ShotgunGuy_free"         , "Shotgun Zombie"          );
+    specialNames.push( "SpiderMastermind_free"   , "Large Technospider"      );
+    specialNames.push( "WolfensteinSS_free"      , "Sailor"                  );
+    specialNames.push( "ZombieMan_free"          , "Zombie"                  );
+    specialNames.push( "Cacodemon_rekkr"         , "Sorrow"                  );
+    specialNames.push( "Demon_rekkr"             , "Husk"                    );
+    specialNames.push( "Spectre_rekkr"           , "Mean Husk"               );
+    specialNames.push( "BaronOfHell_rekkr"       , "Treebeast"               );
+    specialNames.push( "HellKnight_rekkr"        , "Skelly Belly"            );
+    specialNames.push( "Zombieman_rekkr"         , "Former Human"            );
+    specialNames.push( "ShotgunGuy_rekkr"        , "Jackalope"               );
+    specialNames.push( "Archvile_rekkr"          , "Turret"                  );
+    specialNames.push( "Revenant_rekkr"          , "Mean Imp"                );
+    specialNames.push( "Fatso_rekkr"             , "Former Duke"             );
+    specialNames.push( "ChaingunGuy_rekkr"       , "Former King"             );
+    specialNames.push( "LostSoul_rekkr"          , "Eyeball"                 );
+    specialNames.push( "SpiderMastermind_rekkr"  , "Dark Foe"                );
+    specialNames.push( "Arachnotron_rekkr"       , "Mean Jackalope"          );
+    specialNames.push( "WolfensteinSS_rekkr"     , "Grotesque"               );
+    specialNames.push( "DoomImp_rekkr"           , "Imp"                     );
+    specialNames.push( "HangNoGuts_rekkr"        , "Spider"                  );
+    specialNames.push( "DehackedPickup4_rekkr"   , "Soul Launcher"           );
+    specialNames.push( "DeadShotgunGuy_rekkr"    , "Remains of Grotesque"    );
+    specialNames.push( "DeadZombieMan_rekkr"     , "Remains of Former Human" );
+    specialNames.push( "DeadDemon_rekkr"         , "Remains of Husk"         );
+    specialNames.push( "DeadCacodemon_rekkr"     , "Remains of Sorrow"       );
+    specialNames.push( "GibbedMarineExtra_rekkr" , "Remains of Viking"       );
+    specialNames.push( "GibbedMarine_rekkr"      , "Remains of Viking"       );
+    specialNames.push( "HeadsOnAStick_rekkr"     , "Tree"                    );
+    specialNames.push( "CommanderKeen_rekkr"     , "Bottled Health"          );
+    specialNames.push( "DehackedPickup14_rekkr"  , "Platemail Armor"         );
+    specialNames.push( "DehackedPickup13_rekkr"  , "Ringmail Armor"          );
+    specialNames.push( "DehackedPickup16_rekkr"  , "Health Essence"          );
+    specialNames.push( "Medikit_rekkr"           , "Bottled Health"          );
+    specialNames.push( "DehackedPickup15_rekkr"  , "Medicinal Herb"          );
+    specialNames.push( "ArmorBonus_rekkr"        , "Armor Patch"             );
+    specialNames.push( "Backpack_rekkr"          , "Sack of Carrying"        );
+    specialNames.push( "DehackedPickup12_rekkr"  , "Mana Seal"               );
+    specialNames.push( "DehackedPickup0_rekkr"   , "Mana Sprite"             );
+    specialNames.push( "RocketBox_rekkr"         , "Stack of Runes"          );
+    specialNames.push( "RocketAmmo_rekkr"        , "Rune"                    );
+    specialNames.push( "ShellBox_rekkr"          , "Sack of Steelshot"       );
+    specialNames.push( "Shell_rekkr"             , "Steelshot"               );
+    specialNames.push( "ClipBox_rekkr"           , "Soul Prism"              );
+    specialNames.push( "Berserk_rekkr"           , "WODE"                    );
+    specialNames.push( "Allmap_rekkr"            , "Map of the Area"         );
+    specialNames.push( "RadSuit_rekkr"           , "Boots of Protection"     );
+    specialNames.push( "DehackedPickup17_rekkr"  , "Shamans Brew"            );
+    specialNames.push( "DehackedPickup18_rekkr"  , "Ethereal Guard"          );
+    specialNames.push( "DehackedPickup19_rekkr"  , "Cloak of deceit"         );
+    specialNames.push( "DehackedPickup20_rekkr"  , "Torch"                   );
+    specialNames.push( "DehackedPickup21_rekkr"  , "Soul"                    );
+    specialNames.push( "DeadMarine_rekkr"        , "Dead Body"               );
+    specialNames.push( "DeadLostSoul_rekkr"      , "Remains of Eyeball"      );
+    specialNames.push( "LiveStick_rekkr"         , "Puppy"                   );
+    specialNames.push( "HeadOnAStick_rekkr"      , "Grass"                   );
+    specialNames.push( "Gibs_rekkr"              , "Blood"                   );
+    specialNames.push( "DehackedPickup5_rekkr"   , "Soul"                    );
+    specialNames.push( "DeadStick_rekkr"         , "Dead Body"               );
+    specialNames.push( "RedCard_rekkr"           , "Red Key"                 );
+    specialNames.push( "BlueCard_rekkr"          , "Blue Key"                );
+    specialNames.push( "YellowCard_rekkr"        , "Yellow Key"              );
+    specialNames.push( "ExplosiveBarrel_rekkr"   , "Barrel"                  );
+    specialNames.push( "RedSkull_rekkr"          , "Red Skeleton Key"        );
+    specialNames.push( "BlueSkull_rekkr"         , "Blue Skeleton Key"       );
+    specialNames.push( "YellowSkull_rekkr"       , "Yellow Skeleton Key"     );
+    specialNames.push( "DehackedPickup11_rekkr"  , "Blessing of the Gods"    );
+    specialNames.push( "DehackedPickup10_rekkr"  , "Holy Relic"              );
+    specialNames.push( "DehackedPickup8_rekkr"   , "Runic Staff"             );
+    specialNames.push( "DehackedPickup9_rekkr"   , "Axe"                     );
+
 
     slaveActors.push( "HeadshotTargetZombie"        );
     slaveActors.push( "HeadshotTargetEliteZombie"   );
