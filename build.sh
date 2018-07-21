@@ -28,11 +28,12 @@ zip $name.pk3 \
 cp $name.pk3 $name-$(git describe --abbrev=0 --tags).pk3 \
 && \
 gzdoom -glversion 3 \
+       \ #-iwad ~/Programs/Games/wads/doom/freedoom1.wad \
        \ #-iwad ~/Programs/Games/wads/doom/freedoom2.wad \
        -file \
        $name.pk3 \
        ~/Programs/Games/wads/maps/DOOMTEST.wad \
-       "$1" \
+       "$1" "$2" \
        +map test \
        \ #-nomonsters \
        +notarget \

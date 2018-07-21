@@ -401,7 +401,8 @@ class m8f_ts_EventHandler : EventHandler
   {
     PlayerInfo player = players[consolePlayer];
     if (CVar.GetCVar("m8f_ts_show_confirm", player).GetInt()
-        && event.thing == m8f_ts_TargetCache.Get().lastTarget)
+        && event.thing == m8f_ts_TargetCache.Get().lastTarget
+        && CVar.GetCVar("m8f_ts_enabled", player).GetInt())
     {
       CVar.GetCVar("m8f_ts_KillConfirmed", player).SetInt(10);
     }

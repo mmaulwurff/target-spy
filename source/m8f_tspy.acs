@@ -256,7 +256,12 @@ script "target-spy" ENTER
 
   while (true)
     {
-      if (!GetUserCVar(playerN, "m8f_ts_enabled")) { Delay(10); continue; }
+      if (!GetUserCVar(playerN, "m8f_ts_enabled"))
+      {
+        HudMessage(s:""; msgFlags, msgIdConfirm, 0, 0, 0, 0);
+        Delay(10);
+        continue;
+      }
 
       if (optionsUpdateCounter < optionsUpdatePeriod) { ++optionsUpdateCounter; }
       else
