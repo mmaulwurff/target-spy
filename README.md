@@ -17,7 +17,7 @@ This mods provides simple health bar for targeted monsters.
 
 ## Thanks
 * Blue Shadow for examples of code.
-* Spaceman333, Rowsol, Churrupez, Cyanide, and isaacpop23 for ideas and bug reports.
+* Spaceman333, Rowsol, Churrupez, Cyanide, isaacpop23, TheRailgunner, Lud, and Beed28 for ideas and bug reports.
 
 ## Info
 
