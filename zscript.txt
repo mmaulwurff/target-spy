@@ -654,6 +654,7 @@ class m8f_ts_Data : Thinker
     specialNames.push( "Revenant_rekkr"          , "Mean Imp"                );
     specialNames.push( "Fatso_rekkr"             , "Former Duke"             );
     specialNames.push( "ChaingunGuy_rekkr"       , "Former King"             );
+    specialNames.push( "Chaingun_rekkr"          , "Former King"             );
     specialNames.push( "LostSoul_rekkr"          , "Eyeball"                 );
     specialNames.push( "SpiderMastermind_rekkr"  , "Dark Foe"                );
     specialNames.push( "Arachnotron_rekkr"       , "Mean Jackalope"          );

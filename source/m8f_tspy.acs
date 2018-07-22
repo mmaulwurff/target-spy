@@ -80,7 +80,6 @@ function int TS_GameType(void)
   bool isRekkr     = StrICmp(rekkrString, StrLeft(checkString, rekkrLength)) == 0;
   if (isRekkr) { return 2; }
 
-  Log(s:"free");
   str  impName    = StrParam(l:"CC_IMP");
   bool isFreedoom = (StrCmp(impName, "serpentipede") == 0);
   if (isFreedoom) { return 1; }
