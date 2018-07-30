@@ -258,6 +258,7 @@ script "target-spy" ENTER
       if (!GetUserCVar(playerN, "m8f_ts_enabled"))
       {
         HudMessage(s:""; msgFlags, msgIdConfirm, 0, 0, 0, 0);
+        SetUserCVar(playerN, "m8f_ts_KillConfirmed", 0);
         Delay(10);
         continue;
       }
