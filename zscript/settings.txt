@@ -65,8 +65,6 @@ class m8f_ts_Settings
   string pipSource;
   string emptyPipSource;
 
-  Font font;
-
   void read(PlayerInfo player)
   {
     showKillConfirmation = CVar.GetCVar("m8f_ts_show_confirm" , player).GetInt();
@@ -121,8 +119,6 @@ class m8f_ts_Settings
     colors[ 9] = CVar.GetCVar("m8f_ts_cr_9" , player).GetInt();
     colors[10] = CVar.GetCVar("m8f_ts_cr_10", player).GetInt();
     colors[11] = CVar.GetCVar("m8f_ts_cr_11", player).GetInt();
-
-    font = Font.GetFont(fontName);
 
     pipSource      = Repeat(pip,      50);
     emptyPipSource = Repeat(emptyPip, 50);

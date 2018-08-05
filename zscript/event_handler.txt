@@ -102,7 +102,7 @@ class m8f_ts_EventHandler : EventHandler
     lastTarget = newLastTarget;
   }
 
-  ui void drawCrosshairs(Actor target, int crosshairColor)
+  ui void drawCrosshairs(Actor target, int crosshairColor, Font font)
   {
     if (!settings.crossOn) { return; }
 
@@ -120,9 +120,9 @@ class m8f_ts_EventHandler : EventHandler
     double centerY = 0.51 + settings.crossOff;
     double bottomY = 0.54 + settings.botOff;
 
-    drawTextCenter(settings.crossTop,  crosshairColor, scale, topY);
-    drawTextCenter(settings.crosshair, crosshairColor, scale, centerY);
-    drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY);
+    drawTextCenter(settings.crossTop,  crosshairColor, scale, topY   , font);
+    drawTextCenter(settings.crosshair, crosshairColor, scale, centerY, font);
+    drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY, font);
   }
 
   ui void draw(Actor target, PlayerInfo player)
@@ -131,14 +131,16 @@ class m8f_ts_EventHandler : EventHandler
     double newline = 0.03 * settings.stepMult;
     if (y >= 0.95) { newline = -newline; }
 
-    y = drawKillConfirmed(y, newline);
+    Font font = Font.GetFont(settings.fontName);
+
+    y = drawKillConfirmed(y, newline, font);
 
     bool hasTarget = (target != null);
     CVar.GetCVar("m8f_ts_has_target", player).SetInt(hasTarget);
 
     if (!hasTarget)
       {
-        drawCrosshairs(target, settings.crossCol);
+        drawCrosshairs(target, settings.crossCol, font);
         return;
       }
 
@@ -146,14 +148,14 @@ class m8f_ts_EventHandler : EventHandler
     bool showHealth      = (targetMaxHealth != 0);
     if (targetMaxHealth < settings.minHealth && targetMaxHealth != 0)
       {
-        drawCrosshairs(target, settings.crossCol);
+        drawCrosshairs(target, settings.crossCol, font);
         return; // not worth showing
       }
 
     int targetHealth = target.health;
     if (targetHealth < 1 && !settings.showCorps) // target is dead
       {
-        drawCrosshairs(target, settings.crossCol);
+        drawCrosshairs(target, settings.crossCol, font);
         return;
       }
 
@@ -174,7 +176,7 @@ class m8f_ts_EventHandler : EventHandler
     if (targetHealth < 35 && settings.almDeadCr) targetColor = settings.crAlmDead;
     if (targetHealth < 1)                        targetColor = settings.crAlmDead;
 
-    drawCrosshairs(target, targetColor);
+    drawCrosshairs(target, targetColor, font);
 
     if (settings.showBar && showHealth)
       {
@@ -183,7 +185,7 @@ class m8f_ts_EventHandler : EventHandler
                                  settings.pipSource, settings.emptyPipSource,
                                  settings.altHpCols,
                                  settings.greenCr, settings.redCr);
-        drawTextCenter(hpBar, targetColor, 0.5, y);
+        drawTextCenter(hpBar, targetColor, 0.5, y, font);
         y += newline;
       }
 
@@ -199,7 +201,7 @@ class m8f_ts_EventHandler : EventHandler
             nameColor  = targetColor;
           }
 
-        drawTextCenter(targetName, nameColor, 0.5, y);
+        drawTextCenter(targetName, nameColor, 0.5, y, font);
         y += newline;
       }
 
@@ -208,7 +210,7 @@ class m8f_ts_EventHandler : EventHandler
         string targetFlags = GetTargetFlags(target);
         if (targetFlags.Length() > 0)
           {
-            drawTextCenter(targetFlags, nameColor, 0.5, y);
+            drawTextCenter(targetFlags, nameColor, 0.5, y, font);
             y += newline;
           }
       }
@@ -222,13 +224,13 @@ class m8f_ts_EventHandler : EventHandler
           case 1:
             drawTextCenter(StringStruct.Format("%d/%d",
                                                targetHealth, targetMaxHealth),
-                           targetColor, 0.5, y);
+                           targetColor, 0.5, y, font);
             y += newline;
             break;
 
           case 2:
             drawTextCenter(StringStruct.Format("%d", targetHealth),
-                           targetColor, 0.5, y);
+                           targetColor, 0.5, y, font);
             y += newline;
             break;
 
@@ -238,35 +240,36 @@ class m8f_ts_EventHandler : EventHandler
             else { percent100 = targetHealth * 100 / targetMaxHealth; }
 
             drawTextCenter(StringStruct.Format("%d%", percent100),
-                           targetColor, 0.5, y);
+                           targetColor, 0.5, y, font);
             y += newline;
             break;
           }
       }
   }
 
-  ui double drawKillConfirmed(double y, double newline)
+  ui double drawKillConfirmed(double y, double newline, Font font)
   {
     if (!settings.showKillConfirmation) { return y; }
     if (lastTargetKillTime == -1) { return y; }
     if (level.time < lastTargetKillTime + 35 * 2)
       {
-        drawTextCenter("Kill Confirmed", settings.nameCol, 0.5, y);
+        drawTextCenter("Kill Confirmed", settings.nameCol, 0.5, y, font);
         y += newline;
       }
     return y;
   }
 
-  ui void drawTextCenter(string text, int color, double scale, double relativeY)
+  ui void drawTextCenter(string text, int color, double scale, double relativeY,
+                         Font font)
   {
     int width    = scale * Screen.GetWidth();
-    int height   = scale * (Screen.GetHeight() - settings.font.GetHeight());
-    int position = width - settings.font.StringWidth(text);
+    int height   = scale * (Screen.GetHeight() - font.GetHeight());
+    int position = width - font.StringWidth(text);
 
     double x = position * 0.5;
     double y = height   * relativeY;
 
-    Screen.DrawText(settings.font, color, x, y, text,
+    Screen.DrawText(font, color, x, y, text,
                     DTA_KeepRatio,     true,
                     DTA_VirtualWidth,  width,
                     DTA_VirtualHeight, height);
