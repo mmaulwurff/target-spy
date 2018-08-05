@@ -35,6 +35,14 @@ OptionValue "m8f_ts_show_objects_values"
   3, "Everything"
 }
 
+OptionValue "m8f_ts_update_period_values"
+{
+  -1, "Never"
+   0, "Every tick"
+  35, "Every second"
+ 105, "Every three seconds"
+}
+
 OptionMenu "m8f_ts_Options"
 {
   Title "Target Spy Options"
@@ -45,6 +53,7 @@ OptionMenu "m8f_ts_Options"
   Option "Font"                 , "m8f_ts_font"    , "m8f_ts_font_values"
   Slider "Newline step"         , "m8f_ts_step_mult", 0.1, 10.0, 0.1, 1
   Option "Internal names"       , "m8f_class_as_tag", "OnOff"
+  Option "Options update"       , "m8f_ts_update_period", "m8f_ts_update_period_values"
   TextField "Minimal health"    , "m8f_ts_min_health"
   StaticText "Target spy will be hidden for targets" , "Black"
   StaticText "with max health less than this."       , "Black"

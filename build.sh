@@ -2,8 +2,6 @@
 
 name=target-spy
 
-acc source/m8f_tspy.acs acs/m8f_tspy.o \
-&& \
 rm -f $name.pk3 \
 && \
 git log --date=short --pretty=format:"-%d %ad %s%n" | \
@@ -16,8 +14,6 @@ git log --date=short --pretty=format:"-%d %ad %s%n" | \
     > changelog.txt \
 && \
 zip $name.pk3 \
-    acs/m8f_tspy.o \
-    source/m8f_tspy.acs \
     graphics/*.lmp \
     graphics/*.png \
     *.txt \

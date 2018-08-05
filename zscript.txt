@@ -18,189 +18,276 @@ version "3.2.0"
  * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class TSZScriptHelper : Actor
+class m8f_ts_TagCache
 {
-  static void SendResultString(PlayerInfo player, string result)
+  string cachedClass;
+  string cachedTag;
+
+  void SetCache(string targetClass, string targetTag)
   {
-    if (!player) { return; }
-    CVar messageCVar = CVar.GetCVar("m8f_ts_ResultString", player);
-    if (messageCVar) { messageCVar.SetString(result); }
+    cachedClass = targetClass;
+    cachedTag   = targetTag;
   }
 
-  static void SendResultInt(PlayerInfo player, int result)
+  m8f_ts_TagCache Init()
   {
-    if (!player) { return; }
-    CVar messageCVar = CVar.GetCVar("m8f_ts_ResultInt", player);
-    if (messageCVar) { messageCVar.SetInt(result); }
+    cachedClass = "";
+    cachedTag   = "";
+    return self;
+  }
+}
+
+class m8f_ts_EventHandler : EventHandler
+{
+  m8f_ts_Settings settings;
+  m8f_ts_Data     data;
+  bool            isTitlemap;
+  int             dehackedGameType;
+  Actor           lastTarget;
+  int             lastTargetKillTime;
+
+  override void WorldLoaded(WorldEvent e)
+  {
+    settings           = new("m8f_ts_Settings").init(players[consolePlayer]);
+    data               = new("m8f_ts_Data").init();
+    isTitlemap         = CheckTitlemap();
+    dehackedGameType   = GetDehackedGameType();
+    lastTarget         = null;
+    lastTargetKillTime = -1;
   }
 
-  static void TargetIsPresent(Actor a, int gameType)
+  override void WorldThingDied(WorldEvent event)
   {
-    if (!a) { return; }
+    if (event == null) { return; }
 
-    Actor target    = GetTarget(a, gameType);
-    bool  isPresent = (target != null);
+    Actor died = event.thing;
+    if (died == null) { return; }
 
-    if (isPresent) { m8f_ts_TargetCache.Get().lastTarget = target; }
-
-    SendResultInt(a.player, isPresent);
+    if (lastTarget == died)
+    {
+      lastTargetKillTime = level.time;
+    }
   }
 
-  static void GetTargetHealth(Actor a)
+  override void RenderOverlay(RenderEvent e)
   {
-    if (!a) { return; }
+    if (isTitlemap) { return; }
 
-    Actor target = GetTarget(a);
-    if (target == null) { SendResultInt(a.player, 0); return; }
+    PlayerInfo player = players[consolePlayer];
 
-    int targetHealth = target.Health;
-    SendResultInt(a.player, targetHealth);
-  }
-
-  static void GetTargetMaxHealth(Actor a)
-  {
-    if (!a) { return; }
-
-    Actor target = GetTarget(a);
-    if (target == null) { SendResultInt(a.player, 0); return; }
-
-    if (!target.bSHOOTABLE)
+    if (settings.optionsUpdatePeriod == 0) { settings.read(player); }
+    else if (settings.optionsUpdatePeriod != -1
+             && Level.time % settings.optionsUpdatePeriod)
       {
-        SendResultInt(a.player, 0);
+        settings.read(player);
+      }
+
+    drawEverything(player);
+  }
+
+  ui void drawEverything(PlayerInfo player)
+  {
+    if (!CVar.GetCVar("m8f_ts_enabled", player).GetInt()) { return; }
+
+    Actor playerActor = player.mo;
+    if (playerActor == null) { return; }
+
+    Actor target = GetTarget(playerActor);
+
+    drawCrosshairs(target);
+    drawLines(target, player);
+
+    SetLastTarget(target);
+  }
+
+  // Wrapper to access lastTarget in scope play from ui scope.
+  // not really const, but lastTarget doesn't affect gameplay.
+  void SetLastTarget(Actor newLastTarget) const
+  {
+    lastTarget = newLastTarget;
+  }
+
+  ui void drawCrosshairs(Actor target)
+  {
+    if (!settings.crossOn) { return; }
+
+    //int   targetMaxHealth = GetActorMaxHealth(target);
+
+    double scale = 0.5;
+    int    color = settings.crossCol;
+
+    drawTextCenter(settings.crossTop,  color, scale, 0.54);
+    drawTextCenter(settings.crosshair, color, scale, 0.51);
+    drawTextCenter(settings.crossBot,  color, scale, 0.48);
+  }
+
+  ui void drawLines(Actor target, PlayerInfo player)
+  {
+    double y       = settings.yStart;
+    double newline = 0.03 * settings.stepMult;
+    if (y >= 0.95) { newline = -newline; }
+
+    y = drawKillConfirmed(y, newline);
+
+    bool hasTarget = (target != null);
+    CVar.GetCVar("m8f_ts_has_target", player).SetInt(hasTarget);
+
+    if (!hasTarget) { return; }
+
+    int  targetMaxHealth = GetActorMaxHealth(target);
+    bool showHealth      = (targetMaxHealth != 0);
+    if (targetMaxHealth < settings.minHealth && targetMaxHealth != 0)
+      {
+        return; // not worth showing
+      }
+
+    int targetHealth = target.health;
+    if (targetHealth < 1 && !settings.showCorps) // target is dead
+      {
         return;
       }
 
-    int targetMaxHealth = target.SpawnHealth();
-    SendResultInt(a.player, targetMaxHealth);
-  }
+    int tagColor;
+    if (targetMaxHealth < 100) { tagColor = settings.weakCol; }
+    else                       { tagColor = settings.nameCol; }
+    int customColor = CustomTargetColor(target);
+    if (customColor)           { tagColor = customColor; }
 
-  static string AddAdditionalInfo(Actor a, Actor target, string name)
-  {
-    Inventory inv = Inventory(target);
-    if (inv)
+    int percent = 10;
+    if (showHealth)
       {
-        int amount = inv.amount;
-        if (amount == 1)
+        if (targetHealth > targetMaxHealth) { percent = 11; }
+        else { percent = targetHealth * 10 / targetMaxHealth; }
+      }
+
+    int targetColor = settings.colors[percent];
+    if (targetHealth < 35 && settings.almDeadCr) targetColor = settings.crAlmDead;
+    if (targetHealth < 1)                        targetColor = settings.crAlmDead;
+
+    if (settings.showBar && showHealth)
+      {
+        string hpBar = MakeHpBar(targetHealth, targetMaxHealth,
+                                 settings.logScale,
+                                 settings.pipSource, settings.emptyPipSource,
+                                 settings.altHpCols,
+                                 settings.greenCr, settings.redCr);
+        drawTextCenter(hpBar, targetColor, 0.5, y);
+        y += newline;
+      }
+
+    int nameColor = tagColor;
+    if (targetHealth < 1) { nameColor = targetColor; }
+
+    if (settings.showName)
+      {
+        string targetName = GetTargetName(target, dehackedGameType, player);
+        if (targetHealth < 1)
           {
-            BasicArmorPickup armor = BasicArmorPickup(inv);
-            if (armor) { amount = armor.SaveAmount; }
+            targetName = StringStruct.Format("Remains of %s", targetName);
+            nameColor  = targetColor;
           }
-        if (amount == 1) { return name; }
-        else             { return StringStruct.Format("%s (%i)", name, amount); }
+
+        drawTextCenter(targetName, nameColor, 0.5, y);
+        y += newline;
       }
-    else
+
+    if (settings.showInfo)
       {
-        return PrependChampionColor(a, target, name);
+        string targetFlags = GetTargetFlags(target);
+        if (targetFlags.Length() > 0)
+          {
+            drawTextCenter(targetFlags, nameColor, 0.5, y);
+            y += newline;
+          }
+      }
+
+    if (showHealth)
+      {
+        switch (settings.showNums)
+          {
+          case 0: break;
+
+          case 1:
+            drawTextCenter(StringStruct.Format("%d/%d",
+                                               targetHealth, targetMaxHealth),
+                           targetColor, 0.5, y);
+            y += newline;
+            break;
+
+          case 2:
+            drawTextCenter(StringStruct.Format("%d", targetHealth),
+                           targetColor, 0.5, y);
+            y += newline;
+            break;
+
+          case 3:
+            int percent100;
+            if (targetMaxHealth == 0) { percent100 = 100; }
+            else { percent100 = targetHealth * 100 / targetMaxHealth; }
+
+            drawTextCenter(StringStruct.Format("%d%", percent100),
+                           targetColor, 0.5, y);
+            y += newline;
+            break;
+          }
       }
   }
 
-  static string PrependChampionColor(Actor a, Actor target, string name)
+  ui double drawKillConfirmed(double y, double newline)
   {
-    if (!a) { return name; }
-    PlayerInfo player =  a.player;
-    if (!player) { return name; }
-
-    bool showChampion = CVar.GetCVar("m8f_ts_show_champion", player).GetInt();
-    if (!showChampion) { return name; }
-
-    string tokenClass = "champion_Token";
-    Inventory token = target.FindInventory(tokenClass, true);
-    if (!token) { return name; }
-
-    string tokenClassName = token.GetClassName();
-    string championTag    = m8f_ts_Data.get().championTokens.get(tokenClassName);
-    if (championTag.Length() == 0) { championTag = "Champion"; }
-
-    championTag.AppendFormat(" %s", name);
-    return championTag;
+    if (!settings.showKillConfirmation) { return y; }
+    if (lastTargetKillTime == -1) { return y; }
+    if (level.time < lastTargetKillTime + 35 * 2)
+      {
+        drawTextCenter("Kill Confirmed", settings.nameCol, 0.5, y);
+        y += newline;
+      }
+    return y;
   }
 
-  static void GetTargetName(Actor a, int gameType)
+  ui void drawTextCenter(string text, int color, double scale, double relativeY)
   {
-    if (!a) { return; }
-    PlayerInfo player =  a.player;
-    if (!player) { return; }
+    int width    = scale * Screen.GetWidth();
+    int height   = scale * (Screen.GetHeight() - settings.font.GetHeight());
+    int position = width - settings.font.StringWidth(text);
 
-    // protect agains no target
-    Actor target = GetTarget(a);
-    if (target == null) { SendResultString(player, "unknown"); return; }
+    // fix one-pixel offset
+    if (position % 2) { --position; }
 
-    string targetClass = target.GetClassName();
+    double x = position * 0.5;
+    double y = height   * relativeY;
 
-    bool showInternalNames = CVar.GetCVar("m8f_class_as_tag", player).GetInt();
-    if (showInternalNames) { SendResultString(player, targetClass); return; }
-
-    switch (gameType)
-      {
-      case 1: targetClass.AppendFormat("_free" ); break; // Freedoom
-      case 2: targetClass.AppendFormat("_rekkr"); break; // Rekkr
-      }
-
-    // if target name was found before, just return it
-    let cache = TagCache.Get();
-    if (cache.cachedClass == targetClass)
-      {
-        SendResultString(player, AddAdditionalInfo(a, target, cache.cachedTag));
-        return;
-      }
-
-    // if target name is set via actor tag, return it
-    string targetName = target.GetTag();
-    if (targetName != targetClass && !(gameType != 0))
-      {
-        cache.SetCache(targetClass, targetName);
-        SendResultString(player, AddAdditionalInfo(a, target, targetName));
-        return;
-      }
-
-    string specialName = m8f_ts_Data.get().specialNames.get(targetClass);
-    if (specialName.Length() != 0)
-      {
-        targetName = specialName;
-        cache.SetCache(targetClass, targetName);
-        SendResultString(player, AddAdditionalInfo(a, target, targetName));
-        return;
-      }
-
-    // if target name is not found, compose tag from class name
-    targetName = SeparateCamelCase(targetName);
-    targetName.Replace("_", " ");
-
-    cache.SetCache(targetClass, targetName);
-    SendResultString(player, AddAdditionalInfo(a, target, targetName));
+    Screen.DrawText(settings.font, color, x, y, text,
+                    DTA_KeepRatio,     true,
+                    DTA_VirtualWidth,  width,
+                    DTA_VirtualHeight, height);
   }
 
-  static Actor GetTarget(Actor a, int gameType = 0)
+  ui Actor GetTarget(Actor a, int gameType = 0)
   {
     let player = a.player;
     if (!player) { return null; }
 
     // try an easy way to get a target (also works with autoaim)
-    Actor target = player.mo.AimTarget();
+    m8f_ts_PlayToUiTranslator translator = new("m8f_ts_PlayToUiTranslator");
+    Actor target = translator.AimTargetWrapper(player.mo);
 
     // if target is not found by easy way, try the difficult way
     if (target == null)
       {
-        FTranslatedLineTarget victimTarget;
-        a.LineAttack(a.angle, 4000.0, a.pitch, 0, "none",
-                     "m8f_ts_InvisiblePuff", LAF_NOIMPACTDECAL, victimTarget);
-        target = victimTarget.linetarget;
+        target = translator.LineAttackTargetWrapper(a);
       }
 
     int showObjects = CVar.GetCVar("m8f_ts_show_objects", player).GetInt();
 
     if (target == null && showObjects > 1)
       {
-        FTranslatedLineTarget ftlt;
-        a.AimLineAttack(a.angle, 2048.0, ftlt, 0,
-                        ALF_CHECKNONSHOOTABLE | ALF_FORCENOSMART);
-        target = ftlt.linetarget;
+        target = translator.AimLineAttackWrapper(a);
       }
 
     // give up
     if (target == null) { return null; }
 
-    let    data          = m8f_ts_Data.get();
     string targetClass   = target.GetClassName();
     bool   targetIsSlave = data.slaveActors.contains(targetClass);
     if (targetIsSlave) { return target.Master; }
@@ -253,7 +340,169 @@ class TSZScriptHelper : Actor
     return target;
   }
 
-  static string SeparateCamelCase(string source)
+  ui int GetActorMaxHealth(Actor a)
+  {
+    if (a == null)     { return 0; }
+    if (!a.bSHOOTABLE) { return 0; }
+
+    int maxHealth = a.SpawnHealth();
+    return maxHealth;
+  }
+
+  ui int CustomTargetColor(Actor target)
+  {
+    string customColorTokenClass = "tr_color_token";
+    int customColor = target.CountInv(customColorTokenClass);
+    return customColor;
+  }
+
+  ui static int Log2(int value)
+  {
+    int result = -1;
+    while (value)
+      {
+        ++result;
+        value /= 2;
+      }
+    return result;
+  }
+
+  ui string MakeHpBar(int health, int maxHealth, bool logScale,
+                      string pipSource, string emptyPipSource,
+                      bool greenRedTheme, int greenColor, int redColor)
+  {
+    int length;
+    if      (logScale)          { length = Log2(maxHealth) * 2; }
+    else if (maxHealth >= 2000) { length = 30; }
+    else if (maxHealth >= 500)  { length = 20; }
+    else                        { length = 10; }
+
+    int pips = health * length / maxHealth;
+    if      (pips == 0)      { pips = 1; }
+    else if (pips >  length) { pips = length; }
+
+    string pipColor;
+    string emptyColor;
+    if (greenRedTheme)
+      {
+        pipColor   = StringStruct.Format("\c%c", 97 + greenColor); // 'a'
+        emptyColor = StringStruct.Format("\c%c", 97 + redColor);   // 'a'
+      }
+    else
+      {
+        pipColor   = "";
+        emptyColor = "";
+      }
+
+    return StringStruct.Format("%s%s%s%s",
+                               pipColor,   pipSource.Left(pips),
+                               emptyColor, emptyPipSource.Left(length - pips));
+
+  }
+
+  bool CheckTitlemap()
+  {
+    bool isTitlemap = (level.mapname == "TITLEMAP");
+    return isTitlemap;
+  }
+
+  int GetDehackedGameType()
+  {
+    string checkString = StringTable.Localize("$E1TEXT");
+    string rekkrString = "You've been through war.";
+    bool   isRekkr     = (checkString.IndexOf(rekkrString) >= 0);
+    if (isRekkr) { return 2; }
+
+    string impName     = StringTable.Localize("$CC_IMP");
+    bool   isFreedoom  = (impName == "serpentipede");
+    if (isFreedoom) { return 1; }
+
+    return 0;
+  }
+
+  ui string GetTargetName(Actor target, int gameType, PlayerInfo player)
+  {
+    string targetClass = target.GetClassName();
+
+    bool showInternalNames = CVar.GetCVar("m8f_class_as_tag", player).GetInt();
+    if (showInternalNames) { return targetClass; }
+
+    switch (gameType)
+      {
+      case 1: targetClass.AppendFormat("_free" ); break; // Freedoom
+      case 2: targetClass.AppendFormat("_rekkr"); break; // Rekkr
+      }
+
+    // if target name was found before, just return it
+    // TODO: restore tag cache
+    //let cache = TagCache.Get();
+    //if (cache.cachedClass == targetClass)
+    //  {
+    //    SendResultString(player, AddAdditionalInfo(a, target, cache.cachedTag));
+    //    return;
+    //  }
+
+    // if target name is set via actor tag, return it
+    string targetName = target.GetTag();
+    if (targetName != targetClass && !(gameType != 0))
+      {
+        //cache.SetCache(targetClass, targetName);
+        return AddAdditionalInfo(target, targetName);
+      }
+
+    string specialName = data.specialNames.get(targetClass);
+    if (specialName.Length() != 0)
+      {
+        targetName = specialName;
+        //cache.SetCache(targetClass, targetName);
+        return AddAdditionalInfo(target, targetName);
+      }
+
+    // if target name is not found, compose tag from class name
+    targetName = SeparateCamelCase(targetName);
+    targetName.Replace("_", " ");
+
+    //cache.SetCache(targetClass, targetName);
+    return AddAdditionalInfo(target, targetName);
+  }
+
+  ui string AddAdditionalInfo(Actor target, string name)
+  {
+    Inventory inv = Inventory(target);
+    if (inv)
+      {
+        int amount = inv.amount;
+        if (amount == 1)
+          {
+            BasicArmorPickup armor = BasicArmorPickup(inv);
+            if (armor) { amount = armor.SaveAmount; }
+          }
+        if (amount == 1) { return name; }
+        else             { return StringStruct.Format("%s (%i)", name, amount); }
+      }
+    else
+      {
+        return PrependChampionColor(target, name);
+      }
+  }
+
+  ui string PrependChampionColor(Actor target, string name)
+  {
+    if (!settings.showChampion) { return name; }
+
+    string tokenClass = "champion_Token";
+    Inventory token = target.FindInventory(tokenClass, true);
+    if (!token) { return name; }
+
+    string tokenClassName = token.GetClassName();
+    string championTag    = data.championTokens.get(tokenClassName);
+    if (championTag.Length() == 0) { championTag = "Champion"; }
+
+    championTag.AppendFormat(" %s", name);
+    return championTag;
+  }
+
+  ui static string SeparateCamelCase(string source)
   {
     int sourceLength = source.Length();
     string result = "";
@@ -278,27 +527,20 @@ class TSZScriptHelper : Actor
     return result;
   }
 
-  static bool IsSmallLetter(string letter)
+  ui static bool IsSmallLetter(string letter)
   {
     int code = letter.CharCodeAt(0);
     return (97 <= code && code <= 122);
   }
 
-  static bool IsBigLetter(string letter)
+  ui static bool IsBigLetter(string letter)
   {
     int code = letter.CharCodeAt(0);
     return (65 <= code && code <= 90);
   }
 
-  static void GetAdditionalTargetInfo(Actor a)
+  ui string GetTargetFlags(Actor target)
   {
-    if (!a) { return; }
-    PlayerInfo player =  a.player;
-    if (!player) { return; }
-
-    Actor target = GetTarget(a);
-    if (target == null) { SendResultString(player, ""); return; }
-
     string result = "";
 
     if (target.bFRIENDLY)
@@ -318,96 +560,10 @@ class TSZScriptHelper : Actor
         result.AppendFormat("Boss");
       }
 
-    SendResultString(player, result);
+    return result;
   }
 
-  static void CustomTargetColor(Actor a)
-  {
-    if (!a) { return; }
-    PlayerInfo player =  a.player;
-    if (!player) { return; }
-
-    Actor target = GetTarget(a);
-    if (target == null) { SendResultInt(player, 0); return; }
-
-    string customColorTokenClass = "tr_color_token";
-    int customColor = target.CountInv(customColorTokenClass);
-    SendResultInt(player, customColor);
-  }
-
-  static void HealTarget(Actor a, int amount)
-  {
-    if (!a) { return; }
-    PlayerInfo player =  a.player;
-    if (!player) { return; }
-
-    Actor target = GetTarget(a);
-    if (target == null) { return; }
-
-    Console.Printf("%d", (target.Health * 10) / target.SpawnHealth());
-    target.Health += amount;
-  }
-}
-
-class TagCache : Thinker
-{
-  string cachedClass;
-  string cachedTag;
-
-  void SetCache(string targetClass, string targetTag)
-  {
-    cachedClass = targetClass;
-    cachedTag   = targetTag;
-  }
-
-  TagCache Init()
-  {
-    ChangeStatNum(STAT_INFO);
-    return self;
-  }
-
-  static TagCache Get()
-  {
-    let it = ThinkerIterator.Create("TagCache", STAT_INFO);
-    let p  = TagCache(it.Next());
-    if (p == null) { p = new("TagCache").Init(); }
-    return p;
-  }
-}
-
-class m8f_ts_TargetCache : Thinker
-{
-  Actor lastTarget;
-
-  m8f_ts_TargetCache Init()
-  {
-    ChangeStatNum(STAT_INFO);
-    lastTarget = null;
-    return self;
-  }
-
-  static m8f_ts_TargetCache Get()
-  {
-    let it = ThinkerIterator.Create("m8f_ts_TargetCache", STAT_INFO);
-    let p  = m8f_ts_TargetCache(it.Next());
-    if (p == null) { p = new("m8f_ts_TargetCache").Init(); }
-    return p;
-  }
-}
-
-class m8f_ts_EventHandler : EventHandler
-{
-  override void WorldThingDied(WorldEvent event)
-  {
-    PlayerInfo player = players[consolePlayer];
-    if (CVar.GetCVar("m8f_ts_show_confirm", player).GetInt()
-        && event.thing == m8f_ts_TargetCache.Get().lastTarget
-        && CVar.GetCVar("m8f_ts_enabled", player).GetInt())
-    {
-      CVar.GetCVar("m8f_ts_KillConfirmed", player).SetInt(10);
-    }
-  }
-}
+} // class m8f_ts_EventHandler
 
 class m8f_ts_InvisiblePuff : Actor
 {
@@ -556,7 +712,7 @@ class m8f_ts_StringMapTester : Actor
     } stop; }
 }
 
-class m8f_ts_Data : Thinker
+class m8f_ts_Data
 {
   m8f_ts_StringMap championTokens;
   m8f_ts_StringMap specialNames;
@@ -747,13 +903,140 @@ class m8f_ts_Data : Thinker
 
     return self;
   }
+}
 
-  static m8f_ts_Data get()
+class m8f_ts_Settings
+{
+  int colors[12];
+
+  bool showKillConfirmation;
+  bool isEnabled;
+
+  int    minHealth;
+  double yStart;
+  bool logScale;
+  bool showBar;
+  bool showName;
+  int  showNums;
+  bool showInfo;
+  bool showCorps;
+  bool crossOn;
+  int  crossCol;
+  int  nameCol;
+  int  weakCol;
+  bool altHpCols;
+  int  stepMult;
+  bool almDeadCr;
+  int  crAlmDead;
+  int  crossOff;
+  int  topOff;
+  int  botOff;
+  int  greenCr;
+  int  redCr;
+  bool showChampion;
+
+  string pip;
+  string emptyPip;
+  string fontName;
+  string crosshair;
+  string crossTop;
+  string crossBot;
+
+  int optionsUpdatePeriod;
+
+  string pipSource;
+  string emptyPipSource;
+
+  Font font;
+
+  void read(PlayerInfo player)
   {
-    let it = ThinkerIterator.Create("m8f_ts_Data", STAT_INFO);
-    let p  = m8f_ts_Data(it.Next());
+    showKillConfirmation = CVar.GetCVar("m8f_ts_show_confirm" , player).GetInt();
+    isEnabled            = CVar.GetCVar("m8f_ts_enabled"      , player).GetInt();
+    minHealth            = CVar.GetCVar("m8f_ts_min_health"   , player).GetInt();
+    yStart               = CVar.GetCVar("m8f_ts_y"            , player).GetFloat();
+    logScale             = CVar.GetCVar("m8f_ts_bar_log_scale", player).GetInt();
+    showBar              = CVar.GetCVar("m8f_ts_show_bar"     , player).GetInt();
+    showName             = CVar.GetCVar("m8f_ts_show_name"    , player).GetInt();
+    showNums             = CVar.GetCVar("m8f_ts_show_numbers" , player).GetInt();
+    showInfo             = CVar.GetCVar("m8f_ts_show_info"    , player).GetInt();
+    showCorps            = CVar.GetCVar("m8f_ts_show_corpses" , player).GetInt();
+    crossOn              = CVar.GetCVar("m8f_ts_crosshair_on" , player).GetInt();
+    crossCol             = CVar.GetCVar("m8f_ts_def_color_crs", player).GetInt();
+    nameCol              = CVar.GetCVar("m8f_ts_def_color_tag", player).GetInt();
+    weakCol              = CVar.GetCVar("m8f_ts_def_cl_tag_wk", player).GetInt();
+    altHpCols            = CVar.GetCVar("m8f_ts_alt_hp_color" , player).GetInt();
+    crAlmDead            = CVar.GetCVar("m8f_ts_cr_alm_dead"  , player).GetInt();
+    stepMult             = CVar.GetCVar("m8f_ts_step_mult"    , player).GetInt();
+    almDeadCr            = CVar.GetCVar("m8f_ts_alm_dead_cr"  , player).GetInt();
+    crossOff             = CVar.GetCVar("m8f_ts_cross_offset" , player).GetInt();
+    topOff               = CVar.GetCVar("m8f_ts_top_offset"   , player).GetInt();
+    botOff               = CVar.GetCVar("m8f_ts_bot_offset"   , player).GetInt();
+    greenCr              = CVar.GetCVar("m8f_ts_green_color"  , player).GetInt();
+    redCr                = CVar.GetCVar("m8f_ts_red_color"    , player).GetInt();
+    optionsUpdatePeriod  = CVar.GetCVar("m8f_ts_update_period", player).GetInt();
+    showChampion         = CVar.GetCVar("m8f_ts_show_champion", player).GetInt();
 
-    if (p != null) { return p; }
-    else           { return new("m8f_ts_Data").init(); }
+    pip       = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
+    emptyPip  = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();
+    fontName  = CVar.GetCVar("m8f_ts_font"         , player).GetString();
+    crosshair = CVar.GetCVar("m8f_ts_crosshair"    , player).GetString();
+    crossTop  = CVar.GetCVar("m8f_ts_cross_top"    , player).GetString();
+    crossBot  = CVar.GetCVar("m8f_ts_cross_bottom" , player).GetString();
+
+    colors[ 0] = CVar.GetCVar("m8f_ts_cr_0" , player).GetInt();
+    colors[ 1] = CVar.GetCVar("m8f_ts_cr_1" , player).GetInt();
+    colors[ 2] = CVar.GetCVar("m8f_ts_cr_2" , player).GetInt();
+    colors[ 3] = CVar.GetCVar("m8f_ts_cr_3" , player).GetInt();
+    colors[ 4] = CVar.GetCVar("m8f_ts_cr_4" , player).GetInt();
+    colors[ 5] = CVar.GetCVar("m8f_ts_cr_5" , player).GetInt();
+    colors[ 6] = CVar.GetCVar("m8f_ts_cr_6" , player).GetInt();
+    colors[ 7] = CVar.GetCVar("m8f_ts_cr_7" , player).GetInt();
+    colors[ 8] = CVar.GetCVar("m8f_ts_cr_8" , player).GetInt();
+    colors[ 9] = CVar.GetCVar("m8f_ts_cr_9" , player).GetInt();
+    colors[10] = CVar.GetCVar("m8f_ts_cr_10", player).GetInt();
+    colors[11] = CVar.GetCVar("m8f_ts_cr_11", player).GetInt();
+
+    font = Font.GetFont(fontName);
+
+    pipSource      = Repeat(pip,      50);
+    emptyPipSource = Repeat(emptyPip, 50);
+  }
+
+  m8f_ts_Settings Init(PlayerInfo player)
+  {
+    read(player);
+    return self;
+  }
+
+  string Repeat(string s, int times)
+  {
+    string result = "";
+    for (int i = 0; i < times; ++i) { result.AppendFormat("%s", s); }
+    return result;
+  }
+}
+
+class m8f_ts_PlayToUiTranslator
+{
+  play Actor AimTargetWrapper(Actor a) const
+  {
+    return a.AimTarget();
+  }
+
+  play Actor LineAttackTargetWrapper(Actor a) const
+  {
+    FTranslatedLineTarget victimTarget;
+    a.LineAttack(a.angle, 4000.0, a.pitch, 0, "none",
+                 "m8f_ts_InvisiblePuff", LAF_NOIMPACTDECAL, victimTarget);
+    return victimTarget.linetarget;
+  }
+
+  play Actor AimLineAttackWrapper(Actor a) const
+  {
+    FTranslatedLineTarget ftlt;
+    a.AimLineAttack(a.angle, 2048.0, ftlt, 0,
+                    ALF_CHECKNONSHOOTABLE | ALF_FORCENOSMART);
+    return ftlt.linetarget;
   }
 }

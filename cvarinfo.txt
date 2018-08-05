@@ -1,8 +1,3 @@
-// storage to pass results from ZScript
-user string m8f_ts_ResultString;
-user int    m8f_ts_ResultInt;
-user int    m8f_ts_KillConfirmed = 0;
-
 // options
 user float  m8f_ts_y             = 0.02;
 user bool   m8f_ts_enabled       = true;
@@ -38,6 +33,7 @@ user float  m8f_ts_top_offset    = 0.0;
 user float  m8f_ts_bot_offset    = 0.0;
 user int    m8f_ts_green_color   = 3;
 user int    m8f_ts_red_color     = 6;
+user int    m8f_ts_update_period = 70;
 
 user int    m8f_ts_cr_0          =  6; // red
 user int    m8f_ts_cr_1          =  6; // red
@@ -56,6 +52,3 @@ user int    m8f_ts_cr_alm_dead   = 12; // black
 
 // interface for other mods
 user bool   m8f_ts_has_target;
-
-// logs
-user int m8f_ts_version;
