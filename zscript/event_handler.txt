@@ -257,9 +257,7 @@ class m8f_ts_EventHandler : EventHandler
         target = translator.LineAttackTargetWrapper(a);
       }
 
-    int showObjects = CVar.GetCVar("m8f_ts_show_objects", player).GetInt();
-
-    if (target == null && showObjects > 1)
+    if (target == null && settings.showObjects > 1)
       {
         target = translator.AimLineAttackWrapper(a);
       }
@@ -289,20 +287,18 @@ class m8f_ts_EventHandler : EventHandler
 
     if (target.bISMONSTER)
       {
-        if (target.bSHADOW || target.bSTEALTH)
+        if ((target.bSHADOW || target.bSTEALTH) && !settings.showHidden)
           {
-            bool showHidden = CVar.GetCVar("m8f_ts_show_hidden", player).GetInt();
-            if (!showHidden) { return null; }
+            return null;
           }
-        if (target.bFRIENDLY)
+        if (target.bFRIENDLY && !settings.showFriends)
           {
-            bool showFriends = CVar.GetCVar("m8f_ts_show_friends", player).GetInt();
-            if (!showFriends) { return null; }
+            return null;
           }
       }
     else // not monsters
       {
-        switch (showObjects)
+        switch (settings.showObjects)
           {
           case 0: return null;
           case 1:
@@ -403,8 +399,7 @@ class m8f_ts_EventHandler : EventHandler
   {
     string targetClass = target.GetClassName();
 
-    bool showInternalNames = CVar.GetCVar("m8f_class_as_tag", player).GetInt();
-    if (showInternalNames) { return targetClass; }
+    if (settings.showInternalNames) { return targetClass; }
 
     switch (gameType)
       {
