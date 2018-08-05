@@ -71,9 +71,10 @@ class m8f_ts_EventHandler : EventHandler
 
     PlayerInfo player = players[consolePlayer];
 
-    if (settings.optionsUpdatePeriod == 0) { settings.read(player); }
-    else if (settings.optionsUpdatePeriod != -1
-             && Level.time % settings.optionsUpdatePeriod)
+    int optionsUpdatePeriod = CVar.GetCVar("m8f_ts_update_period", player).GetInt();
+    if (optionsUpdatePeriod == 0) { settings.read(player); }
+    else if (optionsUpdatePeriod != -1
+             && (level.time % optionsUpdatePeriod) == 0)
       {
         settings.read(player);
       }

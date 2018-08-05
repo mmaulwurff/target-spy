@@ -39,7 +39,7 @@ OptionValue "m8f_ts_show_objects_values"
 OptionValue "m8f_ts_update_period_values"
 {
   -1, "Never"
-   0, "Every tick"
+   0, "Immediately"
   35, "Every second"
  105, "Every three seconds"
 }

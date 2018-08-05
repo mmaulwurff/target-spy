@@ -61,8 +61,6 @@ class m8f_ts_Settings
   string crossTop;
   string crossBot;
 
-  int optionsUpdatePeriod;
-
   string pipSource;
   string emptyPipSource;
 
@@ -91,7 +89,6 @@ class m8f_ts_Settings
     botOff               = CVar.GetCVar("m8f_ts_bot_offset"   , player).GetFloat();
     greenCr              = CVar.GetCVar("m8f_ts_green_color"  , player).GetInt();
     redCr                = CVar.GetCVar("m8f_ts_red_color"    , player).GetInt();
-    optionsUpdatePeriod  = CVar.GetCVar("m8f_ts_update_period", player).GetInt();
     showChampion         = CVar.GetCVar("m8f_ts_show_champion", player).GetInt();
     showObjects          = CVar.GetCVar("m8f_ts_show_objects" , player).GetInt();
     showInternalNames    = CVar.GetCVar("m8f_class_as_tag"    , player).GetInt();
