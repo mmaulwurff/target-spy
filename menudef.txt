@@ -97,8 +97,11 @@ OptionMenu "m8f_ts_Crosshairs"
 
   StaticText ""
   Option "Enabled"             , "m8f_ts_crosshair_on"  , "OnOff"
+  Option "Only on target"      , "m8f_ts_cross_only_tg" , "OnOff"
+  Option "Hide for Slot 1"     , "m8f_ts_no_cross_on_1" , "OnOff"
+  Option "Change color on hit" , "m8f_ts_hit_confirm"   , "OnOff"
+  Option "Hit color"           , "m8f_ts_hit_color"     , "TextColors"
 
-  StaticText ""
   Slider "Top part offset"     , "m8f_ts_top_offset"   , -0.1, 0.1, 0.005, 3
   Slider "Middle part offset"  , "m8f_ts_cross_offset" , -0.1, 0.1, 0.005, 3
   Slider "Bottom part offset"  , "m8f_ts_bot_offset"   , -0.1, 0.1, 0.005, 3
@@ -106,9 +109,9 @@ OptionMenu "m8f_ts_Crosshairs"
   Slider "Scale"               , "m8f_ts_cross_scale"  , 0.5, 3.0, 0.05, 2
 
   StaticText ""
-  Option "Only on target"      , "m8f_ts_cross_only_tg" , "OnOff"
-  Option "Change color on hit" , "m8f_ts_hit_confirm"   , "OnOff"
-  Option "Hit color"           , "m8f_ts_hit_color"     , "TextColors"
+  StaticText ""
+  StaticText ""
+  StaticText ""
 
   StaticText ""
   TextField "Top"    , "m8f_ts_cross_top"

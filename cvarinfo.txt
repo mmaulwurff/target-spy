@@ -39,6 +39,7 @@ user bool   m8f_ts_hit_confirm   = true;
 user int    m8f_ts_hit_color     = 6; // red
 user float  m8f_ts_text_scale    = 1.0;
 user int    m8f_ts_x_adjustment  = 0;
+user bool   m8f_ts_no_cross_on_1 = false;
 
 user int    m8f_ts_cr_0          =  6; // red
 user int    m8f_ts_cr_1          =  6; // red

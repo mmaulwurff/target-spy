@@ -103,9 +103,24 @@ class m8f_ts_EventHandler : EventHandler
     lastTarget = newLastTarget;
   }
 
+  play bool isSlot1Weapon() const
+  {
+    PlayerInfo player = players[consolePlayer];
+    Weapon w = player.readyWeapon;
+    if (w == null) { return true; }
+
+    int located;
+    int slot;
+    int priority;
+    [located, slot, priority] = player.weapons.LocateWeapon(w.GetClassName());
+    return (slot == 1);
+  }
+
   ui void drawCrosshairs(Actor target, int crosshairColor, Font font)
   {
     if (!settings.crossOn) { return; }
+
+    if (settings.noCrossOnSlot1 && isSlot1Weapon()) { return; }
 
     if (settings.hitConfirmation
         && lastTargetHurtTime != -1

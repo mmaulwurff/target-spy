@@ -54,6 +54,7 @@ class m8f_ts_Settings
   int    hitColor;
   double textScale;
   int    xAdjustment;
+  bool   noCrossOnSlot1;
 
   string pip;
   string emptyPip;
@@ -100,6 +101,7 @@ class m8f_ts_Settings
     hitColor             = CVar.GetCVar("m8f_ts_hit_color"    , player).GetInt();
     textScale            = CVar.GetCVar("m8f_ts_text_scale"   , player).GetFloat();
     xAdjustment          = CVar.GetCVar("m8f_ts_x_adjustment" , player).GetInt();
+    noCrossOnSlot1       = CVar.GetCVar("m8f_ts_no_cross_on_1", player).GetInt();
 
     pip       = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
     emptyPip  = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();
