@@ -9,14 +9,15 @@ OptionValue "m8f_ts_y_values"
 
 OptionString "m8f_ts_font_values"
 {
-  "SMALLFONT", "Small font"
-  "CONFONT",   "Console font"
-  "MM2SFNTO",  "Mementwo"
-  "ESFONT",    "Enlightening"
-  "CYBERFNT",  "Cyberfonter"
-  "JenocideFontRed", "Jenocide"
-  "SMSKFONT",  "Solid Snake"
-  "GARGSMAL",  "Gargoyle Wing"
+  "SMALLFONT"       , "Small font"
+  "BIGFONT"         , "Big font"
+  "CONFONT"         , "Console font"
+  "MM2SFNTO"        , "Mementwo"
+  "ESFONT"          , "Enlightening"
+  "CYBERFNT"        , "Cyberfonter"
+  "JenocideFontRed" , "Jenocide"
+  "SMSKFONT"        , "Solid Snake"
+  "GARGSMAL"        , "Gargoyle Wing"
 }
 
 OptionValue "m8f_ts_health_numbers_values"
@@ -52,6 +53,7 @@ OptionMenu "m8f_ts_Options"
   Option "Target Spy enabled"   , "m8f_ts_enabled" , "OnOff"
   Option "Font"                 , "m8f_ts_font"    , "m8f_ts_font_values"
   Slider "Newline step"         , "m8f_ts_step_mult", 0.1, 10.0, 0.1, 1
+  Slider "Scale"                , "m8f_ts_text_scale", 0.5, 3.0, 0.05, 2
   Option "Internal names"       , "m8f_class_as_tag", "OnOff"
   Option "Options update"       , "m8f_ts_update_period", "m8f_ts_update_period_values"
   TextField "Minimal health"    , "m8f_ts_min_health"

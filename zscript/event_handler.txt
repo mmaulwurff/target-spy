@@ -178,6 +178,8 @@ class m8f_ts_EventHandler : EventHandler
 
     drawCrosshairs(target, targetColor, font);
 
+    double textScale = 0.5 / settings.textScale;
+
     if (settings.showBar && showHealth)
       {
         string hpBar = MakeHpBar(targetHealth, targetMaxHealth,
@@ -185,7 +187,7 @@ class m8f_ts_EventHandler : EventHandler
                                  settings.pipSource, settings.emptyPipSource,
                                  settings.altHpCols,
                                  settings.greenCr, settings.redCr);
-        drawTextCenter(hpBar, targetColor, 0.5, y, font);
+        drawTextCenter(hpBar, targetColor, textScale, y, font);
         y += newline;
       }
 
@@ -201,7 +203,7 @@ class m8f_ts_EventHandler : EventHandler
             nameColor  = targetColor;
           }
 
-        drawTextCenter(targetName, nameColor, 0.5, y, font);
+        drawTextCenter(targetName, nameColor, textScale, y, font);
         y += newline;
       }
 
@@ -210,7 +212,7 @@ class m8f_ts_EventHandler : EventHandler
         string targetFlags = GetTargetFlags(target);
         if (targetFlags.Length() > 0)
           {
-            drawTextCenter(targetFlags, nameColor, 0.5, y, font);
+            drawTextCenter(targetFlags, nameColor, textScale, y, font);
             y += newline;
           }
       }
@@ -224,13 +226,13 @@ class m8f_ts_EventHandler : EventHandler
           case 1:
             drawTextCenter(StringStruct.Format("%d/%d",
                                                targetHealth, targetMaxHealth),
-                           targetColor, 0.5, y, font);
+                           targetColor, textScale, y, font);
             y += newline;
             break;
 
           case 2:
             drawTextCenter(StringStruct.Format("%d", targetHealth),
-                           targetColor, 0.5, y, font);
+                           targetColor, textScale, y, font);
             y += newline;
             break;
 
@@ -240,7 +242,7 @@ class m8f_ts_EventHandler : EventHandler
             else { percent100 = targetHealth * 100 / targetMaxHealth; }
 
             drawTextCenter(StringStruct.Format("%d%", percent100),
-                           targetColor, 0.5, y, font);
+                           targetColor, textScale, y, font);
             y += newline;
             break;
           }
@@ -253,7 +255,8 @@ class m8f_ts_EventHandler : EventHandler
     if (lastTargetKillTime == -1) { return y; }
     if (level.time < lastTargetKillTime + 35 * 2)
       {
-        drawTextCenter("Kill Confirmed", settings.nameCol, 0.5, y, font);
+        double scale = 0.5 / settings.textScale;
+        drawTextCenter("Kill Confirmed", settings.nameCol, scale, y, font);
         y += newline;
       }
     return y;

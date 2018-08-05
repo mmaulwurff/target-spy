@@ -52,6 +52,7 @@ class m8f_ts_Settings
   double crossScale;
   bool   hitConfirmation;
   int    hitColor;
+  double textScale;
 
   string pip;
   string emptyPip;
@@ -99,6 +100,7 @@ class m8f_ts_Settings
     crossScale           = CVar.GetCVar("m8f_ts_cross_scale"  , player).GetFloat();
     hitConfirmation      = CVar.GetCVar("m8f_ts_hit_confirm"  , player).GetInt();
     hitColor             = CVar.GetCVar("m8f_ts_hit_color"    , player).GetInt();
+    textScale            = CVar.GetCVar("m8f_ts_text_scale"   , player).GetFloat();
 
     pip       = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
     emptyPip  = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();
