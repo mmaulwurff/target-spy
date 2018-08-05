@@ -1,0 +1,129 @@
+/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2018
+ *
+ * This file is part of Target Spy.
+ *
+ * Target Spy is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Target Spy is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+class m8f_ts_Settings
+{
+  int colors[12];
+
+  bool showKillConfirmation;
+  bool isEnabled;
+
+  int    minHealth;
+  double yStart;
+  bool logScale;
+  bool showBar;
+  bool showName;
+  int  showNums;
+  bool showInfo;
+  bool showCorps;
+  bool crossOn;
+  int  crossCol;
+  int  nameCol;
+  int  weakCol;
+  bool altHpCols;
+  int  stepMult;
+  bool almDeadCr;
+  int  crAlmDead;
+  int  crossOff;
+  int  topOff;
+  int  botOff;
+  int  greenCr;
+  int  redCr;
+  bool showChampion;
+
+  string pip;
+  string emptyPip;
+  string fontName;
+  string crosshair;
+  string crossTop;
+  string crossBot;
+
+  int optionsUpdatePeriod;
+
+  string pipSource;
+  string emptyPipSource;
+
+  Font font;
+
+  void read(PlayerInfo player)
+  {
+    showKillConfirmation = CVar.GetCVar("m8f_ts_show_confirm" , player).GetInt();
+    isEnabled            = CVar.GetCVar("m8f_ts_enabled"      , player).GetInt();
+    minHealth            = CVar.GetCVar("m8f_ts_min_health"   , player).GetInt();
+    yStart               = CVar.GetCVar("m8f_ts_y"            , player).GetFloat();
+    logScale             = CVar.GetCVar("m8f_ts_bar_log_scale", player).GetInt();
+    showBar              = CVar.GetCVar("m8f_ts_show_bar"     , player).GetInt();
+    showName             = CVar.GetCVar("m8f_ts_show_name"    , player).GetInt();
+    showNums             = CVar.GetCVar("m8f_ts_show_numbers" , player).GetInt();
+    showInfo             = CVar.GetCVar("m8f_ts_show_info"    , player).GetInt();
+    showCorps            = CVar.GetCVar("m8f_ts_show_corpses" , player).GetInt();
+    crossOn              = CVar.GetCVar("m8f_ts_crosshair_on" , player).GetInt();
+    crossCol             = CVar.GetCVar("m8f_ts_def_color_crs", player).GetInt();
+    nameCol              = CVar.GetCVar("m8f_ts_def_color_tag", player).GetInt();
+    weakCol              = CVar.GetCVar("m8f_ts_def_cl_tag_wk", player).GetInt();
+    altHpCols            = CVar.GetCVar("m8f_ts_alt_hp_color" , player).GetInt();
+    crAlmDead            = CVar.GetCVar("m8f_ts_cr_alm_dead"  , player).GetInt();
+    stepMult             = CVar.GetCVar("m8f_ts_step_mult"    , player).GetInt();
+    almDeadCr            = CVar.GetCVar("m8f_ts_alm_dead_cr"  , player).GetInt();
+    crossOff             = CVar.GetCVar("m8f_ts_cross_offset" , player).GetInt();
+    topOff               = CVar.GetCVar("m8f_ts_top_offset"   , player).GetInt();
+    botOff               = CVar.GetCVar("m8f_ts_bot_offset"   , player).GetInt();
+    greenCr              = CVar.GetCVar("m8f_ts_green_color"  , player).GetInt();
+    redCr                = CVar.GetCVar("m8f_ts_red_color"    , player).GetInt();
+    optionsUpdatePeriod  = CVar.GetCVar("m8f_ts_update_period", player).GetInt();
+    showChampion         = CVar.GetCVar("m8f_ts_show_champion", player).GetInt();
+
+    pip       = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
+    emptyPip  = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();
+    fontName  = CVar.GetCVar("m8f_ts_font"         , player).GetString();
+    crosshair = CVar.GetCVar("m8f_ts_crosshair"    , player).GetString();
+    crossTop  = CVar.GetCVar("m8f_ts_cross_top"    , player).GetString();
+    crossBot  = CVar.GetCVar("m8f_ts_cross_bottom" , player).GetString();
+
+    colors[ 0] = CVar.GetCVar("m8f_ts_cr_0" , player).GetInt();
+    colors[ 1] = CVar.GetCVar("m8f_ts_cr_1" , player).GetInt();
+    colors[ 2] = CVar.GetCVar("m8f_ts_cr_2" , player).GetInt();
+    colors[ 3] = CVar.GetCVar("m8f_ts_cr_3" , player).GetInt();
+    colors[ 4] = CVar.GetCVar("m8f_ts_cr_4" , player).GetInt();
+    colors[ 5] = CVar.GetCVar("m8f_ts_cr_5" , player).GetInt();
+    colors[ 6] = CVar.GetCVar("m8f_ts_cr_6" , player).GetInt();
+    colors[ 7] = CVar.GetCVar("m8f_ts_cr_7" , player).GetInt();
+    colors[ 8] = CVar.GetCVar("m8f_ts_cr_8" , player).GetInt();
+    colors[ 9] = CVar.GetCVar("m8f_ts_cr_9" , player).GetInt();
+    colors[10] = CVar.GetCVar("m8f_ts_cr_10", player).GetInt();
+    colors[11] = CVar.GetCVar("m8f_ts_cr_11", player).GetInt();
+
+    font = Font.GetFont(fontName);
+
+    pipSource      = Repeat(pip,      50);
+    emptyPipSource = Repeat(emptyPip, 50);
+  }
+
+  m8f_ts_Settings Init(PlayerInfo player)
+  {
+    read(player);
+    return self;
+  }
+
+  string Repeat(string s, int times)
+  {
+    string result = "";
+    for (int i = 0; i < times; ++i) { result.AppendFormat("%s", s); }
+    return result;
+  }
+}

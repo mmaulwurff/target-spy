@@ -1,0 +1,608 @@
+/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2018
+ *
+ * This file is part of Target Spy.
+ *
+ * Target Spy is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Target Spy is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+class m8f_ts_EventHandler : EventHandler
+{
+  m8f_ts_Settings settings;
+  m8f_ts_Data     data;
+  bool            isTitlemap;
+  int             dehackedGameType;
+  Actor           lastTarget;
+  int             lastTargetKillTime;
+
+  override void WorldLoaded(WorldEvent e)
+  {
+    settings           = new("m8f_ts_Settings").init(players[consolePlayer]);
+    data               = new("m8f_ts_Data").init();
+    isTitlemap         = CheckTitlemap();
+    dehackedGameType   = GetDehackedGameType();
+    lastTarget         = null;
+    lastTargetKillTime = -1;
+  }
+
+  override void WorldThingDied(WorldEvent event)
+  {
+    if (event == null) { return; }
+
+    Actor died = event.thing;
+    if (died == null) { return; }
+
+    if (lastTarget == died)
+    {
+      lastTargetKillTime = level.time;
+    }
+  }
+
+  override void RenderOverlay(RenderEvent e)
+  {
+    if (isTitlemap) { return; }
+
+    PlayerInfo player = players[consolePlayer];
+
+    if (settings.optionsUpdatePeriod == 0) { settings.read(player); }
+    else if (settings.optionsUpdatePeriod != -1
+             && Level.time % settings.optionsUpdatePeriod)
+      {
+        settings.read(player);
+      }
+
+    drawEverything(player);
+  }
+
+  ui void drawEverything(PlayerInfo player)
+  {
+    if (!CVar.GetCVar("m8f_ts_enabled", player).GetInt()) { return; }
+
+    Actor playerActor = player.mo;
+    if (playerActor == null) { return; }
+
+    Actor target = GetTarget(playerActor);
+
+    drawCrosshairs(target);
+    drawLines(target, player);
+
+    SetLastTarget(target);
+  }
+
+  // Wrapper to access lastTarget in scope play from ui scope.
+  // not really const, but lastTarget doesn't affect gameplay.
+  void SetLastTarget(Actor newLastTarget) const
+  {
+    lastTarget = newLastTarget;
+  }
+
+  ui void drawCrosshairs(Actor target)
+  {
+    if (!settings.crossOn) { return; }
+
+    //int   targetMaxHealth = GetActorMaxHealth(target);
+
+    double scale = 0.5;
+    int    color = settings.crossCol;
+
+    drawTextCenter(settings.crossTop,  color, scale, 0.54);
+    drawTextCenter(settings.crosshair, color, scale, 0.51);
+    drawTextCenter(settings.crossBot,  color, scale, 0.48);
+  }
+
+  ui void drawLines(Actor target, PlayerInfo player)
+  {
+    double y       = settings.yStart;
+    double newline = 0.03 * settings.stepMult;
+    if (y >= 0.95) { newline = -newline; }
+
+    y = drawKillConfirmed(y, newline);
+
+    bool hasTarget = (target != null);
+    CVar.GetCVar("m8f_ts_has_target", player).SetInt(hasTarget);
+
+    if (!hasTarget) { return; }
+
+    int  targetMaxHealth = GetActorMaxHealth(target);
+    bool showHealth      = (targetMaxHealth != 0);
+    if (targetMaxHealth < settings.minHealth && targetMaxHealth != 0)
+      {
+        return; // not worth showing
+      }
+
+    int targetHealth = target.health;
+    if (targetHealth < 1 && !settings.showCorps) // target is dead
+      {
+        return;
+      }
+
+    int tagColor;
+    if (targetMaxHealth < 100) { tagColor = settings.weakCol; }
+    else                       { tagColor = settings.nameCol; }
+    int customColor = CustomTargetColor(target);
+    if (customColor)           { tagColor = customColor; }
+
+    int percent = 10;
+    if (showHealth)
+      {
+        if (targetHealth > targetMaxHealth) { percent = 11; }
+        else { percent = targetHealth * 10 / targetMaxHealth; }
+      }
+
+    int targetColor = settings.colors[percent];
+    if (targetHealth < 35 && settings.almDeadCr) targetColor = settings.crAlmDead;
+    if (targetHealth < 1)                        targetColor = settings.crAlmDead;
+
+    if (settings.showBar && showHealth)
+      {
+        string hpBar = MakeHpBar(targetHealth, targetMaxHealth,
+                                 settings.logScale,
+                                 settings.pipSource, settings.emptyPipSource,
+                                 settings.altHpCols,
+                                 settings.greenCr, settings.redCr);
+        drawTextCenter(hpBar, targetColor, 0.5, y);
+        y += newline;
+      }
+
+    int nameColor = tagColor;
+    if (targetHealth < 1) { nameColor = targetColor; }
+
+    if (settings.showName)
+      {
+        string targetName = GetTargetName(target, dehackedGameType, player);
+        if (targetHealth < 1)
+          {
+            targetName = StringStruct.Format("Remains of %s", targetName);
+            nameColor  = targetColor;
+          }
+
+        drawTextCenter(targetName, nameColor, 0.5, y);
+        y += newline;
+      }
+
+    if (settings.showInfo)
+      {
+        string targetFlags = GetTargetFlags(target);
+        if (targetFlags.Length() > 0)
+          {
+            drawTextCenter(targetFlags, nameColor, 0.5, y);
+            y += newline;
+          }
+      }
+
+    if (showHealth)
+      {
+        switch (settings.showNums)
+          {
+          case 0: break;
+
+          case 1:
+            drawTextCenter(StringStruct.Format("%d/%d",
+                                               targetHealth, targetMaxHealth),
+                           targetColor, 0.5, y);
+            y += newline;
+            break;
+
+          case 2:
+            drawTextCenter(StringStruct.Format("%d", targetHealth),
+                           targetColor, 0.5, y);
+            y += newline;
+            break;
+
+          case 3:
+            int percent100;
+            if (targetMaxHealth == 0) { percent100 = 100; }
+            else { percent100 = targetHealth * 100 / targetMaxHealth; }
+
+            drawTextCenter(StringStruct.Format("%d%", percent100),
+                           targetColor, 0.5, y);
+            y += newline;
+            break;
+          }
+      }
+  }
+
+  ui double drawKillConfirmed(double y, double newline)
+  {
+    if (!settings.showKillConfirmation) { return y; }
+    if (lastTargetKillTime == -1) { return y; }
+    if (level.time < lastTargetKillTime + 35 * 2)
+      {
+        drawTextCenter("Kill Confirmed", settings.nameCol, 0.5, y);
+        y += newline;
+      }
+    return y;
+  }
+
+  ui void drawTextCenter(string text, int color, double scale, double relativeY)
+  {
+    int width    = scale * Screen.GetWidth();
+    int height   = scale * (Screen.GetHeight() - settings.font.GetHeight());
+    int position = width - settings.font.StringWidth(text);
+
+    // fix one-pixel offset
+    if (position % 2) { --position; }
+
+    double x = position * 0.5;
+    double y = height   * relativeY;
+
+    Screen.DrawText(settings.font, color, x, y, text,
+                    DTA_KeepRatio,     true,
+                    DTA_VirtualWidth,  width,
+                    DTA_VirtualHeight, height);
+  }
+
+  ui Actor GetTarget(Actor a, int gameType = 0)
+  {
+    let player = a.player;
+    if (!player) { return null; }
+
+    // try an easy way to get a target (also works with autoaim)
+    m8f_ts_PlayToUiTranslator translator = new("m8f_ts_PlayToUiTranslator");
+    Actor target = translator.AimTargetWrapper(player.mo);
+
+    // if target is not found by easy way, try the difficult way
+    if (target == null)
+      {
+        target = translator.LineAttackTargetWrapper(a);
+      }
+
+    int showObjects = CVar.GetCVar("m8f_ts_show_objects", player).GetInt();
+
+    if (target == null && showObjects > 1)
+      {
+        target = translator.AimLineAttackWrapper(a);
+      }
+
+    // give up
+    if (target == null) { return null; }
+
+    string targetClass   = target.GetClassName();
+    bool   targetIsSlave = data.slaveActors.contains(targetClass);
+    if (targetIsSlave) { return target.Master; }
+
+    bool isInBlackList = data.blackList.contains(targetClass);
+    if (isInBlackList) { return null; }
+
+    switch (gameType)
+      {
+      case 1: targetClass.AppendFormat("_free" ); break; // Freedoom
+      case 2: targetClass.AppendFormat("_rekkr"); break; // Rekkr
+      }
+
+    // everything without name in REKKR is "blacklisted"
+    if (targetClass.IndexOf("_rekkr") != -1)
+      {
+        string specialName = data.specialNames.get(targetClass);
+        if (specialName.length() == 0) { return null; }
+      }
+
+    if (target.bISMONSTER)
+      {
+        if (target.bSHADOW || target.bSTEALTH)
+          {
+            bool showHidden = CVar.GetCVar("m8f_ts_show_hidden", player).GetInt();
+            if (!showHidden) { return null; }
+          }
+        if (target.bFRIENDLY)
+          {
+            bool showFriends = CVar.GetCVar("m8f_ts_show_friends", player).GetInt();
+            if (!showFriends) { return null; }
+          }
+      }
+    else // not monsters
+      {
+        switch (showObjects)
+          {
+          case 0: return null;
+          case 1:
+            if (target.bSHOOTABLE) { return target; }
+            else                   { return null;   }
+          case 2:
+            if (target.bSHOOTABLE || target is "Inventory") { return target; }
+            else                                            { return null;   }
+          case 3:
+            return target;
+          }
+      }
+
+    return target;
+  }
+
+  ui int GetActorMaxHealth(Actor a)
+  {
+    if (a == null)     { return 0; }
+    if (!a.bSHOOTABLE) { return 0; }
+
+    int maxHealth = a.SpawnHealth();
+    return maxHealth;
+  }
+
+  ui int CustomTargetColor(Actor target)
+  {
+    string customColorTokenClass = "tr_color_token";
+    int customColor = target.CountInv(customColorTokenClass);
+    return customColor;
+  }
+
+  ui static int Log2(int value)
+  {
+    int result = -1;
+    while (value)
+      {
+        ++result;
+        value /= 2;
+      }
+    return result;
+  }
+
+  ui string MakeHpBar(int health, int maxHealth, bool logScale,
+                      string pipSource, string emptyPipSource,
+                      bool greenRedTheme, int greenColor, int redColor)
+  {
+    int length;
+    if      (logScale)          { length = Log2(maxHealth) * 2; }
+    else if (maxHealth >= 2000) { length = 30; }
+    else if (maxHealth >= 500)  { length = 20; }
+    else                        { length = 10; }
+
+    int pips = health * length / maxHealth;
+    if      (pips == 0)      { pips = 1; }
+    else if (pips >  length) { pips = length; }
+
+    string pipColor;
+    string emptyColor;
+    if (greenRedTheme)
+      {
+        pipColor   = StringStruct.Format("\c%c", 97 + greenColor); // 'a'
+        emptyColor = StringStruct.Format("\c%c", 97 + redColor);   // 'a'
+      }
+    else
+      {
+        pipColor   = "";
+        emptyColor = "";
+      }
+
+    return StringStruct.Format("%s%s%s%s",
+                               pipColor,   pipSource.Left(pips),
+                               emptyColor, emptyPipSource.Left(length - pips));
+
+  }
+
+  bool CheckTitlemap()
+  {
+    bool isTitlemap = (level.mapname == "TITLEMAP");
+    return isTitlemap;
+  }
+
+  int GetDehackedGameType()
+  {
+    string checkString = StringTable.Localize("$E1TEXT");
+    string rekkrString = "You've been through war.";
+    bool   isRekkr     = (checkString.IndexOf(rekkrString) >= 0);
+    if (isRekkr) { return 2; }
+
+    string impName     = StringTable.Localize("$CC_IMP");
+    bool   isFreedoom  = (impName == "serpentipede");
+    if (isFreedoom) { return 1; }
+
+    return 0;
+  }
+
+  ui string GetTargetName(Actor target, int gameType, PlayerInfo player)
+  {
+    string targetClass = target.GetClassName();
+
+    bool showInternalNames = CVar.GetCVar("m8f_class_as_tag", player).GetInt();
+    if (showInternalNames) { return targetClass; }
+
+    switch (gameType)
+      {
+      case 1: targetClass.AppendFormat("_free" ); break; // Freedoom
+      case 2: targetClass.AppendFormat("_rekkr"); break; // Rekkr
+      }
+
+    // if target name was found before, just return it
+    // TODO: restore tag cache
+    //let cache = TagCache.Get();
+    //if (cache.cachedClass == targetClass)
+    //  {
+    //    SendResultString(player, AddAdditionalInfo(a, target, cache.cachedTag));
+    //    return;
+    //  }
+
+    // if target name is set via actor tag, return it
+    string targetName = target.GetTag();
+    if (targetName != targetClass && !(gameType != 0))
+      {
+        //cache.SetCache(targetClass, targetName);
+        return AddAdditionalInfo(target, targetName);
+      }
+
+    string specialName = data.specialNames.get(targetClass);
+    if (specialName.Length() != 0)
+      {
+        targetName = specialName;
+        //cache.SetCache(targetClass, targetName);
+        return AddAdditionalInfo(target, targetName);
+      }
+
+    // if target name is not found, compose tag from class name
+    targetName = SeparateCamelCase(targetName);
+    targetName.Replace("_", " ");
+
+    //cache.SetCache(targetClass, targetName);
+    return AddAdditionalInfo(target, targetName);
+  }
+
+  ui string AddAdditionalInfo(Actor target, string name)
+  {
+    Inventory inv = Inventory(target);
+    if (inv)
+      {
+        int amount = inv.amount;
+        if (amount == 1)
+          {
+            BasicArmorPickup armor = BasicArmorPickup(inv);
+            if (armor) { amount = armor.SaveAmount; }
+          }
+        if (amount == 1) { return name; }
+        else             { return StringStruct.Format("%s (%i)", name, amount); }
+      }
+    else
+      {
+        return PrependChampionColor(target, name);
+      }
+  }
+
+  ui string PrependChampionColor(Actor target, string name)
+  {
+    if (!settings.showChampion) { return name; }
+
+    string tokenClass = "champion_Token";
+    Inventory token = target.FindInventory(tokenClass, true);
+    if (!token) { return name; }
+
+    string tokenClassName = token.GetClassName();
+    string championTag    = data.championTokens.get(tokenClassName);
+    if (championTag.Length() == 0) { championTag = "Champion"; }
+
+    championTag.AppendFormat(" %s", name);
+    return championTag;
+  }
+
+  ui static string SeparateCamelCase(string source)
+  {
+    int sourceLength = source.Length();
+    string result = "";
+    string letter1 = source.CharAt(0);
+    string letter2;
+
+    for (int i = 1; i < sourceLength; ++i)
+      {
+        letter2 = source.CharAt(i);
+        if (IsSmallLetter(letter1) && IsBigLetter(letter2))
+          {
+            result.AppendFormat("%s ", letter1);
+          }
+        else
+          {
+            result.AppendFormat(letter1);
+          }
+        letter1 = letter2;
+      }
+    result.AppendFormat(letter2);
+
+    return result;
+  }
+
+  ui static bool IsSmallLetter(string letter)
+  {
+    int code = letter.CharCodeAt(0);
+    return (97 <= code && code <= 122);
+  }
+
+  ui static bool IsBigLetter(string letter)
+  {
+    int code = letter.CharCodeAt(0);
+    return (65 <= code && code <= 90);
+  }
+
+  ui string GetTargetFlags(Actor target)
+  {
+    string result = "";
+
+    if (target.bFRIENDLY)
+      {
+        result = "Friendly";
+      }
+
+    if (target.bINVULNERABLE)
+      {
+        if (result.Length() > 0) { result.AppendFormat(" "); }
+        result.AppendFormat("Invulnerable");
+      }
+
+    if (target.bBOSS)
+      {
+        if (result.Length() > 0) { result.AppendFormat(" "); }
+        result.AppendFormat("Boss");
+      }
+
+    return result;
+  }
+
+} // class m8f_ts_EventHandler
+
+class m8f_ts_TagCache
+{
+  string cachedClass;
+  string cachedTag;
+
+  void SetCache(string targetClass, string targetTag)
+  {
+    cachedClass = targetClass;
+    cachedTag   = targetTag;
+  }
+
+  m8f_ts_TagCache Init()
+  {
+    cachedClass = "";
+    cachedTag   = "";
+    return self;
+  }
+}
+
+class m8f_ts_InvisiblePuff : Actor
+{
+  Default
+  {
+    Mass 0;
+    Radius 1;
+    Height 2;
+    +NOBLOCKMAP;
+    +NOGRAVITY;
+    +BLOODLESSIMPACT;
+    +PUFFONACTORS;
+    +DONTSPLASH;
+    +NOTRIGGER;
+    +FORCEXYBILLBOARD;
+    +NOTONAUTOMAP;
+  }
+
+  States { Spawn: TNT1 A 0; Stop; }
+}
+
+class m8f_ts_PlayToUiTranslator
+{
+  play Actor AimTargetWrapper(Actor a) const
+  {
+    return a.AimTarget();
+  }
+
+  play Actor LineAttackTargetWrapper(Actor a) const
+  {
+    FTranslatedLineTarget victimTarget;
+    a.LineAttack(a.angle, 4000.0, a.pitch, 0, "none",
+                 "m8f_ts_InvisiblePuff", LAF_NOIMPACTDECAL, victimTarget);
+    return victimTarget.linetarget;
+  }
+
+  play Actor AimLineAttackWrapper(Actor a) const
+  {
+    FTranslatedLineTarget ftlt;
+    a.AimLineAttack(a.angle, 2048.0, ftlt, 0,
+                    ALF_CHECKNONSHOOTABLE | ALF_FORCENOSMART);
+    return ftlt.linetarget;
+  }
+}
