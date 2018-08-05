@@ -94,8 +94,10 @@ OptionMenu "m8f_ts_Crosshairs"
   Title "Target Spy Crosshairs setup"
 
   StaticText ""
-  Option "Enabled"   , "m8f_ts_crosshair_on", "OnOff"
-  Option "Only on target", "m8f_ts_cross_only_tg", "OnOff"
+  Option "Enabled"             , "m8f_ts_crosshair_on"  , "OnOff"
+  Option "Only on target"      , "m8f_ts_cross_only_tg" , "OnOff"
+  Option "Change color on hit" , "m8f_ts_hit_confirm"   , "OnOff"
+  Option "Hit color"           , "m8f_ts_hit_color"     , "TextColors"
 
   StaticText ""
   Slider "Top part offset"    , "m8f_ts_top_offset"   , -0.1, 0.1, 0.005, 3

@@ -24,6 +24,7 @@ class m8f_ts_EventHandler : EventHandler
   int             dehackedGameType;
   Actor           lastTarget;
   int             lastTargetKillTime;
+  int             lastTargetHurtTime;
   m8f_ts_TagCache cache;
 
   override void WorldLoaded(WorldEvent e)
@@ -34,6 +35,7 @@ class m8f_ts_EventHandler : EventHandler
     dehackedGameType   = GetDehackedGameType();
     lastTarget         = null;
     lastTargetKillTime = -1;
+    lastTargetHurtTime = -1;
     cache              = new("m8f_ts_TagCache").init();
   }
 
@@ -48,6 +50,19 @@ class m8f_ts_EventHandler : EventHandler
     {
       lastTargetKillTime = level.time;
     }
+  }
+
+  override void WorldThingDamaged(WorldEvent event)
+  {
+    if (event == null) { return; }
+
+    Actor damagedThing = event.thing;
+    if (damagedThing == null) { return; }
+
+    if (lastTarget == damagedThing)
+      {
+        lastTargetHurtTime = level.time;
+      }
   }
 
   override void RenderOverlay(RenderEvent e)
@@ -77,7 +92,7 @@ class m8f_ts_EventHandler : EventHandler
 
     draw(target, player);
 
-    SetLastTarget(target);
+    if (target != null) { SetLastTarget(target); }
   }
 
   // Wrapper to access lastTarget in scope play from ui scope.
@@ -90,6 +105,14 @@ class m8f_ts_EventHandler : EventHandler
   ui void drawCrosshairs(Actor target, int crosshairColor)
   {
     if (!settings.crossOn) { return; }
+
+    if (settings.hitConfirmation
+        && lastTargetHurtTime != -1
+        && (level.time < lastTargetHurtTime + 5)
+        )
+      {
+        crosshairColor = settings.hitColor;
+      }
 
     double scale = 0.5 / settings.crossScale;
 

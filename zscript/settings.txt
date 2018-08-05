@@ -50,6 +50,8 @@ class m8f_ts_Settings
   bool   showHidden;
   bool   showFriends;
   double crossScale;
+  bool   hitConfirmation;
+  int    hitColor;
 
   string pip;
   string emptyPip;
@@ -97,6 +99,8 @@ class m8f_ts_Settings
     showHidden           = CVar.GetCVar("m8f_ts_show_hidden"  , player).GetInt();
     showFriends          = CVar.GetCVar("m8f_ts_show_friends" , player).GetInt();
     crossScale           = CVar.GetCVar("m8f_ts_cross_scale"  , player).GetFloat();
+    hitConfirmation      = CVar.GetCVar("m8f_ts_hit_confirm"  , player).GetInt();
+    hitColor             = CVar.GetCVar("m8f_ts_hit_color"    , player).GetInt();
 
     pip       = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
     emptyPip  = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();
