@@ -109,7 +109,7 @@ class m8f_ts_EventHandler : EventHandler
 
     if (settings.hitConfirmation
         && lastTargetHurtTime != -1
-        && (level.time < lastTargetHurtTime + 5)
+        && (level.time < lastTargetHurtTime + 10)
         )
       {
         crosshairColor = settings.hitColor;
@@ -254,7 +254,7 @@ class m8f_ts_EventHandler : EventHandler
   {
     if (!settings.showKillConfirmation) { return y; }
     if (lastTargetKillTime == -1) { return y; }
-    if (level.time < lastTargetKillTime + 35 * 2)
+    if (level.time < lastTargetKillTime + 35 * 1)
       {
         double scale = 0.5 / settings.textScale;
         drawTextCenter("Kill Confirmed", settings.nameCol, scale, y, font);
