@@ -97,6 +97,13 @@ OptionMenu "m8f_ts_Crosshairs"
   Option "Enabled"   , "m8f_ts_crosshair_on", "OnOff"
   Option "Only on target", "m8f_ts_cross_only_tg", "OnOff"
 
+  StaticText ""
+  Slider "Top part offset"    , "m8f_ts_top_offset"   , -0.1, 0.1, 0.005, 3
+  Slider "Middle part offset" , "m8f_ts_cross_offset" , -0.1, 0.1, 0.005, 3
+  Slider "Bottom part offset" , "m8f_ts_bot_offset"   , -0.1, 0.1, 0.005, 3
+
+  StaticText ""
+  Slider "Scale", "m8f_ts_cross_scale", 0.5, 3.0, 0.05, 2
   TextField "Top"    , "m8f_ts_cross_top"
   Command "Clear"    , "m8f_ts_cross_top \"\""
   StaticText ""
@@ -107,11 +114,6 @@ OptionMenu "m8f_ts_Crosshairs"
 
   TextField "Bottom" , "m8f_ts_cross_bottom"
   Command "Clear"    , "m8f_ts_cross_bottom \"\""
-
-  StaticText ""
-  Slider "Top part offset"    , "m8f_ts_top_offset"   , -0.1, 0.1, 0.005, 3
-  Slider "Middle part offset" , "m8f_ts_cross_offset" , -0.1, 0.1, 0.005, 3
-  Slider "Bottom part offset" , "m8f_ts_bot_offset"   , -0.1, 0.1, 0.005, 3
 
   StaticText ""
 }

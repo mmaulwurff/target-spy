@@ -36,12 +36,12 @@ class m8f_ts_Settings
   int    nameCol;
   int    weakCol;
   bool   altHpCols;
-  int    stepMult;
+  double stepMult;
   bool   almDeadCr;
   int    crAlmDead;
-  int    crossOff;
-  int    topOff;
-  int    botOff;
+  double crossOff;
+  double topOff;
+  double botOff;
   int    greenCr;
   int    redCr;
   bool   showChampion;
@@ -49,6 +49,7 @@ class m8f_ts_Settings
   bool   showInternalNames;
   bool   showHidden;
   bool   showFriends;
+  double crossScale;
 
   string pip;
   string emptyPip;
@@ -82,11 +83,11 @@ class m8f_ts_Settings
     weakCol              = CVar.GetCVar("m8f_ts_def_cl_tag_wk", player).GetInt();
     altHpCols            = CVar.GetCVar("m8f_ts_alt_hp_color" , player).GetInt();
     crAlmDead            = CVar.GetCVar("m8f_ts_cr_alm_dead"  , player).GetInt();
-    stepMult             = CVar.GetCVar("m8f_ts_step_mult"    , player).GetInt();
+    stepMult             = CVar.GetCVar("m8f_ts_step_mult"    , player).GetFloat();
     almDeadCr            = CVar.GetCVar("m8f_ts_alm_dead_cr"  , player).GetInt();
-    crossOff             = CVar.GetCVar("m8f_ts_cross_offset" , player).GetInt();
-    topOff               = CVar.GetCVar("m8f_ts_top_offset"   , player).GetInt();
-    botOff               = CVar.GetCVar("m8f_ts_bot_offset"   , player).GetInt();
+    crossOff             = CVar.GetCVar("m8f_ts_cross_offset" , player).GetFloat();
+    topOff               = CVar.GetCVar("m8f_ts_top_offset"   , player).GetFloat();
+    botOff               = CVar.GetCVar("m8f_ts_bot_offset"   , player).GetFloat();
     greenCr              = CVar.GetCVar("m8f_ts_green_color"  , player).GetInt();
     redCr                = CVar.GetCVar("m8f_ts_red_color"    , player).GetInt();
     optionsUpdatePeriod  = CVar.GetCVar("m8f_ts_update_period", player).GetInt();
@@ -95,6 +96,7 @@ class m8f_ts_Settings
     showInternalNames    = CVar.GetCVar("m8f_class_as_tag"    , player).GetInt();
     showHidden           = CVar.GetCVar("m8f_ts_show_hidden"  , player).GetInt();
     showFriends          = CVar.GetCVar("m8f_ts_show_friends" , player).GetInt();
+    crossScale           = CVar.GetCVar("m8f_ts_cross_scale"  , player).GetFloat();
 
     pip       = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
     emptyPip  = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();

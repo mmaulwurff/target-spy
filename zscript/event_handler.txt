@@ -91,11 +91,15 @@ class m8f_ts_EventHandler : EventHandler
   {
     if (!settings.crossOn) { return; }
 
-    double scale = 0.5;
+    double scale = 0.5 / settings.crossScale;
 
-    drawTextCenter(settings.crossTop,  crosshairColor, scale, 0.54);
-    drawTextCenter(settings.crosshair, crosshairColor, scale, 0.51);
-    drawTextCenter(settings.crossBot,  crosshairColor, scale, 0.48);
+    double topY    = 0.48 + settings.topOff;
+    double centerY = 0.51 + settings.crossOff;
+    double bottomY = 0.54 + settings.botOff;
+
+    drawTextCenter(settings.crossTop,  crosshairColor, scale, topY);
+    drawTextCenter(settings.crosshair, crosshairColor, scale, centerY);
+    drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY);
   }
 
   ui void draw(Actor target, PlayerInfo player)
@@ -235,9 +239,6 @@ class m8f_ts_EventHandler : EventHandler
     int width    = scale * Screen.GetWidth();
     int height   = scale * (Screen.GetHeight() - settings.font.GetHeight());
     int position = width - settings.font.StringWidth(text);
-
-    // fix one-pixel offset
-    if (position % 2) { --position; }
 
     double x = position * 0.5;
     double y = height   * relativeY;
