@@ -24,6 +24,7 @@ class m8f_ts_EventHandler : EventHandler
   int             dehackedGameType;
   Actor           lastTarget;
   int             lastTargetKillTime;
+  m8f_ts_TagCache cache;
 
   override void WorldLoaded(WorldEvent e)
   {
@@ -33,6 +34,7 @@ class m8f_ts_EventHandler : EventHandler
     dehackedGameType   = GetDehackedGameType();
     lastTarget         = null;
     lastTargetKillTime = -1;
+    cache              = new("m8f_ts_TagCache").init();
   }
 
   override void WorldThingDied(WorldEvent event)
@@ -408,19 +410,16 @@ class m8f_ts_EventHandler : EventHandler
       }
 
     // if target name was found before, just return it
-    // TODO: restore tag cache
-    //let cache = TagCache.Get();
-    //if (cache.cachedClass == targetClass)
-    //  {
-    //    SendResultString(player, AddAdditionalInfo(a, target, cache.cachedTag));
-    //    return;
-    //  }
+    if (cache.cachedClass == targetClass)
+      {
+        return AddAdditionalInfo(target, cache.cachedTag);
+      }
 
     // if target name is set via actor tag, return it
     string targetName = target.GetTag();
     if (targetName != targetClass && !(gameType != 0))
       {
-        //cache.SetCache(targetClass, targetName);
+        cache.SetCache(targetClass, targetName);
         return AddAdditionalInfo(target, targetName);
       }
 
@@ -428,7 +427,7 @@ class m8f_ts_EventHandler : EventHandler
     if (specialName.Length() != 0)
       {
         targetName = specialName;
-        //cache.SetCache(targetClass, targetName);
+        cache.SetCache(targetClass, targetName);
         return AddAdditionalInfo(target, targetName);
       }
 
@@ -436,7 +435,7 @@ class m8f_ts_EventHandler : EventHandler
     targetName = SeparateCamelCase(targetName);
     targetName.Replace("_", " ");
 
-    //cache.SetCache(targetClass, targetName);
+    cache.SetCache(targetClass, targetName);
     return AddAdditionalInfo(target, targetName);
   }
 
