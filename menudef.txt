@@ -93,21 +93,24 @@ OptionMenu "m8f_ts_Options"
 
 OptionMenu "m8f_ts_Crosshairs"
 {
-  Title "Target Spy Crosshairs setup"
+  Title "Target Spy Crosshairs Setup"
 
   StaticText ""
   Option "Enabled"             , "m8f_ts_crosshair_on"  , "OnOff"
+
+  StaticText ""
+  Slider "Top part offset"     , "m8f_ts_top_offset"   , -0.1, 0.1, 0.005, 3
+  Slider "Middle part offset"  , "m8f_ts_cross_offset" , -0.1, 0.1, 0.005, 3
+  Slider "Bottom part offset"  , "m8f_ts_bot_offset"   , -0.1, 0.1, 0.005, 3
+  Slider "X Adjustment"        , "m8f_ts_x_adjustment" , -50, 50, 1, 0
+  Slider "Scale"               , "m8f_ts_cross_scale"  , 0.5, 3.0, 0.05, 2
+
+  StaticText ""
   Option "Only on target"      , "m8f_ts_cross_only_tg" , "OnOff"
   Option "Change color on hit" , "m8f_ts_hit_confirm"   , "OnOff"
   Option "Hit color"           , "m8f_ts_hit_color"     , "TextColors"
 
   StaticText ""
-  Slider "Top part offset"    , "m8f_ts_top_offset"   , -0.1, 0.1, 0.005, 3
-  Slider "Middle part offset" , "m8f_ts_cross_offset" , -0.1, 0.1, 0.005, 3
-  Slider "Bottom part offset" , "m8f_ts_bot_offset"   , -0.1, 0.1, 0.005, 3
-
-  StaticText ""
-  Slider "Scale", "m8f_ts_cross_scale", 0.5, 3.0, 0.05, 2
   TextField "Top"    , "m8f_ts_cross_top"
   Command "Clear"    , "m8f_ts_cross_top \"\""
   StaticText ""

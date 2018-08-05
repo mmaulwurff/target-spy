@@ -121,9 +121,10 @@ class m8f_ts_EventHandler : EventHandler
     double centerY = 0.51 + settings.crossOff;
     double bottomY = 0.54 + settings.botOff;
 
-    drawTextCenter(settings.crossTop,  crosshairColor, scale, topY   , font);
-    drawTextCenter(settings.crosshair, crosshairColor, scale, centerY, font);
-    drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY, font);
+    int dx = settings.xAdjustment;
+    drawTextCenter(settings.crossTop,  crosshairColor, scale, topY   , font, dx);
+    drawTextCenter(settings.crosshair, crosshairColor, scale, centerY, font, dx);
+    drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY, font, dx);
   }
 
   ui void draw(Actor target, PlayerInfo player)
@@ -264,13 +265,13 @@ class m8f_ts_EventHandler : EventHandler
   }
 
   ui void drawTextCenter(string text, int color, double scale, double relativeY,
-                         Font font)
+                         Font font, int xAdjustment = 0)
   {
     int width    = scale * Screen.GetWidth();
     int height   = scale * (Screen.GetHeight() - font.GetHeight());
     int position = width - font.StringWidth(text);
 
-    double x = position * 0.5;
+    double x = position * 0.5 + xAdjustment;
     double y = height   * relativeY;
 
     Screen.DrawText(font, color, x, y, text,

@@ -53,6 +53,7 @@ class m8f_ts_Settings
   bool   hitConfirmation;
   int    hitColor;
   double textScale;
+  int    xAdjustment;
 
   string pip;
   string emptyPip;
@@ -98,6 +99,7 @@ class m8f_ts_Settings
     hitConfirmation      = CVar.GetCVar("m8f_ts_hit_confirm"  , player).GetInt();
     hitColor             = CVar.GetCVar("m8f_ts_hit_color"    , player).GetInt();
     textScale            = CVar.GetCVar("m8f_ts_text_scale"   , player).GetFloat();
+    xAdjustment          = CVar.GetCVar("m8f_ts_x_adjustment" , player).GetInt();
 
     pip       = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
     emptyPip  = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();
