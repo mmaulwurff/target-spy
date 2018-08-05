@@ -75,8 +75,7 @@ class m8f_ts_EventHandler : EventHandler
 
     Actor target = GetTarget(playerActor);
 
-    drawCrosshairs(target);
-    drawLines(target, player);
+    draw(target, player);
 
     SetLastTarget(target);
   }
@@ -88,21 +87,18 @@ class m8f_ts_EventHandler : EventHandler
     lastTarget = newLastTarget;
   }
 
-  ui void drawCrosshairs(Actor target)
+  ui void drawCrosshairs(Actor target, int crosshairColor)
   {
     if (!settings.crossOn) { return; }
 
-    //int   targetMaxHealth = GetActorMaxHealth(target);
-
     double scale = 0.5;
-    int    color = settings.crossCol;
 
-    drawTextCenter(settings.crossTop,  color, scale, 0.54);
-    drawTextCenter(settings.crosshair, color, scale, 0.51);
-    drawTextCenter(settings.crossBot,  color, scale, 0.48);
+    drawTextCenter(settings.crossTop,  crosshairColor, scale, 0.54);
+    drawTextCenter(settings.crosshair, crosshairColor, scale, 0.51);
+    drawTextCenter(settings.crossBot,  crosshairColor, scale, 0.48);
   }
 
-  ui void drawLines(Actor target, PlayerInfo player)
+  ui void draw(Actor target, PlayerInfo player)
   {
     double y       = settings.yStart;
     double newline = 0.03 * settings.stepMult;
@@ -113,18 +109,24 @@ class m8f_ts_EventHandler : EventHandler
     bool hasTarget = (target != null);
     CVar.GetCVar("m8f_ts_has_target", player).SetInt(hasTarget);
 
-    if (!hasTarget) { return; }
+    if (!hasTarget)
+      {
+        drawCrosshairs(target, settings.crossCol);
+        return;
+      }
 
     int  targetMaxHealth = GetActorMaxHealth(target);
     bool showHealth      = (targetMaxHealth != 0);
     if (targetMaxHealth < settings.minHealth && targetMaxHealth != 0)
       {
+        drawCrosshairs(target, settings.crossCol);
         return; // not worth showing
       }
 
     int targetHealth = target.health;
     if (targetHealth < 1 && !settings.showCorps) // target is dead
       {
+        drawCrosshairs(target, settings.crossCol);
         return;
       }
 
@@ -144,6 +146,8 @@ class m8f_ts_EventHandler : EventHandler
     int targetColor = settings.colors[percent];
     if (targetHealth < 35 && settings.almDeadCr) targetColor = settings.crAlmDead;
     if (targetHealth < 1)                        targetColor = settings.crAlmDead;
+
+    drawCrosshairs(target, targetColor);
 
     if (settings.showBar && showHealth)
       {
