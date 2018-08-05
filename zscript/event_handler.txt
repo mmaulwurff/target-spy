@@ -130,7 +130,7 @@ class m8f_ts_EventHandler : EventHandler
   {
     double y       = settings.yStart;
     double newline = 0.03 * settings.stepMult;
-    if (y >= 0.95) { newline = -newline; }
+    if (y >= 0.80) { newline = -newline; }
 
     Font font = Font.GetFont(settings.fontName);
 
