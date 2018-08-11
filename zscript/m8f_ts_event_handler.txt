@@ -79,6 +79,8 @@ class m8f_ts_EventHandler : EventHandler
         settings.read(player);
       }
 
+    if (automapActive) { return; }
+
     drawEverything(player);
   }
 
