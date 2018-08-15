@@ -46,7 +46,7 @@ class m8f_ts_Settings
   int    redCr;
   bool   showChampion;
   int    showObjects;
-  bool   showInternalNames;
+  int    showInternalNames;
   bool   showHidden;
   bool   showFriends;
   double crossScale;

@@ -454,7 +454,12 @@ class m8f_ts_EventHandler : EventHandler
   {
     string targetClass = target.GetClassName();
 
-    if (settings.showInternalNames) { return targetClass; }
+    switch (settings.showInternalNames)
+      {
+      case 0: break;
+      case 1: return targetClass;
+      case 2: return Beautify(targetClass);
+      }
 
     switch (gameType)
       {
@@ -485,11 +490,17 @@ class m8f_ts_EventHandler : EventHandler
       }
 
     // if target name is not found, compose tag from class name
-    targetName = SeparateCamelCase(targetName);
-    targetName.Replace("_", " ");
+    targetName = Beautify(targetName);
 
     cache.SetCache(targetClass, targetName);
     return AddAdditionalInfo(target, targetName);
+  }
+
+  ui string Beautify(string s)
+  {
+    string result = SeparateCamelCase(s);
+    result.Replace("_", " ");
+    return result;
   }
 
   ui string AddAdditionalInfo(Actor target, string name)

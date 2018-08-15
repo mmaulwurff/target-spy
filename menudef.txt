@@ -44,6 +44,13 @@ OptionValue "m8f_ts_update_period_values"
  105, "Every three seconds"
 }
 
+OptionValue "m8f_ts_class_as_tag_values"
+{
+  0, "Tags"
+  1, "Class Names"
+  2, "Beautified Class Names"
+}
+
 OptionMenu "m8f_ts_Options"
 {
   Title "Target Spy Options"
@@ -54,7 +61,7 @@ OptionMenu "m8f_ts_Options"
   Option "Font"                 , "m8f_ts_font"    , "m8f_ts_font_values"
   Slider "Newline step"         , "m8f_ts_step_mult", 0.1, 10.0, 0.1, 1
   Slider "Scale"                , "m8f_ts_text_scale", 0.5, 3.0, 0.05, 2
-  Option "Internal names"       , "m8f_class_as_tag", "OnOff"
+  Option "Names:"               , "m8f_class_as_tag", "m8f_ts_class_as_tag_values"
   Option "Options update"       , "m8f_ts_update_period", "m8f_ts_update_period_values"
   TextField "Minimal health"    , "m8f_ts_min_health"
   StaticText "Target spy will be hidden for targets" , "Black"
