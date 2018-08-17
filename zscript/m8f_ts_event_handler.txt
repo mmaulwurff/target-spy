@@ -16,27 +16,110 @@
  * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+class m8f_ts_MultiSettings
+{
+  Array<m8f_ts_Settings> settingsArray;
+
+  m8f_ts_MultiSettings init()
+  {
+    for (int i = 0; i < MAXPLAYERS; ++i)
+      {
+        settingsArray.push(new("m8f_ts_Settings"));
+      }
+
+    return self;
+  }
+
+  void read(int playerNumber)
+  {
+    PlayerInfo player = players[playerNumber];
+    settingsArray[playerNumber].read(player);
+  }
+
+  m8f_ts_Settings get(int playerNumber)
+  {
+    return settingsArray[playerNumber];
+  }
+
+  void maybeUpdate(int playerNumber)
+  {
+    PlayerInfo player              = players[playerNumber];
+    int        optionsUpdatePeriod = CVar.GetCVar("m8f_ts_update_period", player).GetInt();
+
+    if (optionsUpdatePeriod == 0) { read(playerNumber); }
+    else if (optionsUpdatePeriod != -1
+             && (level.time % optionsUpdatePeriod) == 0)
+      {
+        read(playerNumber);
+      }
+  }
+}
+
+class m8f_ts_LastTargetInfo
+{
+  Actor a;
+  int   killTime;
+  int   hurtTime;
+
+  m8f_ts_LastTargetInfo init()
+  {
+    a        = null;
+    killTime = -1;
+    hurtTime = -1;
+
+    return self;
+  }
+}
+
+class m8f_ts_MultiLastTargetInfo
+{
+  Array<m8f_ts_LastTargetInfo> lastTargetInfos;
+
+  m8f_ts_MultiLastTargetInfo init()
+  {
+    for (int i = 0; i < MAXPLAYERS; ++i)
+      {
+        lastTargetInfos.push(new("m8f_ts_LastTargetInfo").init());
+      }
+
+    return self;
+  }
+
+  m8f_ts_LastTargetInfo get(int playerNumber)
+  {
+    return lastTargetInfos[playerNumber];
+  }
+}
+
 class m8f_ts_EventHandler : EventHandler
 {
-  m8f_ts_Settings settings;
+  m8f_ts_MultiSettings       multiSettings;
+  m8f_ts_MultiLastTargetInfo multiLastTargetInfo;
+
   m8f_ts_Data     data;
   bool            isTitlemap;
   int             dehackedGameType;
-  Actor           lastTarget;
-  int             lastTargetKillTime;
-  int             lastTargetHurtTime;
+
   m8f_ts_TagCache cache;
 
   override void WorldLoaded(WorldEvent e)
   {
-    settings           = new("m8f_ts_Settings").init(players[consolePlayer]);
     data               = new("m8f_ts_Data").init();
     isTitlemap         = CheckTitlemap();
     dehackedGameType   = GetDehackedGameType();
-    lastTarget         = null;
-    lastTargetKillTime = -1;
-    lastTargetHurtTime = -1;
+
     cache              = new("m8f_ts_TagCache").init();
+  }
+
+  override void OnRegister()
+  {
+    multiSettings       = new("m8f_ts_MultiSettings").init();
+    multiLastTargetInfo = new("m8f_ts_MultiLastTargetInfo").init();
+  }
+
+  override void PlayerEntered(PlayerEvent e)
+  {
+    multiSettings.read(e.playerNumber);
   }
 
   override void WorldThingDied(WorldEvent event)
@@ -46,10 +129,14 @@ class m8f_ts_EventHandler : EventHandler
     Actor died = event.thing;
     if (died == null) { return; }
 
-    if (lastTarget == died)
-    {
-      lastTargetKillTime = level.time;
-    }
+    for (int i = 0; i < MAXPLAYERS; ++i)
+      {
+        let lastTargetInfo = multiLastTargetInfo.get(i);
+        if (lastTargetInfo.a == died)
+          {
+            lastTargetInfo.killTime = level.time;
+          }
+      }
   }
 
   override void WorldThingDamaged(WorldEvent event)
@@ -59,9 +146,14 @@ class m8f_ts_EventHandler : EventHandler
     Actor damagedThing = event.thing;
     if (damagedThing == null) { return; }
 
-    if (lastTarget == damagedThing)
+
+    for (int i = 0; i < MAXPLAYERS; ++i)
       {
-        lastTargetHurtTime = level.time;
+        let lastTargetInfo = multiLastTargetInfo.get(i);
+        if (lastTargetInfo.a == damagedThing)
+          {
+            lastTargetInfo.hurtTime = level.time;
+          }
       }
   }
 
@@ -69,45 +161,37 @@ class m8f_ts_EventHandler : EventHandler
   {
     if (isTitlemap) { return; }
 
-    PlayerInfo player = players[consolePlayer];
-
-    int optionsUpdatePeriod = CVar.GetCVar("m8f_ts_update_period", player).GetInt();
-    if (optionsUpdatePeriod == 0) { settings.read(player); }
-    else if (optionsUpdatePeriod != -1
-             && (level.time % optionsUpdatePeriod) == 0)
-      {
-        settings.read(player);
-      }
+    int        playerNumber = e.camera.PlayerNumber();
+    PlayerInfo player       = players[playerNumber];
+    multiSettings.maybeUpdate(playerNumber);
 
     if (automapActive) { return; }
 
-    drawEverything(player);
+    drawEverything(playerNumber);
   }
 
-  ui void drawEverything(PlayerInfo player)
+  ui void drawEverything(int playerNumber)
   {
+    PlayerInfo player = players[playerNumber];
     if (!CVar.GetCVar("m8f_ts_enabled", player).GetInt()) { return; }
 
-    Actor playerActor = player.mo;
-    if (playerActor == null) { return; }
+    Actor target = GetTarget(playerNumber, 0);
 
-    Actor target = GetTarget(playerActor);
+    draw(target, playerNumber);
 
-    draw(target, player);
-
-    if (target != null) { SetLastTarget(target); }
+    if (target != null) { SetLastTarget(target, playerNumber); }
   }
 
   // Wrapper to access lastTarget in scope play from ui scope.
   // not really const, but lastTarget doesn't affect gameplay.
-  void SetLastTarget(Actor newLastTarget) const
+  void SetLastTarget(Actor newLastTarget, int playerNumber) const
   {
-    lastTarget = newLastTarget;
+    multiLastTargetInfo.get(playerNumber).a = newLastTarget;
   }
 
-  play bool isSlot1Weapon() const
+  play bool isSlot1Weapon(int playerNumber) const
   {
-    PlayerInfo player = players[consolePlayer];
+    PlayerInfo player = players[playerNumber];
     Weapon w = player.readyWeapon;
     if (w == null) { return true; }
 
@@ -118,69 +202,81 @@ class m8f_ts_EventHandler : EventHandler
     return (slot == 1);
   }
 
-  ui void drawCrosshairs(Actor target, int crosshairColor, Font font)
+  ui void drawCrosshairs( Actor target
+                        , int   crosshairColor
+                        , Font  font
+                        , int   playerNumber
+                        )
   {
-    if (!settings.crossOn) { return; }
+    if (!multiSettings.get(playerNumber).crossOn) { return; }
 
-    if (settings.noCrossOnSlot1 && isSlot1Weapon()) { return; }
-
-    if (settings.hitConfirmation
-        && lastTargetHurtTime != -1
-        && (level.time < lastTargetHurtTime + 10)
-        )
+    if (multiSettings.get(playerNumber).noCrossOnSlot1
+        && isSlot1Weapon(playerNumber))
       {
-        crosshairColor = settings.hitColor;
+        return;
       }
 
-    double scale = 0.5 / settings.crossScale;
+    if (multiSettings.get(playerNumber).hitConfirmation)
+      {
+        let lastTargetInfo = multiLastTargetInfo.get(playerNumber);
+        if (lastTargetInfo.hurtTime != -1
+            && (level.time < lastTargetInfo.hurtTime + 10))
+          {
+            crosshairColor = multiSettings.get(playerNumber).hitColor;
+          }
+      }
 
-    double topY    = 0.48 + settings.topOff;
-    double centerY = 0.51 + settings.crossOff;
-    double bottomY = 0.54 + settings.botOff;
+    double scale = 0.5 / multiSettings.get(playerNumber).crossScale;
 
-    int dx = settings.xAdjustment;
-    drawTextCenter(settings.crossTop,  crosshairColor, scale, topY   , font, dx);
-    drawTextCenter(settings.crosshair, crosshairColor, scale, centerY, font, dx);
-    drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY, font, dx);
+    double topY    = 0.48 + multiSettings.get(playerNumber).topOff;
+    double centerY = 0.51 + multiSettings.get(playerNumber).crossOff;
+    double bottomY = 0.54 + multiSettings.get(playerNumber).botOff;
+
+    int dx = multiSettings.get(playerNumber).xAdjustment;
+    drawTextCenter(multiSettings.get(playerNumber).crossTop,  crosshairColor, scale, topY   , font, dx);
+    drawTextCenter(multiSettings.get(playerNumber).crosshair, crosshairColor, scale, centerY, font, dx);
+    drawTextCenter(multiSettings.get(playerNumber).crossBot,  crosshairColor, scale, bottomY, font, dx);
   }
 
-  ui void draw(Actor target, PlayerInfo player)
+  ui void draw(Actor target, int playerNumber)
   {
-    double y       = settings.yStart;
-    double newline = 0.03 * settings.stepMult;
+    double y       = multiSettings.get(playerNumber).yStart;
+    double newline = 0.03 * multiSettings.get(playerNumber).stepMult;
     if (y >= 0.80) { newline = -newline; }
 
-    Font font = Font.GetFont(settings.fontName);
+    Font font = Font.GetFont(multiSettings.get(playerNumber).fontName);
 
-    y = drawKillConfirmed(y, newline, font);
+    y = drawKillConfirmed(y, newline, font, playerNumber);
 
-    bool hasTarget = (target != null);
+    PlayerInfo player    = players[playerNumber];
+    bool       hasTarget = (target != null);
+    int        crossCol  = multiSettings.get(playerNumber).crossCol;
     CVar.GetCVar("m8f_ts_has_target", player).SetInt(hasTarget);
 
     if (!hasTarget)
       {
-        drawCrosshairs(target, settings.crossCol, font);
+        drawCrosshairs(target, crossCol, font, playerNumber);
         return;
       }
 
     int  targetMaxHealth = GetActorMaxHealth(target);
     bool showHealth      = (targetMaxHealth != 0);
-    if (targetMaxHealth < settings.minHealth && targetMaxHealth != 0)
+    if (targetMaxHealth < multiSettings.get(playerNumber).minHealth && targetMaxHealth != 0)
       {
-        drawCrosshairs(target, settings.crossCol, font);
+        drawCrosshairs(target, crossCol, font, playerNumber);
         return; // not worth showing
       }
 
     int targetHealth = target.health;
-    if (targetHealth < 1 && !settings.showCorps) // target is dead
+    if (targetHealth < 1 && !multiSettings.get(playerNumber).showCorps) // target is dead
       {
-        drawCrosshairs(target, settings.crossCol, font);
+        drawCrosshairs(target, crossCol, font, playerNumber);
         return;
       }
 
     int tagColor;
-    if (targetMaxHealth < 100) { tagColor = settings.weakCol; }
-    else                       { tagColor = settings.nameCol; }
+    if (targetMaxHealth < 100) { tagColor = multiSettings.get(playerNumber).weakCol; }
+    else                       { tagColor = multiSettings.get(playerNumber).nameCol; }
     int customColor = CustomTargetColor(target);
     if (customColor)           { tagColor = customColor; }
 
@@ -191,21 +287,21 @@ class m8f_ts_EventHandler : EventHandler
         else { percent = targetHealth * 10 / targetMaxHealth; }
       }
 
-    int targetColor = settings.colors[percent];
-    if (targetHealth < 35 && settings.almDeadCr) targetColor = settings.crAlmDead;
-    if (targetHealth < 1)                        targetColor = settings.crAlmDead;
+    int targetColor = multiSettings.get(playerNumber).colors[percent];
+    if (targetHealth < 35 && multiSettings.get(playerNumber).almDeadCr) targetColor = multiSettings.get(playerNumber).crAlmDead;
+    if (targetHealth < 1)                        targetColor = multiSettings.get(playerNumber).crAlmDead;
 
-    drawCrosshairs(target, targetColor, font);
+    drawCrosshairs(target, targetColor, font, playerNumber);
 
-    double textScale = 0.5 / settings.textScale;
+    double textScale = 0.5 / multiSettings.get(playerNumber).textScale;
 
-    if (settings.showBar && showHealth)
+    if (multiSettings.get(playerNumber).showBar && showHealth)
       {
         string hpBar = MakeHpBar(targetHealth, targetMaxHealth,
-                                 settings.logScale,
-                                 settings.pipSource, settings.emptyPipSource,
-                                 settings.altHpCols,
-                                 settings.greenCr, settings.redCr);
+                                 multiSettings.get(playerNumber).logScale,
+                                 multiSettings.get(playerNumber).pipSource, multiSettings.get(playerNumber).emptyPipSource,
+                                 multiSettings.get(playerNumber).altHpCols,
+                                 multiSettings.get(playerNumber).greenCr, multiSettings.get(playerNumber).redCr);
         drawTextCenter(hpBar, targetColor, textScale, y, font);
         y += newline;
       }
@@ -213,9 +309,9 @@ class m8f_ts_EventHandler : EventHandler
     int nameColor = tagColor;
     if (targetHealth < 1) { nameColor = targetColor; }
 
-    if (settings.showName)
+    if (multiSettings.get(playerNumber).showName)
       {
-        string targetName = GetTargetName(target, dehackedGameType, player);
+        string targetName = GetTargetName(target, dehackedGameType, playerNumber);
         if (targetHealth < 1)
           {
             targetName = StringStruct.Format("Remains of %s", targetName);
@@ -226,7 +322,7 @@ class m8f_ts_EventHandler : EventHandler
         y += newline;
       }
 
-    if (settings.showInfo)
+    if (multiSettings.get(playerNumber).showInfo)
       {
         string targetFlags = GetTargetFlags(target);
         if (targetFlags.Length() > 0)
@@ -238,7 +334,7 @@ class m8f_ts_EventHandler : EventHandler
 
     if (showHealth)
       {
-        switch (settings.showNums)
+        switch (multiSettings.get(playerNumber).showNums)
           {
           case 0: break;
 
@@ -268,14 +364,19 @@ class m8f_ts_EventHandler : EventHandler
       }
   }
 
-  ui double drawKillConfirmed(double y, double newline, Font font)
+  ui double drawKillConfirmed( double y
+                             , double newline
+                             , Font   font
+                             , int    playerNumber
+                             )
   {
-    if (!settings.showKillConfirmation) { return y; }
-    if (lastTargetKillTime == -1) { return y; }
-    if (level.time < lastTargetKillTime + 35 * 1)
+    if (!multiSettings.get(playerNumber).showKillConfirmation) { return y; }
+    let lastTargetInfo = multiLastTargetInfo.get(playerNumber);
+    if (lastTargetInfo.killTime == -1) { return y; }
+    if (level.time < lastTargetInfo.killTime + 35 * 1)
       {
-        double scale = 0.5 / settings.textScale;
-        drawTextCenter("Kill Confirmed", settings.nameCol, scale, y, font);
+        double scale = 0.5 / multiSettings.get(playerNumber).textScale;
+        drawTextCenter("Kill Confirmed", multiSettings.get(playerNumber).nameCol, scale, y, font);
         y += newline;
       }
     return y;
@@ -297,9 +398,9 @@ class m8f_ts_EventHandler : EventHandler
                     DTA_VirtualHeight, height);
   }
 
-  ui Actor GetTarget(Actor a, int gameType = 0)
+  ui Actor GetTarget(int playerNumber, int gameType)
   {
-    let player = a.player;
+    PlayerInfo player = players[playerNumber];
     if (!player) { return null; }
 
     // try an easy way to get a target (also works with autoaim)
@@ -307,14 +408,16 @@ class m8f_ts_EventHandler : EventHandler
     Actor target = translator.AimTargetWrapper(player.mo);
 
     // if target is not found by easy way, try the difficult way
+    //*
     if (target == null)
       {
-        target = translator.LineAttackTargetWrapper(a);
+        target = translator.LineAttackTargetWrapper(player.mo);
       }
+    ///*///
 
-    if (target == null && settings.showObjects > 1)
+    if (target == null && multiSettings.get(playerNumber).showObjects > 1)
       {
-        target = translator.AimLineAttackWrapper(a);
+        target = translator.AimLineAttackWrapper(player.mo);
       }
 
     // give up
@@ -342,18 +445,18 @@ class m8f_ts_EventHandler : EventHandler
 
     if (target.bISMONSTER)
       {
-        if ((target.bSHADOW || target.bSTEALTH) && !settings.showHidden)
+        if ((target.bSHADOW || target.bSTEALTH) && !multiSettings.get(playerNumber).showHidden)
           {
             return null;
           }
-        if (target.bFRIENDLY && !settings.showFriends)
+        if (target.bFRIENDLY && !multiSettings.get(playerNumber).showFriends)
           {
             return null;
           }
       }
     else // not monsters
       {
-        switch (settings.showObjects)
+        switch (multiSettings.get(playerNumber).showObjects)
           {
           case 0: return null;
           case 1:
@@ -450,11 +553,11 @@ class m8f_ts_EventHandler : EventHandler
     return 0;
   }
 
-  ui string GetTargetName(Actor target, int gameType, PlayerInfo player)
+  ui string GetTargetName(Actor target, int gameType, int playerNumber)
   {
     string targetClass = target.GetClassName();
 
-    switch (settings.showInternalNames)
+    switch (multiSettings.get(playerNumber).showInternalNames)
       {
       case 0: break;
       case 1: return targetClass;
@@ -470,7 +573,7 @@ class m8f_ts_EventHandler : EventHandler
     // if target name was found before, just return it
     if (cache.cachedClass == targetClass)
       {
-        return AddAdditionalInfo(target, cache.cachedTag);
+        return AddAdditionalInfo(target, cache.cachedTag, playerNumber);
       }
 
     // if target name is set via actor tag, return it
@@ -478,7 +581,7 @@ class m8f_ts_EventHandler : EventHandler
     if (targetName != targetClass && !(gameType != 0))
       {
         cache.SetCache(targetClass, targetName);
-        return AddAdditionalInfo(target, targetName);
+        return AddAdditionalInfo(target, targetName, playerNumber);
       }
 
     string specialName = data.specialNames.get(targetClass);
@@ -486,14 +589,14 @@ class m8f_ts_EventHandler : EventHandler
       {
         targetName = specialName;
         cache.SetCache(targetClass, targetName);
-        return AddAdditionalInfo(target, targetName);
+        return AddAdditionalInfo(target, targetName, playerNumber);
       }
 
     // if target name is not found, compose tag from class name
     targetName = Beautify(targetName);
 
     cache.SetCache(targetClass, targetName);
-    return AddAdditionalInfo(target, targetName);
+    return AddAdditionalInfo(target, targetName, playerNumber);
   }
 
   ui string Beautify(string s)
@@ -503,7 +606,7 @@ class m8f_ts_EventHandler : EventHandler
     return result;
   }
 
-  ui string AddAdditionalInfo(Actor target, string name)
+  ui string AddAdditionalInfo(Actor target, string name, int playerNumber)
   {
     Inventory inv = Inventory(target);
     if (inv)
@@ -519,13 +622,13 @@ class m8f_ts_EventHandler : EventHandler
       }
     else
       {
-        return PrependChampionColor(target, name);
+        return PrependChampionColor(target, name, playerNumber);
       }
   }
 
-  ui string PrependChampionColor(Actor target, string name)
+  ui string PrependChampionColor(Actor target, string name, int playerNumber)
   {
-    if (!settings.showChampion) { return name; }
+    if (!multiSettings.get(playerNumber).showChampion) { return name; }
 
     string tokenClass = "champion_Token";
     Inventory token = target.FindInventory(tokenClass, true);
@@ -621,26 +724,6 @@ class m8f_ts_TagCache
   }
 }
 
-class m8f_ts_InvisiblePuff : Actor
-{
-  Default
-  {
-    Mass 0;
-    Radius 1;
-    Height 2;
-    +NOBLOCKMAP;
-    +NOGRAVITY;
-    +BLOODLESSIMPACT;
-    +PUFFONACTORS;
-    +DONTSPLASH;
-    +NOTRIGGER;
-    +FORCEXYBILLBOARD;
-    +NOTONAUTOMAP;
-  }
-
-  States { Spawn: TNT1 A 0; Stop; }
-}
-
 class m8f_ts_PlayToUiTranslator
 {
   play Actor AimTargetWrapper(Actor a) const
@@ -650,10 +733,9 @@ class m8f_ts_PlayToUiTranslator
 
   play Actor LineAttackTargetWrapper(Actor a) const
   {
-    FTranslatedLineTarget victimTarget;
-    a.LineAttack(a.angle, 4000.0, a.pitch, 0, "none",
-                 "m8f_ts_InvisiblePuff", LAF_NOIMPACTDECAL, victimTarget);
-    return victimTarget.linetarget;
+    FLineTraceData lineTraceData;
+    a.LineTrace(a.angle, 4000.0, a.pitch, 0, 0.0, 0.0, 0.0, lineTraceData);
+    return lineTraceData.HitActor;
   }
 
   play Actor AimLineAttackWrapper(Actor a) const
