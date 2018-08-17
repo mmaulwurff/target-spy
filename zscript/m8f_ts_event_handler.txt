@@ -259,24 +259,25 @@ class m8f_ts_EventHandler : EventHandler
         return;
       }
 
+    let  settings        = multiSettings.get(playerNumber);
     int  targetMaxHealth = GetActorMaxHealth(target);
     bool showHealth      = (targetMaxHealth != 0);
-    if (targetMaxHealth < multiSettings.get(playerNumber).minHealth && targetMaxHealth != 0)
+    if (targetMaxHealth < settings.minHealth && targetMaxHealth != 0)
       {
         drawCrosshairs(target, crossCol, font, playerNumber);
         return; // not worth showing
       }
 
     int targetHealth = target.health;
-    if (targetHealth < 1 && !multiSettings.get(playerNumber).showCorps) // target is dead
+    if (targetHealth < 1 && !settings.showCorps) // target is dead
       {
         drawCrosshairs(target, crossCol, font, playerNumber);
         return;
       }
 
     int tagColor;
-    if (targetMaxHealth < 100) { tagColor = multiSettings.get(playerNumber).weakCol; }
-    else                       { tagColor = multiSettings.get(playerNumber).nameCol; }
+    if (targetMaxHealth < 100) { tagColor = settings.weakCol; }
+    else                       { tagColor = settings.nameCol; }
     int customColor = CustomTargetColor(target);
     if (customColor)           { tagColor = customColor; }
 
@@ -287,21 +288,21 @@ class m8f_ts_EventHandler : EventHandler
         else { percent = targetHealth * 10 / targetMaxHealth; }
       }
 
-    int targetColor = multiSettings.get(playerNumber).colors[percent];
-    if (targetHealth < 35 && multiSettings.get(playerNumber).almDeadCr) targetColor = multiSettings.get(playerNumber).crAlmDead;
-    if (targetHealth < 1)                        targetColor = multiSettings.get(playerNumber).crAlmDead;
+    int targetColor = settings.colors[percent];
+    if (targetHealth < 35 && settings.almDeadCr) targetColor = settings.crAlmDead;
+    if (targetHealth < 1)                        targetColor = settings.crAlmDead;
 
     drawCrosshairs(target, targetColor, font, playerNumber);
 
-    double textScale = 0.5 / multiSettings.get(playerNumber).textScale;
+    double textScale = 0.5 / settings.textScale;
 
-    if (multiSettings.get(playerNumber).showBar && showHealth)
+    if (settings.showBar && showHealth)
       {
         string hpBar = MakeHpBar(targetHealth, targetMaxHealth,
-                                 multiSettings.get(playerNumber).logScale,
-                                 multiSettings.get(playerNumber).pipSource, multiSettings.get(playerNumber).emptyPipSource,
-                                 multiSettings.get(playerNumber).altHpCols,
-                                 multiSettings.get(playerNumber).greenCr, multiSettings.get(playerNumber).redCr);
+                                 settings.logScale,
+                                 settings.pipSource, settings.emptyPipSource,
+                                 settings.altHpCols,
+                                 settings.greenCr, settings.redCr);
         drawTextCenter(hpBar, targetColor, textScale, y, font);
         y += newline;
       }
@@ -309,7 +310,7 @@ class m8f_ts_EventHandler : EventHandler
     int nameColor = tagColor;
     if (targetHealth < 1) { nameColor = targetColor; }
 
-    if (multiSettings.get(playerNumber).showName)
+    if (settings.showName)
       {
         string targetName = GetTargetName(target, dehackedGameType, playerNumber);
         if (targetHealth < 1)
@@ -322,7 +323,7 @@ class m8f_ts_EventHandler : EventHandler
         y += newline;
       }
 
-    if (multiSettings.get(playerNumber).showInfo)
+    if (settings.showInfo)
       {
         string targetFlags = GetTargetFlags(target);
         if (targetFlags.Length() > 0)
@@ -334,7 +335,7 @@ class m8f_ts_EventHandler : EventHandler
 
     if (showHealth)
       {
-        switch (multiSettings.get(playerNumber).showNums)
+        switch (settings.showNums)
           {
           case 0: break;
 
@@ -404,18 +405,17 @@ class m8f_ts_EventHandler : EventHandler
     if (!player) { return null; }
 
     // try an easy way to get a target (also works with autoaim)
-    m8f_ts_PlayToUiTranslator translator = new("m8f_ts_PlayToUiTranslator");
-    Actor target = translator.AimTargetWrapper(player.mo);
+    let   translator = new("m8f_ts_PlayToUiTranslator");
+    Actor target     = translator.AimTargetWrapper(player.mo);
+    let   settings   = multiSettings.get(playerNumber);
 
     // if target is not found by easy way, try the difficult way
-    //*
     if (target == null)
       {
         target = translator.LineAttackTargetWrapper(player.mo);
       }
-    ///*///
 
-    if (target == null && multiSettings.get(playerNumber).showObjects > 1)
+    if (target == null && settings.showObjects > 1)
       {
         target = translator.AimLineAttackWrapper(player.mo);
       }
@@ -445,18 +445,20 @@ class m8f_ts_EventHandler : EventHandler
 
     if (target.bISMONSTER)
       {
-        if ((target.bSHADOW || target.bSTEALTH) && !multiSettings.get(playerNumber).showHidden)
+        if ((target.bSHADOW || target.bSTEALTH) && !settings.showHidden)
           {
             return null;
           }
-        if (target.bFRIENDLY && !multiSettings.get(playerNumber).showFriends)
+        if (target.bFRIENDLY && !settings.showFriends)
           {
             return null;
           }
       }
     else // not monsters
       {
-        switch (multiSettings.get(playerNumber).showObjects)
+        if (target.player) { return target; }
+
+        switch (settings.showObjects)
           {
           case 0: return null;
           case 1:
@@ -555,6 +557,8 @@ class m8f_ts_EventHandler : EventHandler
 
   ui string GetTargetName(Actor target, int gameType, int playerNumber)
   {
+    if (target.player) { return target.player.GetUserName(); }
+
     string targetClass = target.GetClassName();
 
     switch (multiSettings.get(playerNumber).showInternalNames)
@@ -683,7 +687,7 @@ class m8f_ts_EventHandler : EventHandler
   {
     string result = "";
 
-    if (target.bFRIENDLY)
+    if (target.bFRIENDLY && !target.player)
       {
         result = "Friendly";
       }
