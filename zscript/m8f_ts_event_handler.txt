@@ -480,6 +480,8 @@ class m8f_ts_EventHandler : EventHandler
     if (a == null)     { return 0; }
     if (!a.bSHOOTABLE) { return 0; }
 
+    if (a.player && a.player.mo) { return a.player.mo.GetMaxHealth(); }
+
     int maxHealth = a.SpawnHealth();
     return maxHealth;
   }
