@@ -47,6 +47,13 @@ class m8f_ts_MultiSettings
     int        optionsUpdatePeriod = CVar.GetCVar("m8f_ts_update_period", player).GetInt();
 
     if (optionsUpdatePeriod == 0) { read(playerNumber); }
+
+    else if (!settingsArray[playerNumber].initialized)
+      {
+        settingsArray[playerNumber].initialized = true;
+        read(playerNumber);
+      }
+
     else if (optionsUpdatePeriod != -1
              && (level.time % optionsUpdatePeriod) == 0)
       {

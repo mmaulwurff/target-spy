@@ -66,6 +66,8 @@ class m8f_ts_Settings
   string pipSource;
   string emptyPipSource;
 
+  bool   initialized;
+
   void read(PlayerInfo player)
   {
     showKillConfirmation = CVar.GetCVar("m8f_ts_show_confirm" , player).GetInt();
