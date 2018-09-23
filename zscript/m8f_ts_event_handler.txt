@@ -393,8 +393,8 @@ class m8f_ts_EventHandler : EventHandler
   ui void drawTextCenter(string text, int color, double scale, double relativeY,
                          Font font, int xAdjustment = 0)
   {
-    int width    = scale * Screen.GetWidth();
-    int height   = scale * (Screen.GetHeight() - font.GetHeight());
+    int width    = int(scale * Screen.GetWidth());
+    int height   = int(scale * (Screen.GetHeight() - font.GetHeight()));
     int position = width - font.StringWidth(text);
 
     double x = position * 0.5 + xAdjustment;
