@@ -127,6 +127,10 @@ class m8f_ts_Settings
 
     pipSource      = Repeat(pip,      50);
     emptyPipSource = Repeat(emptyPip, 50);
+
+    // prevent division by zero
+    if (textScale  == 0.0) { textScale  = 1.0; }
+    if (crossScale == 0.0) { crossScale = 1.0; }
   }
 
   m8f_ts_Settings Init(PlayerInfo player)

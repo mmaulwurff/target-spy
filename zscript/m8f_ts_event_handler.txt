@@ -295,6 +295,7 @@ class m8f_ts_EventHandler : EventHandler
         else { percent = targetHealth * 10 / targetMaxHealth; }
       }
 
+    if (percent < 0) { percent = 0; }
     int targetColor = settings.colors[percent];
     if (targetHealth < 35 && settings.almDeadCr) targetColor = settings.crAlmDead;
     if (targetHealth < 1)                        targetColor = settings.crAlmDead;
@@ -511,6 +512,13 @@ class m8f_ts_EventHandler : EventHandler
     return result;
   }
 
+  ui static int clamp(int value, int min, int max)
+  {
+    if      (value < min) { return min;   }
+    else if (value > max) { return max;   }
+    else                  { return value; }
+  }
+
   ui string MakeHpBar(int health, int maxHealth, bool logScale,
                       string pipSource, string emptyPipSource,
                       bool greenRedTheme, int greenColor, int redColor)
@@ -521,9 +529,16 @@ class m8f_ts_EventHandler : EventHandler
     else if (maxHealth >= 500)  { length = 20; }
     else                        { length = 10; }
 
-    int pips = health * length / maxHealth;
-    if      (pips == 0)      { pips = 1; }
-    else if (pips >  length) { pips = length; }
+    int pips;
+    if (maxHealth < 1)
+    {
+      pips = 1;
+    }
+    else
+    {
+      pips = health * length / maxHealth;
+      pips = clamp(pips, 1, length);
+    }
 
     string pipColor;
     string emptyColor;
