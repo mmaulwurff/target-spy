@@ -51,21 +51,15 @@ OptionValue "m8f_ts_class_as_tag_values"
   2, "Beautified Class Names"
 }
 
-OptionMenu "m8f_ts_Options"
+OptionMenu   "m8f_ts_VisualOptions"
 {
-  Title "Target Spy Options"
-  StaticText "Changes apply after a short delay.", "Black"
+  Title      "Target Spy Visual Options"
 
   StaticText ""
-  Option "Target Spy enabled"   , "m8f_ts_enabled" , "OnOff"
-  Option "Font"                 , "m8f_ts_font"    , "m8f_ts_font_values"
-  Slider "Newline step"         , "m8f_ts_step_mult", 0.1, 10.0, 0.1, 1
-  Slider "Scale"                , "m8f_ts_text_scale", 0.5, 3.0, 0.05, 2
-  Option "Names:"               , "m8f_class_as_tag", "m8f_ts_class_as_tag_values"
-  Option "Options update"       , "m8f_ts_update_period", "m8f_ts_update_period_values"
-  TextField "Minimal health"    , "m8f_ts_min_health"
-  StaticText "Target spy will be hidden for targets" , "Black"
-  StaticText "with max health less than this."       , "Black"
+  Option     "Font"               , "m8f_ts_font"         , "m8f_ts_font_values"
+  Slider     "Newline step"       , "m8f_ts_step_mult"    , 0.1, 10.0, 0.1, 1
+  Slider     "Scale"              , "m8f_ts_text_scale"   , 0.5, 3.0, 0.05, 2
+  Option     "Names:"             , "m8f_class_as_tag"    , "m8f_ts_class_as_tag_values"
 
   StaticText ""
   StaticText "Show:", "Blue"
@@ -87,13 +81,68 @@ OptionMenu "m8f_ts_Options"
   Option "Vertical position"    , "m8f_ts_y"             , "m8f_ts_y_values"
 
   StaticText ""
-  Submenu "Color Setup"      , "m8f_ts_ColorSetup"
-  Submenu "Crosshairs Setup" , "m8f_ts_Crosshairs"
+}
+
+OptionMenu   "m8f_ts_BehaviorOptions"
+{
+  Title      "Target Spy Behavior Options"
 
   StaticText ""
-  StaticText "Cross-mod options", "Blue"
-  Option "Special names for Champions" , "m8f_ts_show_champion", "OnOff"
+  TextField  "Minimal health"     , "m8f_ts_min_health"
+  StaticText "Target spy will be hidden for targets"      , "Black"
+  StaticText "with max health less than this."            , "Black"
+
+  StaticText ""
+}
+
+OptionMenu   "m8f_ts_CrossOptions"
+{
+  Title      "Target Spy Cross-mod Options"
+
+  StaticText ""
+  Option     "Special names for Champions" , "m8f_ts_show_champion", "OnOff"
   StaticText "Champions is a monster mod by Mikk-", "Black"
+
+  StaticText ""
+}
+
+OptionMenu   "m8f_ts_Controls"
+{
+  Title      "Target Spy Controls"
+  StaticTextSwitchable "$CNTRLMNU_SWITCHTEXT1", "$CNTRLMNU_SWITCHTEXT2", "ControlMessage"
+
+  StaticText ""
+  Control    "Toggle"       , "m8f_ts_toggle"
+  Control    "Hold to show" , "+m8f_ts_hold"
+
+  StaticText ""
+}
+
+OptionMenu   "m8f_ts_Options"
+{
+  Title      "Target Spy Options"
+
+  StaticText ""
+  Option     "Target Spy enabled" , "m8f_ts_enabled"       , "OnOff"
+  Option     "Options update"     , "m8f_ts_update_period" , "m8f_ts_update_period_values"
+
+  StaticText ""
+  SubMenu    "Visuals"            , "m8f_ts_VisualOptions"
+
+  StaticText ""
+  SubMenu    "Colors"             , "m8f_ts_ColorSetup"
+
+  StaticText ""
+  SubMenu    "Behavior"           , "m8f_ts_BehaviorOptions"
+
+  StaticText ""
+  SubMenu    "Crosshairs Setup"   , "m8f_ts_Crosshairs"
+
+  StaticText ""
+  SubMenu    "Controls"           , "m8f_ts_Controls"
+
+  StaticText ""
+  SubMenu    "Cross-mod options"  , "m8f_ts_CrossOptions"
 
   StaticText ""
 }
