@@ -1,0 +1,11 @@
+alias m8f_ts_turn_off "m8f_ts_enabled 0"
+alias m8f_ts_turn_on  "m8f_ts_enabled 1"
+
+alias m8f_ts_toggle   "test $m8f_ts_enabled m8f_ts_turn_off m8f_ts_turn_on"
+
+alias +m8f_ts_hold    "m8f_ts_turn_on"
+alias -m8f_ts_hold    "m8f_ts_turn_off"
+
+AddKeySection "Target Spy Controls" "m8f_ts_Controls"
+AddMenuKey    "Toggle"              "m8f_ts_toggle"
+AddMenuKey    "Hold to show"        "+m8f_ts_hold"
