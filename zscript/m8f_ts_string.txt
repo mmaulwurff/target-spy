@@ -1,0 +1,59 @@
+/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2018
+ *
+ * This file is part of Target Spy.
+ *
+ * Target Spy is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Target Spy is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+class m8f_ts_String
+{
+
+  ui static string SeparateCamelCase(string source)
+  {
+    int sourceLength = source.Length();
+    string result = "";
+    string letter1 = source.CharAt(0);
+    string letter2;
+
+    for (int i = 1; i < sourceLength; ++i)
+      {
+        letter2 = source.CharAt(i);
+        if (IsSmallLetter(letter1) && IsBigLetter(letter2))
+          {
+            result.AppendFormat("%s ", letter1);
+          }
+        else
+          {
+            result.AppendFormat(letter1);
+          }
+        letter1 = letter2;
+      }
+    result.AppendFormat(letter2);
+
+    return result;
+  }
+
+  ui static bool IsSmallLetter(string letter)
+  {
+    int code = letter.CharCodeAt(0);
+    return (97 <= code && code <= 122);
+  }
+
+  ui static bool IsBigLetter(string letter)
+  {
+    int code = letter.CharCodeAt(0);
+    return (65 <= code && code <= 90);
+  }
+
+} // class m8f_ts_String

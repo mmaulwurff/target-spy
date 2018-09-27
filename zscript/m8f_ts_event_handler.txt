@@ -18,6 +18,7 @@
 
 class m8f_ts_MultiSettings
 {
+
   Array<m8f_ts_Settings> settingsArray;
 
   m8f_ts_MultiSettings init()
@@ -60,10 +61,12 @@ class m8f_ts_MultiSettings
         read(playerNumber);
       }
   }
-}
+
+} // class m8f_ts_MultiSettings
 
 class m8f_ts_LastTargetInfo
 {
+
   Actor a;
   int   killTime;
   int   hurtTime;
@@ -76,10 +79,12 @@ class m8f_ts_LastTargetInfo
 
     return self;
   }
-}
+
+} // class m8f_ts_LastTargetInfo
 
 class m8f_ts_MultiLastTargetInfo
 {
+
   Array<m8f_ts_LastTargetInfo> lastTargetInfos;
 
   m8f_ts_MultiLastTargetInfo init()
@@ -96,32 +101,38 @@ class m8f_ts_MultiLastTargetInfo
   {
     return lastTargetInfos[playerNumber];
   }
-}
+
+} // class m8f_ts_MultiLastTargetInfo
 
 class m8f_ts_EventHandler : EventHandler
 {
-  m8f_ts_MultiSettings       multiSettings;
-  m8f_ts_MultiLastTargetInfo multiLastTargetInfo;
 
-  m8f_ts_Data     data;
-  bool            isTitlemap;
-  int             dehackedGameType;
+  // Attributes section ////////////////////////////////////////////////////////
 
-  m8f_ts_TagCache cache;
+  private m8f_ts_MultiSettings       multiSettings;
+  private m8f_ts_MultiLastTargetInfo multiLastTargetInfo;
 
-  override void WorldLoaded(WorldEvent e)
-  {
-    data               = new("m8f_ts_Data").init();
-    isTitlemap         = CheckTitlemap();
-    dehackedGameType   = GetDehackedGameType();
+  private m8f_ts_Data     data;
+  private bool            isTitlemap;
+  private int             dehackedGameType;
 
-    cache              = new("m8f_ts_TagCache").init();
-  }
+  private m8f_ts_TagCache cache;
+
+  // EventHandler overrides section ////////////////////////////////////////////
 
   override void OnRegister()
   {
     multiSettings       = new("m8f_ts_MultiSettings").init();
     multiLastTargetInfo = new("m8f_ts_MultiLastTargetInfo").init();
+  }
+
+  override void WorldLoaded(WorldEvent e)
+  {
+    data               = new("m8f_ts_Data").init();
+    isTitlemap         = m8f_ts_Game.CheckTitlemap();
+    dehackedGameType   = GetDehackedGameType();
+
+    cache              = new("m8f_ts_TagCache").init();
   }
 
   override void PlayerEntered(PlayerEvent e)
@@ -137,13 +148,13 @@ class m8f_ts_EventHandler : EventHandler
     if (died == null) { return; }
 
     for (int i = 0; i < MAXPLAYERS; ++i)
+    {
+      let lastTargetInfo = multiLastTargetInfo.get(i);
+      if (lastTargetInfo.a == died)
       {
-        let lastTargetInfo = multiLastTargetInfo.get(i);
-        if (lastTargetInfo.a == died)
-          {
-            lastTargetInfo.killTime = level.time;
-          }
+        lastTargetInfo.killTime = level.time;
       }
+    }
   }
 
   override void WorldThingDamaged(WorldEvent event)
@@ -176,6 +187,8 @@ class m8f_ts_EventHandler : EventHandler
 
     drawEverything(playerNumber);
   }
+
+  // Helper functions section //////////////////////////////////////////////////
 
   ui void drawEverything(int playerNumber)
   {
@@ -501,30 +514,18 @@ class m8f_ts_EventHandler : EventHandler
     return customColor;
   }
 
-  ui static int Log2(int value)
-  {
-    int result = -1;
-    while (value)
-      {
-        ++result;
-        value /= 2;
-      }
-    return result;
-  }
-
-  ui static int clamp(int value, int min, int max)
-  {
-    if      (value < min) { return min;   }
-    else if (value > max) { return max;   }
-    else                  { return value; }
-  }
-
-  ui string MakeHpBar(int health, int maxHealth, bool logScale,
-                      string pipSource, string emptyPipSource,
-                      bool greenRedTheme, int greenColor, int redColor)
+  ui string MakeHpBar( int    health
+                     , int    maxHealth
+                     , bool   logScale
+                     , string pipSource
+                     , string emptyPipSource
+                     , bool   greenRedTheme
+                     , int    greenColor
+                     , int    redColor
+                     )
   {
     int length;
-    if      (logScale)          { length = Log2(maxHealth) * 2; }
+    if      (logScale)          { length = int(Log(maxHealth)) * 2; }
     else if (maxHealth >= 2000) { length = 30; }
     else if (maxHealth >= 500)  { length = 20; }
     else                        { length = 10; }
@@ -557,12 +558,6 @@ class m8f_ts_EventHandler : EventHandler
                                pipColor,   pipSource.Left(pips),
                                emptyColor, emptyPipSource.Left(length - pips));
 
-  }
-
-  bool CheckTitlemap()
-  {
-    bool isTitlemap = (level.mapname == "TITLEMAP");
-    return isTitlemap;
   }
 
   int GetDehackedGameType()
@@ -629,7 +624,7 @@ class m8f_ts_EventHandler : EventHandler
 
   ui string Beautify(string s)
   {
-    string result = SeparateCamelCase(s);
+    string result = m8f_ts_String.SeparateCamelCase(s);
     result.Replace("_", " ");
     return result;
   }
@@ -670,43 +665,6 @@ class m8f_ts_EventHandler : EventHandler
     return championTag;
   }
 
-  ui static string SeparateCamelCase(string source)
-  {
-    int sourceLength = source.Length();
-    string result = "";
-    string letter1 = source.CharAt(0);
-    string letter2;
-
-    for (int i = 1; i < sourceLength; ++i)
-      {
-        letter2 = source.CharAt(i);
-        if (IsSmallLetter(letter1) && IsBigLetter(letter2))
-          {
-            result.AppendFormat("%s ", letter1);
-          }
-        else
-          {
-            result.AppendFormat(letter1);
-          }
-        letter1 = letter2;
-      }
-    result.AppendFormat(letter2);
-
-    return result;
-  }
-
-  ui static bool IsSmallLetter(string letter)
-  {
-    int code = letter.CharCodeAt(0);
-    return (97 <= code && code <= 122);
-  }
-
-  ui static bool IsBigLetter(string letter)
-  {
-    int code = letter.CharCodeAt(0);
-    return (65 <= code && code <= 90);
-  }
-
   ui string GetTargetFlags(Actor target)
   {
     string result = "";
@@ -735,6 +693,7 @@ class m8f_ts_EventHandler : EventHandler
 
 class m8f_ts_TagCache
 {
+
   string cachedClass;
   string cachedTag;
 
@@ -750,10 +709,12 @@ class m8f_ts_TagCache
     cachedTag   = "";
     return self;
   }
-}
+
+} // class m8f_ts_TagCache
 
 class m8f_ts_PlayToUiTranslator
 {
+
   play Actor AimTargetWrapper(Actor a) const
   {
     return a.AimTarget();
@@ -773,4 +734,5 @@ class m8f_ts_PlayToUiTranslator
                     ALF_CHECKNONSHOOTABLE | ALF_FORCENOSMART);
     return ftlt.linetarget;
   }
-}
+
+} // class m8f_ts_PlayToUiTranslator
