@@ -18,6 +18,16 @@
 
 class m8f_ts_Settings
 {
+
+  enum FrameStyles
+  {
+    FRAME_DISABLED,
+    FRAME_SLASH,
+    FRAME_DOTS,
+    FRAME_LESS_GREATER,
+    FRAME_BARS,
+  };
+
   int colors[12];
 
   bool showKillConfirmation;
@@ -55,6 +65,7 @@ class m8f_ts_Settings
   double textScale;
   int    xAdjustment;
   bool   noCrossOnSlot1;
+  int    frameStyle;
 
   string pip;
   string emptyPip;
@@ -104,6 +115,7 @@ class m8f_ts_Settings
     textScale            = CVar.GetCVar("m8f_ts_text_scale"   , player).GetFloat();
     xAdjustment          = CVar.GetCVar("m8f_ts_x_adjustment" , player).GetInt();
     noCrossOnSlot1       = CVar.GetCVar("m8f_ts_no_cross_on_1", player).GetInt();
+    frameStyle           = CVar.GetCVar("m8f_ts_frame_style"  , player).GetInt();
 
     pip       = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
     emptyPip  = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();

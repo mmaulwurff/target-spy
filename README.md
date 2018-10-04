@@ -35,3 +35,4 @@ License doesn't apply to fonts included in the archive. See credits.
 * [Jenocide Small font by Jimmy](https://www.realm667.com/index.php/en/font-press/technical)
 * [Solid Snake Small font by Jimmy](https://www.realm667.com/index.php/en/font-press/technical)
 * [Gargoyle Wing Small font by NeuralStunner](https://www.realm667.com/index.php/en/font-press/medieval)
+* [Gutamatics by Gutawer](https://gitlab.com/Gutawer/gzdoom-gutamatics) (MIT License)

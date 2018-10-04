@@ -17,6 +17,7 @@ zip $name.pk3 \
     graphics/*.lmp \
     graphics/*.png \
     zscript/*.txt \
+    zscript/*/*.zsc \
     *.txt \
     *.md \
     *.fon2 \

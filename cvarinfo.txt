@@ -56,5 +56,8 @@ user int    m8f_ts_cr_11         = 21; // cyan
 
 user int    m8f_ts_cr_alm_dead   = 12; // black
 
+// see m8f_ts_Settings for frame styles enumaration
+user int    m8f_ts_frame_style   = 0;
+
 // interface for other mods
 user bool   m8f_ts_has_target;

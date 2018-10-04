@@ -51,6 +51,15 @@ OptionValue "m8f_ts_class_as_tag_values"
   2, "Beautified Class Names"
 }
 
+OptionValue "m8f_ts_frame_style_values"
+{
+  0, "Disabled"
+  1, "//"
+  2, "::"
+  3, "< >"
+  4, "II"
+}
+
 OptionMenu   "m8f_ts_VisualOptions"
 {
   Title      "Target Spy Visual Options"
@@ -79,6 +88,10 @@ OptionMenu   "m8f_ts_VisualOptions"
   TextField "Empty bar symbol"  , "m8f_ts_empty_pip"
   Option "Health bar log scale" , "m8f_ts_bar_log_scale" , "OnOff"
   Option "Vertical position"    , "m8f_ts_y"             , "m8f_ts_y_values"
+
+  StaticText ""
+  StaticText "Target Frame", "Blue"
+  Option "Style" , "m8f_ts_frame_style" , "m8f_ts_frame_style_values"
 
   StaticText ""
 }
