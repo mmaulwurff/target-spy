@@ -1,0 +1,65 @@
+/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2018
+ *
+ * This file is part of Target Spy.
+ *
+ * Target Spy is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Target Spy is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+class m8f_ts_MultiSettings
+{
+
+  Array<m8f_ts_Settings> settingsArray;
+
+  m8f_ts_MultiSettings init()
+  {
+    for (int i = 0; i < MAXPLAYERS; ++i)
+      {
+        settingsArray.push(new("m8f_ts_Settings"));
+      }
+
+    return self;
+  }
+
+  void read(int playerNumber)
+  {
+    PlayerInfo player = players[playerNumber];
+    settingsArray[playerNumber].read(player);
+  }
+
+  m8f_ts_Settings get(int playerNumber)
+  {
+    return settingsArray[playerNumber];
+  }
+
+  void maybeUpdate(int playerNumber)
+  {
+    PlayerInfo player              = players[playerNumber];
+    int        optionsUpdatePeriod = CVar.GetCVar("m8f_ts_update_period", player).GetInt();
+
+    if (optionsUpdatePeriod == 0) { read(playerNumber); }
+
+    else if (!settingsArray[playerNumber].initialized)
+      {
+        settingsArray[playerNumber].initialized = true;
+        read(playerNumber);
+      }
+
+    else if (optionsUpdatePeriod != -1
+             && (level.time % optionsUpdatePeriod) == 0)
+      {
+        read(playerNumber);
+      }
+  }
+
+} // class m8f_ts_MultiSettings
