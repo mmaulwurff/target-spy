@@ -259,34 +259,46 @@ class m8f_ts_EventHandler : EventHandler
                         , int   playerNumber
                         )
   {
-    if (!multiSettings.get(playerNumber).crossOn) { return; }
+    let settings = multiSettings.get(playerNumber);
 
-    if (multiSettings.get(playerNumber).noCrossOnSlot1
+    if (!settings.crossOn) { return; }
+
+    if (settings.noCrossOnSlot1
         && isSlot1Weapon(playerNumber))
+    {
+      return;
+    }
+
+    if (settings.hitConfirmation)
+    {
+      let lastTargetInfo = multiLastTargetInfo.get(playerNumber);
+      if (lastTargetInfo.hurtTime != -1
+          && (level.time < lastTargetInfo.hurtTime + 10))
       {
-        return;
+        crosshairColor = settings.hitColor;
       }
+    }
 
-    if (multiSettings.get(playerNumber).hitConfirmation)
-      {
-        let lastTargetInfo = multiLastTargetInfo.get(playerNumber);
-        if (lastTargetInfo.hurtTime != -1
-            && (level.time < lastTargetInfo.hurtTime + 10))
-          {
-            crosshairColor = multiSettings.get(playerNumber).hitColor;
-          }
-      }
+    double scale           = 0.5 / settings.crossScale;
+    int    x;
+    int    y;
+    int    width;
+    int    height;
+    [x, y, width, height]  = Screen.GetViewWindow();
+    int    screenHeight    = Screen.GetHeight();
+    int    statusBarHeight = screenHeight - height;
+    double relativeStatusBarHeight = double(statusBarHeight) * scale / screenHeight;
+    double baseCenterY     = 0.51 - relativeStatusBarHeight;
+    double topBottomShift  = 0.3;
 
-    double scale = 0.5 / multiSettings.get(playerNumber).crossScale;
+    double topY            = baseCenterY - topBottomShift + settings.topOff;
+    double centerY         = baseCenterY                  + settings.crossOff;
+    double bottomY         = baseCenterY + topBottomShift + settings.botOff;
 
-    double topY    = 0.48 + multiSettings.get(playerNumber).topOff;
-    double centerY = 0.51 + multiSettings.get(playerNumber).crossOff;
-    double bottomY = 0.54 + multiSettings.get(playerNumber).botOff;
-
-    int dx = multiSettings.get(playerNumber).xAdjustment;
-    drawTextCenter(multiSettings.get(playerNumber).crossTop,  crosshairColor, scale, topY   , font, dx);
-    drawTextCenter(multiSettings.get(playerNumber).crosshair, crosshairColor, scale, centerY, font, dx);
-    drawTextCenter(multiSettings.get(playerNumber).crossBot,  crosshairColor, scale, bottomY, font, dx);
+    int dx = settings.xAdjustment;
+    drawTextCenter(settings.crossTop,  crosshairColor, scale, topY   , font, dx);
+    drawTextCenter(settings.crosshair, crosshairColor, scale, centerY, font, dx);
+    drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY, font, dx);
   }
 
   ui void draw(Actor target, int playerNumber, RenderEvent event)
