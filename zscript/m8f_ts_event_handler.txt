@@ -468,14 +468,14 @@ class m8f_ts_EventHandler : EventHandler
 
     // if target is not found by easy way, try the difficult way
     if (target == null)
-      {
-        target = translator.LineAttackTargetWrapper(player.mo);
-      }
+    {
+      target = translator.LineAttackTargetWrapper(player.mo, player.viewheight);
+    }
 
     if (target == null && settings.showObjects > 1)
-      {
-        target = translator.AimLineAttackWrapper(player.mo);
-      }
+    {
+      target = translator.AimLineAttackWrapper(player.mo);
+    }
 
     // give up
     if (target == null) { return null; }

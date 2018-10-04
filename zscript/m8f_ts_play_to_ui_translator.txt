@@ -24,10 +24,10 @@ class m8f_ts_PlayToUiTranslator
     return a.AimTarget();
   }
 
-  play Actor LineAttackTargetWrapper(Actor a) const
+  play Actor LineAttackTargetWrapper(Actor a, double offsetz) const
   {
     FLineTraceData lineTraceData;
-    a.LineTrace(a.angle, 4000.0, a.pitch, 0, 0.0, 0.0, 0.0, lineTraceData);
+    a.LineTrace(a.angle, 4000.0, a.pitch, 0, offsetz, 0.0, 0.0, lineTraceData);
     return lineTraceData.HitActor;
   }
 
