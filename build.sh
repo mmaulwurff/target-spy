@@ -16,6 +16,7 @@ git log --date=short --pretty=format:"-%d %ad %s%n" | \
 zip $name.pk3 \
     graphics/*.lmp \
     graphics/*.png \
+    graphics/*/*.png \
     zscript/*.txt \
     zscript/*/*.zsc \
     *.txt \

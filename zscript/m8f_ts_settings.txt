@@ -25,7 +25,9 @@ class m8f_ts_Settings
     FRAME_SLASH,
     FRAME_DOTS,
     FRAME_LESS_GREATER,
+    FRAME_GREATER_LESS,
     FRAME_BARS,
+    FRAME_GRAPHIC,
   };
 
   int colors[12];

@@ -57,7 +57,9 @@ OptionValue "m8f_ts_frame_style_values"
   1, "//"
   2, "::"
   3, "< >"
-  4, "II"
+  4, "> <"
+  5, "II"
+  6, "Graphics"
 }
 
 OptionMenu   "m8f_ts_VisualOptions"

@@ -181,14 +181,44 @@ class m8f_ts_EventHandler : EventHandler
           drawCleanText(right, ">", f, color);
           break;
 
+        case settings.FRAME_GREATER_LESS:
+          drawCleanText(left,  ">", f, color);
+          drawCleanText(right, "<", f, color);
+          break;
+
         case settings.FRAME_BARS:
           drawCleanText(top,    ".", f, color);
           drawCleanText(left,   "I", f, color);
           drawCleanText(right,  "I", f, color);
           drawCleanText(bottom, ".", f, color);
           break;
+
+        case settings.FRAME_GRAPHIC:
+          {
+            TextureID topLeftTex     = TexMan.CheckForTexture("ts_frame"              , TexMan.TryAny);
+            TextureID topRightTex    = TexMan.CheckForTexture("ts_frame_top_right"    , TexMan.TryAny);
+            TextureID bottomLeftTex  = TexMan.CheckForTexture("ts_frame_bottom_left"  , TexMan.TryAny);
+            TextureID bottomRightTex = TexMan.CheckForTexture("ts_frame_bottom_right" , TexMan.TryAny);
+            bool      animate        = false;
+            Screen.SetClipRect( topLeft.x
+                              , topLeft.y
+                              , round(bottomRight.x - topLeft.x + 1)
+                              , round(bottomRight.y - topLeft.y + 1)
+                              );
+            Screen.DrawTexture(topLeftTex,     animate, topLeft.x,     topLeft.y    );
+            Screen.DrawTexture(topRightTex,    animate, topRight.x,    topRight.y   );
+            Screen.DrawTexture(bottomLeftTex,  animate, bottomLeft.x,  bottomLeft.y );
+            Screen.DrawTexture(bottomRightTex, animate, bottomRight.x, bottomRight.y);
+            Screen.ClearClipRect();
+          }
+          break;
       }
     }
+  }
+
+  private ui static double round(double value)
+  {
+    return int(value + 1.0);
   }
 
   private ui void drawCleanText(Vector2 pos, string str, Font f, int color)
