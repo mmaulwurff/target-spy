@@ -157,6 +157,16 @@ class m8f_ts_Data
     slaveActors    = new("m8f_ts_StringSet");
     blackList      = new("m8f_ts_StringSet");
 
+    fillChampionTokens();
+    fillSpecialNames();
+    fillSlaveActors();
+    fillBlackList();
+
+    return self;
+  }
+
+  private void fillChampionTokens()
+  {
     championTokens.push( "champion_BlackToken"     , "Brutal"      );
     championTokens.push( "champion_BlueToken"      , "Retaliating" );
     championTokens.push( "champion_BronzeToken"    , "Tough"       );
@@ -174,7 +184,10 @@ class m8f_ts_Data
     championTokens.push( "champion_VioletToken"    , "Relentless"  );
     championTokens.push( "champion_WhiteToken"     , "Restraining" );
     championTokens.push( "champion_YellowToken"    , "Fast"        );
+  }
 
+  private void fillSpecialNames()
+  {
     specialNames.push( "Arachnotron_free"        , "Technospider"       );
     specialNames.push( "Archvile"                , "Arch-vile"          );
     specialNames.push( "Archvile_free"           , "Flame Bringer"      );
@@ -298,8 +311,14 @@ class m8f_ts_Data
     specialNames.push( "DehackedPickup10_rekkr"  , "Holy Relic"              );
     specialNames.push( "DehackedPickup8_rekkr"   , "Runic Staff"             );
     specialNames.push( "DehackedPickup9_rekkr"   , "Axe"                     );
+    specialNames.push( "NonsolidTwitch_rekkr"    , "Bell"                    );
+    specialNames.push( "HeartColumn_rekkr"       , "Viking"                  );
+    specialNames.push( "HangTLookingUp_rekkr"    , "Hanging Body"            );
+    specialNames.push( "SmallBloodPool_rekkr"    , "Hanging Body"            );
+  }
 
-
+  private void fillSlaveActors()
+  {
     slaveActors.push( "HeadshotTargetZombie"        );
     slaveActors.push( "HeadshotTargetEliteZombie"   );
     slaveActors.push( "HeadshotTargetImp"           );
@@ -317,7 +336,10 @@ class m8f_ts_Data
     slaveActors.push( "HeadshotTargetPainElemental" );
     slaveActors.push( "HeadshotTargetDemon"         );
     slaveActors.push( "HeadshotTargetCyberdemon"    );
+  }
 
+  private void fillBlackList()
+  {
     blackList.push( "m8f_aas_token"           );
     blackList.push( "AutoautosaveToken"       );
     blackList.push( "AutoautosaveAlertToken"  );
@@ -331,7 +353,6 @@ class m8f_ts_Data
     blackList.push( "SpaceCowFloating"        );
     blackList.push( "CowboyCow"               );
     blackList.push( "MummyCow"                );
-
-    return self;
   }
-}
+
+} // class m8f_ts_Data
