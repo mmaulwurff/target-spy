@@ -514,14 +514,10 @@ class m8f_ts_EventHandler : EventHandler
 
     if (target.bISMONSTER)
       {
-        if ((target.bSHADOW || target.bSTEALTH) && !settings.showHidden)
-          {
-            return null;
-          }
-        if (target.bFRIENDLY && !settings.showFriends)
-          {
-            return null;
-          }
+        bool targetIsHidden = (target.bSHADOW || target.bSTEALTH);
+        if (!settings.showHidden  && targetIsHidden)   { return null; }
+        if (!settings.showFriends && target.bFRIENDLY) { return null; }
+        if (!settings.showIdle    && IsIdle(target))   { return null; }
       }
     else // not monsters
       {
@@ -542,6 +538,11 @@ class m8f_ts_EventHandler : EventHandler
       }
 
     return target;
+  }
+
+  ui bool IsIdle(Actor a) const
+  {
+    return a.target == null;
   }
 
   ui int GetActorMaxHealth(Actor a)
