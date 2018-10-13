@@ -200,10 +200,10 @@ class m8f_ts_EventHandler : EventHandler
             TextureID bottomLeftTex  = TexMan.CheckForTexture("ts_frame_bottom_left"  , TexMan.TryAny);
             TextureID bottomRightTex = TexMan.CheckForTexture("ts_frame_bottom_right" , TexMan.TryAny);
             bool      animate        = false;
-            Screen.SetClipRect( topLeft.x
-                              , topLeft.y
-                              , round(bottomRight.x - topLeft.x + 1)
-                              , round(bottomRight.y - topLeft.y + 1)
+            Screen.SetClipRect( int(topLeft.x)
+                              , int(topLeft.y)
+                              , int(round(bottomRight.x - topLeft.x + 1))
+                              , int(round(bottomRight.y - topLeft.y + 1))
                               );
             Screen.DrawTexture(topLeftTex,     animate, topLeft.x,     topLeft.y    );
             Screen.DrawTexture(topRightTex,    animate, topRight.x,    topRight.y   );
