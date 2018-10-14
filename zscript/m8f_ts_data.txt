@@ -18,7 +18,8 @@
 
 class m8f_ts_StringSet
 {
-  Array<string> values;
+
+  private Array<string> values;
 
   void print()
   {
@@ -56,12 +57,14 @@ class m8f_ts_StringSet
       }
     return false;
   }
-}
+
+} // class m8f_ts_StringSet
 
 class m8f_ts_StringMap
 {
-  Array<string> keys;
-  Array<string> values;
+
+  private Array<string> keys;
+  private Array<string> values;
 
   void print()
   {
@@ -120,10 +123,12 @@ class m8f_ts_StringSetTester : Actor
       Console.Printf("%d", set.contains("2two"));
 
     } stop; }
-}
+
+} // class m8f_ts_StringMap
 
 class m8f_ts_StringMapTester : Actor
 {
+
   States { Spawn: TNT1 A 0; TNT1 A 0
     {
 
@@ -141,7 +146,8 @@ class m8f_ts_StringMapTester : Actor
       Console.Printf("%s", set.get("2"));
 
     } stop; }
-}
+
+} // class m8f_ts_StringMapTester
 
 class m8f_ts_Data
 {
