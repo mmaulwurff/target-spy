@@ -322,9 +322,16 @@ class m8f_ts_EventHandler : EventHandler
         return;
       }
 
-    let  settings        = multiSettings.get(playerNumber);
-    int  targetMaxHealth = GetActorMaxHealth(target);
-    bool showHealth      = (targetMaxHealth != 0);
+    let    settings        = multiSettings.get(playerNumber);
+    int    targetMaxHealth = GetActorMaxHealth(target);
+    bool   showHealth      = (targetMaxHealth != 0);
+    string legendaryToken  = "LDLegendaryMonsterToken";
+
+    if (target.CountInv(legendaryToken) > 0)
+    {
+      targetMaxHealth *= 3;
+    }
+
     if (targetMaxHealth < settings.minHealth && targetMaxHealth != 0)
       {
         drawCrosshairs(target, crossCol, font, playerNumber);
