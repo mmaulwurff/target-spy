@@ -29,6 +29,7 @@ class m8f_ts_EventHandler : EventHandler
   private int             dehackedGameType;
 
   private m8f_ts_TagCache cache;
+  private m8f_ts_PlayToUiTranslator translator;
 
   // EventHandler overrides section ////////////////////////////////////////////
 
@@ -36,6 +37,7 @@ class m8f_ts_EventHandler : EventHandler
   {
     multiSettings       = new("m8f_ts_MultiSettings").init();
     multiLastTargetInfo = new("m8f_ts_MultiLastTargetInfo").init();
+    translator          = new("m8f_ts_PlayToUiTranslator");
   }
 
   override void WorldLoaded(WorldEvent e)
@@ -481,9 +483,8 @@ class m8f_ts_EventHandler : EventHandler
     if (!player) { return null; }
 
     // try an easy way to get a target (also works with autoaim)
-    let   translator = new("m8f_ts_PlayToUiTranslator");
-    Actor target     = translator.AimTargetWrapper(player.mo);
-    let   settings   = multiSettings.get(playerNumber);
+    Actor target   = translator.AimTargetWrapper(player.mo);
+    let   settings = multiSettings.get(playerNumber);
 
     // if target is not found by easy way, try the difficult way
     if (target == null)
@@ -499,9 +500,23 @@ class m8f_ts_EventHandler : EventHandler
     // give up
     if (target == null) { return null; }
 
+    // target is found
+
+    // check sector lighting
+    if (settings.hideInDarkness)
+    {
+      Sector targetSector = target.curSector;
+      int    lightlevel   = targetSector.lightlevel;
+      if (lightLevel < settings.minimalLightLevel) { return null; }
+    }
+
     string targetClass   = target.GetClassName();
     bool   targetIsSlave = data.slaveActors.contains(targetClass);
-    if (targetIsSlave) { return target.Master; }
+    if (targetIsSlave)
+    {
+      target      = target.Master;
+      targetClass = target.GetClassName();
+    }
 
     bool isInBlackList = data.blackList.contains(targetClass);
     if (isInBlackList) { return null; }

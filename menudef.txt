@@ -82,15 +82,6 @@ OptionMenu   "m8f_ts_VisualOptions"
   StaticText "Includes: Friendly, Invulnerable, Boss"      , "Black"
 
   StaticText ""
-  StaticText "Target Filters:"     , "Blue"
-  Option "Stealth/shadow monsters" , "m8f_ts_show_hidden"  , "OnOff"
-  Option "Friendly targets"        , "m8f_ts_show_friends" , "OnOff"
-  Option "Objects"                 , "m8f_ts_show_objects" , "m8f_ts_show_objects_values"
-  Option "Corpses"                 , "m8f_ts_show_corpses" , "OnOff"
-  Option "Idle targets"            , "m8f_ts_show_idle"    , "OnOff"
-  StaticText "Recommended: OFF if the game contains mimics.", "Black"
-
-  StaticText ""
   StaticText "Health bar"          , "Blue"
   TextField "Filled bar symbol"    , "m8f_ts_pip"
   TextField "Empty bar symbol"     , "m8f_ts_empty_pip"
@@ -100,6 +91,26 @@ OptionMenu   "m8f_ts_VisualOptions"
   StaticText ""
   StaticText "Target Frame", "Blue"
   Option "Style" , "m8f_ts_frame_style" , "m8f_ts_frame_style_values"
+
+  StaticText ""
+}
+
+OptionMenu   "m8f_ts_Filters"
+{
+  Title "Target Filters"
+
+  StaticText ""
+  Option "Stealth/shadow monsters" , "m8f_ts_show_hidden"  , "OnOff"
+  Option "Friendly targets"        , "m8f_ts_show_friends" , "OnOff"
+  Option "Objects"                 , "m8f_ts_show_objects" , "m8f_ts_show_objects_values"
+  Option "Corpses"                 , "m8f_ts_show_corpses" , "OnOff"
+  Option "Idle targets"            , "m8f_ts_show_idle"    , "OnOff"
+  StaticText "Recommended: OFF if the game contains mimics.", "Black"
+
+  StaticText ""
+  Option "Hide targets in darkness", "m8f_ts_hide_in_dark" , "OnOff"
+  Slider "Minimal light level"     , "m8f_ts_light_level"  , 0, 250, 10, 0
+  StaticText "Targets are hidden if light is less than this", "Black"
 
   StaticText ""
 }
@@ -149,6 +160,9 @@ OptionMenu   "m8f_ts_Options"
 
   StaticText ""
   SubMenu    "Visuals"            , "m8f_ts_VisualOptions"
+
+  StaticText ""
+  SubMenu    "Target Filters"     , "m8f_ts_Filters"
 
   StaticText ""
   SubMenu    "Colors"             , "m8f_ts_ColorSetup"
