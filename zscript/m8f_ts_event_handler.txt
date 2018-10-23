@@ -481,6 +481,8 @@ class m8f_ts_EventHandler : EventHandler
   {
     PlayerInfo player = players[playerNumber];
     if (!player) { return null; }
+    Actor playerActor = player.mo;
+    if (!playerActor) { return null; }
 
     // try an easy way to get a target (also works with autoaim)
     Actor target   = translator.AimTargetWrapper(player.mo);
@@ -505,9 +507,14 @@ class m8f_ts_EventHandler : EventHandler
     // check sector lighting
     if (settings.hideInDarkness)
     {
-      Sector targetSector = target.curSector;
-      int    lightlevel   = targetSector.lightlevel;
-      if (lightLevel < settings.minimalLightLevel) { return null; }
+      bool noLightAmplifier = (playerActor.FindInventory("PowerLightAmp") == null)
+        && (playerActor.FindInventory("PowerInvulnerable") == null);
+      if (noLightAmplifier)
+      {
+        Sector targetSector = target.curSector;
+        int    lightlevel   = targetSector.lightlevel;
+        if (lightLevel < settings.minimalLightLevel) { return null; }
+      }
     }
 
     string targetClass   = target.GetClassName();
