@@ -237,7 +237,7 @@ class m8f_ts_EventHandler : EventHandler
 
   // Wrapper to access lastTarget in scope play from ui scope.
   // not really const, but lastTarget doesn't affect gameplay.
-  void SetLastTarget(Actor newLastTarget, int playerNumber) const
+  private void SetLastTarget(Actor newLastTarget, int playerNumber) const
   {
     multiLastTargetInfo.get(playerNumber).a = newLastTarget;
   }
@@ -255,11 +255,11 @@ class m8f_ts_EventHandler : EventHandler
     return (slot == 1);
   }
 
-  ui void drawCrosshairs( Actor target
-                        , int   crosshairColor
-                        , Font  font
-                        , int   playerNumber
-                        )
+  private ui void drawCrosshairs( Actor target
+                                , int   crosshairColor
+                                , Font  font
+                                , int   playerNumber
+                                )
   {
     let settings = multiSettings.get(playerNumber);
 
@@ -303,7 +303,7 @@ class m8f_ts_EventHandler : EventHandler
     drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY, font, dx);
   }
 
-  ui void draw(Actor target, int playerNumber, RenderEvent event)
+  private ui void draw(Actor target, int playerNumber, RenderEvent event)
   {
     double y       = multiSettings.get(playerNumber).yStart;
     double newline = 0.03 * multiSettings.get(playerNumber).stepMult;
@@ -443,11 +443,11 @@ class m8f_ts_EventHandler : EventHandler
     }
   }
 
-  ui double drawKillConfirmed( double y
-                             , double newline
-                             , Font   font
-                             , int    playerNumber
-                             )
+  private ui double drawKillConfirmed( double y
+                                     , double newline
+                                     , Font   font
+                                     , int    playerNumber
+                                     )
   {
     if (!multiSettings.get(playerNumber).showKillConfirmation) { return y; }
     let lastTargetInfo = multiLastTargetInfo.get(playerNumber);
@@ -461,8 +461,8 @@ class m8f_ts_EventHandler : EventHandler
     return y;
   }
 
-  ui void drawTextCenter(string text, int color, double scale, double relativeY,
-                         Font font, int xAdjustment = 0)
+  private ui void drawTextCenter(string text, int color, double scale, double relativeY,
+                                 Font font, int xAdjustment = 0)
   {
     int width    = int(scale * Screen.GetWidth());
     int height   = int(scale * (Screen.GetHeight() - font.GetHeight()));
@@ -477,7 +477,7 @@ class m8f_ts_EventHandler : EventHandler
                     DTA_VirtualHeight, height);
   }
 
-  ui Actor GetTarget(int playerNumber, int gameType)
+  private ui Actor GetTarget(int playerNumber, int gameType)
   {
     PlayerInfo player = players[playerNumber];
     if (!player) { return null; }
@@ -569,12 +569,12 @@ class m8f_ts_EventHandler : EventHandler
     return target;
   }
 
-  ui bool IsIdle(Actor a) const
+  private ui bool IsIdle(Actor a) const
   {
     return a.target == null;
   }
 
-  ui int GetActorMaxHealth(Actor a)
+  private ui int GetActorMaxHealth(Actor a)
   {
     if (a == null)     { return 0; }
     if (!a.bSHOOTABLE) { return 0; }
@@ -585,22 +585,22 @@ class m8f_ts_EventHandler : EventHandler
     return maxHealth;
   }
 
-  ui int CustomTargetColor(Actor target)
+  private ui int CustomTargetColor(Actor target)
   {
     string customColorTokenClass = "tr_color_token";
     int customColor = target.CountInv(customColorTokenClass);
     return customColor;
   }
 
-  ui string MakeHpBar( int    health
-                     , int    maxHealth
-                     , bool   logScale
-                     , string pipSource
-                     , string emptyPipSource
-                     , bool   greenRedTheme
-                     , int    greenColor
-                     , int    redColor
-                     )
+  private ui string MakeHpBar( int    health
+                             , int    maxHealth
+                             , bool   logScale
+                             , string pipSource
+                             , string emptyPipSource
+                             , bool   greenRedTheme
+                             , int    greenColor
+                             , int    redColor
+                             )
   {
     int length;
     if      (logScale)          { length = int(Log(maxHealth)) * 2; }
@@ -638,7 +638,7 @@ class m8f_ts_EventHandler : EventHandler
 
   }
 
-  int GetDehackedGameType()
+  private int GetDehackedGameType()
   {
     string checkString = StringTable.Localize("$E1TEXT");
     string rekkrString = "You've been through war.";
@@ -652,7 +652,7 @@ class m8f_ts_EventHandler : EventHandler
     return 0;
   }
 
-  ui string GetTargetName(Actor target, int gameType, int playerNumber)
+  private ui string GetTargetName(Actor target, int gameType, int playerNumber)
   {
     if (target.player) { return target.player.GetUserName(); }
 
@@ -662,7 +662,7 @@ class m8f_ts_EventHandler : EventHandler
       {
       case 0: break;
       case 1: return targetClass;
-      case 2: return Beautify(targetClass);
+      case 2: return m8f_ts_String.Beautify(targetClass);
       }
 
     switch (gameType)
@@ -694,20 +694,13 @@ class m8f_ts_EventHandler : EventHandler
       }
 
     // if target name is not found, compose tag from class name
-    targetName = Beautify(targetName);
+    targetName = m8f_ts_String.Beautify(targetName);
 
     cache.SetCache(targetClass, targetName);
     return AddAdditionalInfo(target, targetName, playerNumber);
   }
 
-  ui string Beautify(string s)
-  {
-    string result = m8f_ts_String.SeparateCamelCase(s);
-    result.Replace("_", " ");
-    return result;
-  }
-
-  ui string AddAdditionalInfo(Actor target, string name, int playerNumber)
+  private ui string AddAdditionalInfo(Actor target, string name, int playerNumber)
   {
     Inventory inv = Inventory(target);
     if (inv)
@@ -727,7 +720,7 @@ class m8f_ts_EventHandler : EventHandler
       }
   }
 
-  ui string PrependChampionColor(Actor target, string name, int playerNumber)
+  private ui string PrependChampionColor(Actor target, string name, int playerNumber)
   {
     if (!multiSettings.get(playerNumber).showChampion) { return name; }
 
@@ -743,7 +736,7 @@ class m8f_ts_EventHandler : EventHandler
     return championTag;
   }
 
-  ui string GetTargetFlags(Actor target)
+  private ui string GetTargetFlags(Actor target)
   {
     string result = "";
 

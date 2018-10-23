@@ -19,6 +19,13 @@
 class m8f_ts_String
 {
 
+  ui static string Beautify(string s)
+  {
+    string result = SeparateCamelCase(s);
+    result.Replace("_", " ");
+    return result;
+  }
+
   ui static string SeparateCamelCase(string source)
   {
     int sourceLength = source.Length();
