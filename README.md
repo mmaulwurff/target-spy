@@ -11,11 +11,14 @@ This mods provides configurable health bar for targets.
 * "Kill Confirmed" message;
 * info on pickups and other objects can be shown too;
 * Weapon Menu integration;
+* Frame around target (off by default);
 * netplay support.
 
 ## Thanks
 * Blue Shadow for examples of code.
-* Spaceman333, Rowsol, Churrupez, Cyanide, isaacpop23, TheRailgunner, Lud, Beed28, Ahpiox, ramon.dexter, and Dutchygamer for ideas and bug reports.
+* Spaceman333, Rowsol, Churrupez, Cyanide, isaacpop23, TheRailgunner,
+Lud, Beed28, Ahpiox, ramon.dexter, Dutchygamer, and Tesculpture for
+ideas and bug reports.
 * Silentdarkness12 and Zhs2 for testing netplay.
 
 ## Info
