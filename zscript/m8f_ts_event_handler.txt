@@ -116,7 +116,11 @@ class m8f_ts_EventHandler : EventHandler
 
     draw(target, playerNumber, event);
 
-    if (target != null)
+    bool hasTarget = (target != null);
+    CVar.GetCVar("m8f_ts_has_target", player).SetInt(hasTarget);
+    Cvar.GetCVar("m8f_ts_friendly_target", player).SetInt(hasTarget && target.bFRIENDLY);
+
+    if (hasTarget)
     {
       SetLastTarget(target, playerNumber);
     }
@@ -316,13 +320,12 @@ class m8f_ts_EventHandler : EventHandler
     PlayerInfo player    = players[playerNumber];
     bool       hasTarget = (target != null);
     int        crossCol  = multiSettings.get(playerNumber).crossCol;
-    CVar.GetCVar("m8f_ts_has_target", player).SetInt(hasTarget);
 
     if (!hasTarget)
-      {
-        drawCrosshairs(target, crossCol, font, playerNumber);
-        return;
-      }
+    {
+      drawCrosshairs(target, crossCol, font, playerNumber);
+      return;
+    }
 
     let    settings        = multiSettings.get(playerNumber);
     int    targetMaxHealth = GetActorMaxHealth(target);
@@ -736,7 +739,7 @@ class m8f_ts_EventHandler : EventHandler
     return championTag;
   }
 
-  private ui string GetTargetFlags(Actor target)
+  private static ui string GetTargetFlags(Actor target)
   {
     string result = "";
 

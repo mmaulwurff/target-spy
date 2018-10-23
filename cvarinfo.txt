@@ -64,3 +64,4 @@ user int    m8f_ts_frame_style   = 0;
 
 // interface for other mods
 user bool   m8f_ts_has_target;
+user bool   m8f_ts_friendly_target;
