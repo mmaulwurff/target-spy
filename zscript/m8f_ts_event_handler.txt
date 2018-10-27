@@ -44,7 +44,7 @@ class m8f_ts_EventHandler : EventHandler
   {
     data               = new("m8f_ts_Data").init();
     isTitlemap         = m8f_ts_Game.CheckTitlemap();
-    dehackedGameType   = GetDehackedGameType();
+    dehackedGameType   = m8f_ts_Game.GetDehackedGameType();
 
     cache              = new("m8f_ts_TagCache").init();
   }
@@ -208,8 +208,8 @@ class m8f_ts_EventHandler : EventHandler
             bool      animate        = false;
             Screen.SetClipRect( int(topLeft.x)
                               , int(topLeft.y)
-                              , int(round(bottomRight.x - topLeft.x + 1))
-                              , int(round(bottomRight.y - topLeft.y + 1))
+                              , int(ts_Math.round(bottomRight.x - topLeft.x + 1))
+                              , int(ts_Math.round(bottomRight.y - topLeft.y + 1))
                               );
             Screen.DrawTexture(topLeftTex,     animate, topLeft.x,     topLeft.y    );
             Screen.DrawTexture(topRightTex,    animate, topRight.x,    topRight.y   );
@@ -222,11 +222,6 @@ class m8f_ts_EventHandler : EventHandler
     }
   }
 
-  private ui static double round(double value)
-  {
-    return int(value + 1.0);
-  }
-
   private ui void drawCleanText(Vector2 pos, string str, Font f, int color, double scale)
   {
     int width  = int(scale * Screen.GetWidth());
@@ -234,8 +229,8 @@ class m8f_ts_EventHandler : EventHandler
 
     Screen.drawText( f
                    , color
-                     , (pos.x - (f.stringWidth(str) * cleanXFac / 2.0)) * scale
-                     , (pos.y - (f.getHeight()      * cleanYFac / 2.0)) * scale
+                   , (pos.x - (f.stringWidth(str) * cleanXFac / 2.0)) * scale
+                   , (pos.y - (f.getHeight()      * cleanYFac / 2.0)) * scale
                    , str
                    , DTA_CleanNoMove   , true
                    , DTA_KeepRatio     , true
@@ -331,7 +326,7 @@ class m8f_ts_EventHandler : EventHandler
     }
 
     let    settings        = multiSettings.get(playerNumber);
-    int    targetMaxHealth = GetActorMaxHealth(target);
+    int    targetMaxHealth = m8f_ts_ActorInfo.GetActorMaxHealth(target);
     bool   showHealth      = (targetMaxHealth != 0);
     string legendaryToken  = "LDLegendaryMonsterToken";
 
@@ -377,11 +372,15 @@ class m8f_ts_EventHandler : EventHandler
 
     if (settings.showBar && showHealth)
       {
-        string hpBar = MakeHpBar(targetHealth, targetMaxHealth,
-                                 settings.logScale,
-                                 settings.pipSource, settings.emptyPipSource,
-                                 settings.altHpCols,
-                                 settings.greenCr, settings.redCr);
+        string hpBar = m8f_ts_String.MakeHpBar( targetHealth
+                                              , targetMaxHealth
+                                              , settings.logScale
+                                              , settings.pipSource
+                                              , settings.emptyPipSource
+                                              , settings.altHpCols
+                                              , settings.greenCr
+                                              , settings.redCr
+                                              );
         drawTextCenter(hpBar, targetColor, textScale, y, font);
         y += newline;
       }
@@ -404,7 +403,7 @@ class m8f_ts_EventHandler : EventHandler
 
     if (settings.showInfo)
       {
-        string targetFlags = GetTargetFlags(target);
+        string targetFlags = m8f_ts_ActorInfo.GetTargetFlags(target);
         if (targetFlags.Length() > 0)
           {
             drawTextCenter(targetFlags, nameColor, textScale, y, font);
@@ -585,82 +584,11 @@ class m8f_ts_EventHandler : EventHandler
     return a.target == null;
   }
 
-  private ui int GetActorMaxHealth(Actor a)
-  {
-    if (a == null)     { return 0; }
-    if (!a.bSHOOTABLE) { return 0; }
-
-    if (a.player && a.player.mo) { return a.player.mo.GetMaxHealth(); }
-
-    int maxHealth = a.SpawnHealth();
-    return maxHealth;
-  }
-
   private ui int CustomTargetColor(Actor target)
   {
     string customColorTokenClass = "tr_color_token";
     int customColor = target.CountInv(customColorTokenClass);
     return customColor;
-  }
-
-  private ui string MakeHpBar( int    health
-                             , int    maxHealth
-                             , bool   logScale
-                             , string pipSource
-                             , string emptyPipSource
-                             , bool   greenRedTheme
-                             , int    greenColor
-                             , int    redColor
-                             )
-  {
-    int length;
-    if      (logScale)          { length = int(Log(maxHealth)) * 2; }
-    else if (maxHealth >= 2000) { length = 30; }
-    else if (maxHealth >= 500)  { length = 20; }
-    else                        { length = 10; }
-
-    int pips;
-    if (maxHealth < 1)
-    {
-      pips = 1;
-    }
-    else
-    {
-      pips = health * length / maxHealth;
-      pips = clamp(pips, 1, length);
-    }
-
-    string pipColor;
-    string emptyColor;
-    if (greenRedTheme)
-      {
-        pipColor   = StringStruct.Format("\c%c", 97 + greenColor); // 'a'
-        emptyColor = StringStruct.Format("\c%c", 97 + redColor);   // 'a'
-      }
-    else
-      {
-        pipColor   = "";
-        emptyColor = "";
-      }
-
-    return StringStruct.Format("%s%s%s%s",
-                               pipColor,   pipSource.Left(pips),
-                               emptyColor, emptyPipSource.Left(length - pips));
-
-  }
-
-  private int GetDehackedGameType()
-  {
-    string checkString = StringTable.Localize("$E1TEXT");
-    string rekkrString = "You've been through war.";
-    bool   isRekkr     = (checkString.IndexOf(rekkrString) >= 0);
-    if (isRekkr) { return 2; }
-
-    string impName     = StringTable.Localize("$CC_IMP");
-    bool   isFreedoom  = (impName == "serpentipede");
-    if (isFreedoom) { return 1; }
-
-    return 0;
   }
 
   private ui string GetTargetName(Actor target, int gameType, int playerNumber)
@@ -745,30 +673,6 @@ class m8f_ts_EventHandler : EventHandler
 
     championTag.AppendFormat(" %s", name);
     return championTag;
-  }
-
-  private static ui string GetTargetFlags(Actor target)
-  {
-    string result = "";
-
-    if (target.bFRIENDLY && !target.player)
-      {
-        result = "Friendly";
-      }
-
-    if (target.bINVULNERABLE)
-      {
-        if (result.Length() > 0) { result.AppendFormat(" "); }
-        result.AppendFormat("Invulnerable");
-      }
-
-    if (target.bBOSS)
-      {
-        if (result.Length() > 0) { result.AppendFormat(" "); }
-        result.AppendFormat("Boss");
-      }
-
-    return result;
   }
 
 } // class m8f_ts_EventHandler

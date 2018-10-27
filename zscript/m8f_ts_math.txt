@@ -16,27 +16,12 @@
  * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class m8f_ts_Game
+class ts_Math
 {
 
-  static bool CheckTitlemap()
+  ui static double round(double value)
   {
-    bool isTitlemap = (level.mapname == "TITLEMAP");
-    return isTitlemap;
+    return int(value + 1.0);
   }
 
-  static int GetDehackedGameType()
-  {
-    string checkString = StringTable.Localize("$E1TEXT");
-    string rekkrString = "You've been through war.";
-    bool   isRekkr     = (checkString.IndexOf(rekkrString) >= 0);
-    if (isRekkr) { return 2; }
-
-    string impName     = StringTable.Localize("$CC_IMP");
-    bool   isFreedoom  = (impName == "serpentipede");
-    if (isFreedoom) { return 1; }
-
-    return 0;
-  }
-
-} // class m8f_ts_Game
+} // class m8f_ts_Math

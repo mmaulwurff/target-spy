@@ -13,6 +13,8 @@ version "3.2.0"
 
 #include "zscript/m8f_ts_string.txt"
 #include "zscript/m8f_ts_game.txt"
+#include "zscript/m8f_ts_math.txt"
+#include "zscript/m8f_ts_actor_info.txt"
 
 // https://gitlab.com/Gutawer/gzdoom-gutamatics
 #include "zscript/m8f_ts_Gutamatics/GlobalMaths.zsc"

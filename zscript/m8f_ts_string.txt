@@ -63,4 +63,50 @@ class m8f_ts_String
     return (65 <= code && code <= 90);
   }
 
+  ui static string MakeHpBar( int    health
+                             , int    maxHealth
+                             , bool   logScale
+                             , string pipSource
+                             , string emptyPipSource
+                             , bool   greenRedTheme
+                             , int    greenColor
+                             , int    redColor
+                             )
+  {
+    int length;
+    if      (logScale)          { length = int(Log(maxHealth)) * 2; }
+    else if (maxHealth >= 2000) { length = 30; }
+    else if (maxHealth >= 500)  { length = 20; }
+    else                        { length = 10; }
+
+    int pips;
+    if (maxHealth < 1)
+    {
+      pips = 1;
+    }
+    else
+    {
+      pips = health * length / maxHealth;
+      pips = clamp(pips, 1, length);
+    }
+
+    string pipColor;
+    string emptyColor;
+    if (greenRedTheme)
+      {
+        pipColor   = StringStruct.Format("\c%c", 97 + greenColor); // 'a'
+        emptyColor = StringStruct.Format("\c%c", 97 + redColor);   // 'a'
+      }
+    else
+      {
+        pipColor   = "";
+        emptyColor = "";
+      }
+
+    return StringStruct.Format("%s%s%s%s",
+                               pipColor,   pipSource.Left(pips),
+                               emptyColor, emptyPipSource.Left(length - pips));
+
+  }
+
 } // class m8f_ts_String
