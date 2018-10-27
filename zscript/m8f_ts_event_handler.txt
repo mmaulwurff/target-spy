@@ -222,7 +222,7 @@ class m8f_ts_EventHandler : EventHandler
     }
   }
 
-  private ui void drawCleanText(Vector2 pos, string str, Font f, int color, double scale)
+  private static ui void drawCleanText(Vector2 pos, string str, Font f, int color, double scale)
   {
     int width  = int(scale * Screen.GetWidth());
     int height = int(scale * (Screen.GetHeight() - f.GetHeight()));
@@ -246,7 +246,7 @@ class m8f_ts_EventHandler : EventHandler
     multiLastTargetInfo.get(playerNumber).a = newLastTarget;
   }
 
-  play bool isSlot1Weapon(int playerNumber) const
+  private play bool isSlot1Weapon(int playerNumber) const
   {
     PlayerInfo player = players[playerNumber];
     Weapon w = player.readyWeapon;
@@ -306,18 +306,19 @@ class m8f_ts_EventHandler : EventHandler
 
   private ui void draw(Actor target, int playerNumber, RenderEvent event)
   {
-    double y       = multiSettings.get(playerNumber).yStart;
-    double newline = 0.03 * multiSettings.get(playerNumber).stepMult;
+    let    settings = multiSettings.get(playerNumber);
+    double y        = settings.yStart + settings.yOffset;
+    double newline  = 0.03 * settings.stepMult;
     if (y >= 0.80) { newline = -newline; }
 
-    Font font      = Font.GetFont(multiSettings.get(playerNumber).fontName);
-    Font crossfont = Font.GetFont(multiSettings.get(playerNumber).crossFontName);
+    Font font      = Font.GetFont(settings.fontName);
+    Font crossfont = Font.GetFont(settings.crossFontName);
 
     y = drawKillConfirmed(y, newline, font, playerNumber);
 
     PlayerInfo player    = players[playerNumber];
     bool       hasTarget = (target != null);
-    int        crossCol  = multiSettings.get(playerNumber).crossCol;
+    int        crossCol  = settings.crossCol;
 
     if (!hasTarget)
     {
@@ -325,7 +326,6 @@ class m8f_ts_EventHandler : EventHandler
       return;
     }
 
-    let    settings        = multiSettings.get(playerNumber);
     int    targetMaxHealth = m8f_ts_ActorInfo.GetActorMaxHealth(target);
     bool   showHealth      = (targetMaxHealth != 0);
     string legendaryToken  = "LDLegendaryMonsterToken";

@@ -37,6 +37,7 @@ class m8f_ts_Settings
 
   int    minHealth;
   double yStart;
+  double yOffset;
   bool   logScale;
   bool   showBar;
   bool   showName;
@@ -92,6 +93,7 @@ class m8f_ts_Settings
     isEnabled            = CVar.GetCVar("m8f_ts_enabled"      , player).GetInt();
     minHealth            = CVar.GetCVar("m8f_ts_min_health"   , player).GetInt();
     yStart               = CVar.GetCVar("m8f_ts_y"            , player).GetFloat();
+    yOffset              = CVar.GetCVar("m8f_ts_y_offset"     , player).GetFloat();
     logScale             = CVar.GetCVar("m8f_ts_bar_log_scale", player).GetInt();
     showBar              = CVar.GetCVar("m8f_ts_show_bar"     , player).GetInt();
     showName             = CVar.GetCVar("m8f_ts_show_name"    , player).GetInt();

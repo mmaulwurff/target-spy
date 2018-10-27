@@ -4,7 +4,7 @@ OptionValue "m8f_ts_y_values"
   0.10, "Below top"
   0.35, "Above crosshair"
   0.60, "Below crosshair"
-  1.0,  "Bottom"
+  0.90,  "Bottom"
 }
 
 OptionString "m8f_ts_font_values"
@@ -87,6 +87,7 @@ OptionMenu   "m8f_ts_VisualOptions"
   TextField "Empty bar symbol"     , "m8f_ts_empty_pip"
   Option "Health bar log scale"    , "m8f_ts_bar_log_scale" , "OnOff"
   Option "Vertical position"       , "m8f_ts_y"             , "m8f_ts_y_values"
+  Slider "Offset"                  , "m8f_ts_y_offset"      , -0.2, 0.2, 0.0025, 4
 
   StaticText ""
   StaticText "Target Frame", "Blue"

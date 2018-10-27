@@ -1,5 +1,6 @@
 // options
 user float  m8f_ts_y             = 0.02;
+user float  m8f_ts_y_offset      = 0.0;
 user bool   m8f_ts_enabled       = true;
 user int    m8f_ts_min_health    = 0;
 user bool   m8f_ts_show_name     = true;
