@@ -78,6 +78,7 @@ class m8f_ts_Settings
   string crosshair;
   string crossTop;
   string crossBot;
+  string crossFontName;
 
   string pipSource;
   string emptyPipSource;
@@ -125,12 +126,13 @@ class m8f_ts_Settings
     hideInDarkness       = CVar.GetCVar("m8f_ts_hide_in_dark" , player).GetInt();
     minimalLightLevel    = CVar.GetCVar("m8f_ts_light_level"  , player).GetInt();
 
-    pip       = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
-    emptyPip  = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();
-    fontName  = CVar.GetCVar("m8f_ts_font"         , player).GetString();
-    crosshair = CVar.GetCVar("m8f_ts_crosshair"    , player).GetString();
-    crossTop  = CVar.GetCVar("m8f_ts_cross_top"    , player).GetString();
-    crossBot  = CVar.GetCVar("m8f_ts_cross_bottom" , player).GetString();
+    pip           = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
+    emptyPip      = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();
+    fontName      = CVar.GetCVar("m8f_ts_font"         , player).GetString();
+    crosshair     = CVar.GetCVar("m8f_ts_crosshair"    , player).GetString();
+    crossTop      = CVar.GetCVar("m8f_ts_cross_top"    , player).GetString();
+    crossBot      = CVar.GetCVar("m8f_ts_cross_bottom" , player).GetString();
+    crossFontName = CVar.GetCVar("m8f_ts_cr_font"      , player).GetString();
 
     colors[ 0] = CVar.GetCVar("m8f_ts_cr_0" , player).GetInt();
     colors[ 1] = CVar.GetCVar("m8f_ts_cr_1" , player).GetInt();
@@ -165,4 +167,5 @@ class m8f_ts_Settings
     for (int i = 0; i < times; ++i) { result.AppendFormat("%s", s); }
     return result;
   }
-}
+
+} // class m8f_ts_Settings

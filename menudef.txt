@@ -198,6 +198,7 @@ OptionMenu "m8f_ts_Crosshairs"
   Slider "Bottom part offset"  , "m8f_ts_bot_offset"   , -0.1, 0.1, 0.005, 3
   Slider "X Adjustment"        , "m8f_ts_x_adjustment" , -50, 50, 1, 0
   Slider "Scale"               , "m8f_ts_cross_scale"  , 0.5, 3.0, 0.05, 2
+  Option "Font"                , "m8f_ts_cr_font"      , "m8f_ts_font_values"
 
   StaticText ""
   StaticText ""
