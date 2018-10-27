@@ -65,7 +65,7 @@ class m8f_ts_Settings
   bool   hitConfirmation;
   int    hitColor;
   double textScale;
-  int    xAdjustment;
+  double xAdjustment;
   bool   noCrossOnSlot1;
   int    frameStyle;
   bool   showIdle;
@@ -119,7 +119,7 @@ class m8f_ts_Settings
     hitConfirmation      = CVar.GetCVar("m8f_ts_hit_confirm"  , player).GetInt();
     hitColor             = CVar.GetCVar("m8f_ts_hit_color"    , player).GetInt();
     textScale            = CVar.GetCVar("m8f_ts_text_scale"   , player).GetFloat();
-    xAdjustment          = CVar.GetCVar("m8f_ts_x_adjustment" , player).GetInt();
+    xAdjustment          = CVar.GetCVar("m8f_ts_x_adjustment" , player).GetFloat();
     noCrossOnSlot1       = CVar.GetCVar("m8f_ts_no_cross_on_1", player).GetInt();
     frameStyle           = CVar.GetCVar("m8f_ts_frame_style"  , player).GetInt();
     showIdle             = CVar.GetCVar("m8f_ts_show_idle"    , player).GetInt();

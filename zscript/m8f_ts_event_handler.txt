@@ -297,7 +297,7 @@ class m8f_ts_EventHandler : EventHandler
     double topY            = baseCenterY - topBottomShift + settings.topOff;
     double centerY         = baseCenterY                  + settings.crossOff;
     double bottomY         = baseCenterY + topBottomShift + settings.botOff;
-    int    dx              = settings.xAdjustment;
+    double dx              = settings.xAdjustment;
 
     drawTextCenter(settings.crossTop,  crosshairColor, scale, topY   , font, dx);
     drawTextCenter(settings.crosshair, crosshairColor, scale, centerY, font, dx);
@@ -462,8 +462,13 @@ class m8f_ts_EventHandler : EventHandler
     return y;
   }
 
-  private ui void drawTextCenter(string text, int color, double scale, double relativeY,
-                                 Font font, int xAdjustment = 0)
+  private ui void drawTextCenter( string text
+                                , int    color
+                                , double scale
+                                , double relativeY
+                                , Font   font
+                                , double xAdjustment = 0
+                                )
   {
     int width    = int(scale * Screen.GetWidth());
     int height   = int(scale * (Screen.GetHeight() - font.GetHeight()));
