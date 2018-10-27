@@ -154,7 +154,6 @@ class m8f_ts_EventHandler : EventHandler
       let  settings         = multiSettings.get(playerNumber);
       let  f                = Font.GetFont(settings.fontName);
 
-      //drawCleanText(centerPos.x, centerPos.y, "+", f);
       Vector2 left   = (centerPos.x - visibleRadius / 2.0, centerPos.y);
       Vector2 right  = (centerPos.x + visibleRadius / 2.0, centerPos.y);
       Vector2 top    = (centerPos.x, centerPos.y - visibleHeight / 2.0);
@@ -164,6 +163,7 @@ class m8f_ts_EventHandler : EventHandler
       Vector2 topRight    = (right.x, top.y);
       Vector2 bottomLeft  = (left.x,  bottom.y);
       Vector2 bottomRight = (right.x, bottom.y);
+      double  scale       = 0.5 / multiSettings.get(playerNumber).frameScale;
 
       switch (settings.frameStyle)
       {
@@ -171,32 +171,32 @@ class m8f_ts_EventHandler : EventHandler
           break;
 
         case settings.FRAME_SLASH:
-          drawCleanText(topLeft,     "/", f, color);
-          drawCleanText(bottomRight, "/", f, color);
+          drawCleanText(topLeft,     "/", f, color, scale);
+          drawCleanText(bottomRight, "/", f, color, scale);
           break;
 
         case settings.FRAME_DOTS:
-          drawCleanText(topLeft,     ".", f, color);
-          drawCleanText(topRight,    ".", f, color);
-          drawCleanText(bottomLeft,  ".", f, color);
-          drawCleanText(bottomRight, ".", f, color);
+          drawCleanText(topLeft,     ".", f, color, scale);
+          drawCleanText(topRight,    ".", f, color, scale);
+          drawCleanText(bottomLeft,  ".", f, color, scale);
+          drawCleanText(bottomRight, ".", f, color, scale);
           break;
 
         case settings.FRAME_LESS_GREATER:
-          drawCleanText(left,  "<", f, color);
-          drawCleanText(right, ">", f, color);
+          drawCleanText(left,  "<", f, color, scale);
+          drawCleanText(right, ">", f, color, scale);
           break;
 
         case settings.FRAME_GREATER_LESS:
-          drawCleanText(left,  ">", f, color);
-          drawCleanText(right, "<", f, color);
+          drawCleanText(left,  ">", f, color, scale);
+          drawCleanText(right, "<", f, color, scale);
           break;
 
         case settings.FRAME_BARS:
-          drawCleanText(top,    ".", f, color);
-          drawCleanText(left,   "I", f, color);
-          drawCleanText(right,  "I", f, color);
-          drawCleanText(bottom, ".", f, color);
+          drawCleanText(top,    ".", f, color, scale);
+          drawCleanText(left,   "I", f, color, scale);
+          drawCleanText(right,  "I", f, color, scale);
+          drawCleanText(bottom, ".", f, color, scale);
           break;
 
         case settings.FRAME_GRAPHIC:
@@ -227,15 +227,20 @@ class m8f_ts_EventHandler : EventHandler
     return int(value + 1.0);
   }
 
-  private ui void drawCleanText(Vector2 pos, string str, Font f, int color)
+  private ui void drawCleanText(Vector2 pos, string str, Font f, int color, double scale)
   {
+    int width  = int(scale * Screen.GetWidth());
+    int height = int(scale * (Screen.GetHeight() - f.GetHeight()));
+
     Screen.drawText( f
                    , color
-                   , pos.x - (f.stringWidth(str) * cleanXFac / 2.0)
-                   , pos.y - (f.getHeight()      * cleanYFac / 2.0)
+                     , (pos.x - (f.stringWidth(str) * cleanXFac / 2.0)) * scale
+                     , (pos.y - (f.getHeight()      * cleanYFac / 2.0)) * scale
                    , str
-                   , DTA_CleanNoMove
-                   , true
+                   , DTA_CleanNoMove   , true
+                   , DTA_KeepRatio     , true
+                   , DTA_VirtualWidth  , width
+                   , DTA_VirtualHeight , height
                    );
   }
 
