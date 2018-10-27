@@ -295,7 +295,7 @@ class m8f_ts_EventHandler : EventHandler
     int    statusBarHeight = screenHeight - height;
     double relativeStatusBarHeight = double(statusBarHeight) * scale / screenHeight;
     double baseCenterY     = 0.51 - relativeStatusBarHeight;
-    double topBottomShift  = 0.3;
+    double topBottomShift  = 0.02;
 
     double topY            = baseCenterY - topBottomShift + settings.topOff;
     double centerY         = baseCenterY                  + settings.crossOff;
