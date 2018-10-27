@@ -286,13 +286,10 @@ class m8f_ts_EventHandler : EventHandler
     }
 
     double scale           = 0.5 / settings.crossScale;
-    int    x;
-    int    y;
-    int    width;
-    int    height;
+    int    x, y, width, height;
     [x, y, width, height]  = Screen.GetViewWindow();
     int    screenHeight    = Screen.GetHeight();
-    int    statusBarHeight = screenHeight - height;
+    int    statusBarHeight = screenHeight - height - x;
     double relativeStatusBarHeight = double(statusBarHeight) * scale / screenHeight;
     double baseCenterY     = 0.51 - relativeStatusBarHeight;
     double topBottomShift  = 0.02;
@@ -300,8 +297,8 @@ class m8f_ts_EventHandler : EventHandler
     double topY            = baseCenterY - topBottomShift + settings.topOff;
     double centerY         = baseCenterY                  + settings.crossOff;
     double bottomY         = baseCenterY + topBottomShift + settings.botOff;
+    int    dx              = settings.xAdjustment;
 
-    int dx = settings.xAdjustment;
     drawTextCenter(settings.crossTop,  crosshairColor, scale, topY   , font, dx);
     drawTextCenter(settings.crosshair, crosshairColor, scale, centerY, font, dx);
     drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY, font, dx);
