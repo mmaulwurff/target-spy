@@ -298,10 +298,11 @@ class m8f_ts_EventHandler : EventHandler
     double centerY         = baseCenterY                  + settings.crossOff;
     double bottomY         = baseCenterY + topBottomShift + settings.botOff;
     double dx              = settings.xAdjustment;
+    double opacity         = settings.crossOpacity;
 
-    drawTextCenter(settings.crossTop,  crosshairColor, scale, topY   , font, dx);
-    drawTextCenter(settings.crosshair, crosshairColor, scale, centerY, font, dx);
-    drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY, font, dx);
+    drawTextCenter(settings.crossTop,  crosshairColor, scale, topY   , font, dx, opacity);
+    drawTextCenter(settings.crosshair, crosshairColor, scale, centerY, font, dx, opacity);
+    drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY, font, dx, opacity);
   }
 
   private ui void draw(Actor target, int playerNumber, RenderEvent event)
@@ -369,6 +370,7 @@ class m8f_ts_EventHandler : EventHandler
     drawCrosshairs(target, targetColor, crossFont, playerNumber);
 
     double textScale = 0.5 / settings.textScale;
+    double opacity   = settings.opacity;
 
     if (settings.showBar && showHealth)
       {
@@ -381,7 +383,7 @@ class m8f_ts_EventHandler : EventHandler
                                               , settings.greenCr
                                               , settings.redCr
                                               );
-        drawTextCenter(hpBar, targetColor, textScale, y, font);
+        drawTextCenter(hpBar, targetColor, textScale, y, font, 0.0, opacity);
         y += newline;
       }
 
@@ -397,7 +399,7 @@ class m8f_ts_EventHandler : EventHandler
             nameColor  = targetColor;
           }
 
-        drawTextCenter(targetName, nameColor, textScale, y, font);
+        drawTextCenter(targetName, nameColor, textScale, y, font, 0.0, opacity);
         y += newline;
       }
 
@@ -406,7 +408,7 @@ class m8f_ts_EventHandler : EventHandler
         string targetFlags = m8f_ts_ActorInfo.GetTargetFlags(target);
         if (targetFlags.Length() > 0)
           {
-            drawTextCenter(targetFlags, nameColor, textScale, y, font);
+            drawTextCenter(targetFlags, nameColor, textScale, y, font, 0.0, opacity);
             y += newline;
           }
       }
@@ -420,13 +422,13 @@ class m8f_ts_EventHandler : EventHandler
         case 1:
           drawTextCenter(StringStruct.Format("%d/%d",
                                              targetHealth, targetMaxHealth),
-                         targetColor, textScale, y, font);
+                         targetColor, textScale, y, font, 0.0, opacity);
           y += newline;
           break;
 
         case 2:
           drawTextCenter(StringStruct.Format("%d", targetHealth),
-                         targetColor, textScale, y, font);
+                         targetColor, textScale, y, font, 0.0, opacity);
           y += newline;
           break;
 
@@ -436,7 +438,7 @@ class m8f_ts_EventHandler : EventHandler
           else { percent100 = targetHealth * 100 / targetMaxHealth; }
 
           drawTextCenter(StringStruct.Format("%d%", percent100),
-                         targetColor, textScale, y, font);
+                         targetColor, textScale, y, font, 0.0, opacity);
           y += newline;
           break;
       }
@@ -454,15 +456,23 @@ class m8f_ts_EventHandler : EventHandler
                                      , int    playerNumber
                                      )
   {
-    if (!multiSettings.get(playerNumber).showKillConfirmation) { return y; }
+    let settings = multiSettings.get(playerNumber);
+
+    if (!settings.showKillConfirmation) { return y; }
+
     let lastTargetInfo = multiLastTargetInfo.get(playerNumber);
+
     if (lastTargetInfo.killTime == -1) { return y; }
+
     if (level.time < lastTargetInfo.killTime + 35 * 1)
-      {
-        double scale = 0.5 / multiSettings.get(playerNumber).textScale;
-        drawTextCenter("Kill Confirmed", multiSettings.get(playerNumber).nameCol, scale, y, font);
-        y += newline;
-      }
+    {
+      double scale     = 0.5 / settings.textScale;
+      double opacity   = settings.opacity;
+      int    nameColor = settings.nameCol;
+      drawTextCenter("Kill Confirmed", nameColor, scale, y, font, 0.0, opacity);
+      y += newline;
+    }
+
     return y;
   }
 
@@ -471,7 +481,8 @@ class m8f_ts_EventHandler : EventHandler
                                 , double scale
                                 , double relativeY
                                 , Font   font
-                                , double xAdjustment = 0
+                                , double xAdjustment
+                                , double opacity
                                 )
   {
     int width    = int(scale * Screen.GetWidth());
@@ -481,10 +492,16 @@ class m8f_ts_EventHandler : EventHandler
     double x = position * 0.5 + xAdjustment;
     double y = height   * relativeY;
 
-    Screen.DrawText(font, color, x, y, text,
-                    DTA_KeepRatio,     true,
-                    DTA_VirtualWidth,  width,
-                    DTA_VirtualHeight, height);
+    Screen.DrawText( font
+                   , color
+                   , x
+                   , y
+                   , text
+                   , DTA_KeepRatio     , true
+                   , DTA_VirtualWidth  , width
+                   , DTA_VirtualHeight , height
+                   , DTA_Alpha         , opacity
+                   );
   }
 
   private ui Actor GetTarget(int playerNumber, int gameType)

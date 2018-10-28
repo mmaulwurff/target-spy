@@ -44,6 +44,7 @@ user bool   m8f_ts_no_cross_on_1 = false;
 user bool   m8f_ts_show_idle     = true;
 user bool   m8f_ts_hide_in_dark  = false;
 user int    m8f_ts_light_level   = 120;
+user float  m8f_ts_opacity       = 1.0;
 
 user int    m8f_ts_cr_0          =  6; // red
 user int    m8f_ts_cr_1          =  6; // red
@@ -59,8 +60,8 @@ user int    m8f_ts_cr_10         =  1; // tan
 user int    m8f_ts_cr_11         = 21; // cyan
 
 user int    m8f_ts_cr_alm_dead   = 12; // black
-
 user string m8f_ts_cr_font       = "MM2SFNTO";
+user float  m8f_ts_cr_opacity    = 1.0;
 
 // see m8f_ts_Settings for frame styles enumaration
 user int    m8f_ts_frame_style   = 0;

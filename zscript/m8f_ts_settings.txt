@@ -73,6 +73,8 @@ class m8f_ts_Settings
   bool   showIdle;
   bool   hideInDarkness;
   int    minimalLightLevel;
+  float  crossOpacity;
+  float  opacity;
 
   string pip;
   string emptyPip;
@@ -129,6 +131,8 @@ class m8f_ts_Settings
     showIdle             = CVar.GetCVar("m8f_ts_show_idle"    , player).GetInt();
     hideInDarkness       = CVar.GetCVar("m8f_ts_hide_in_dark" , player).GetInt();
     minimalLightLevel    = CVar.GetCVar("m8f_ts_light_level"  , player).GetInt();
+    crossOpacity         = CVar.GetCVar("m8f_ts_cr_opacity"   , player).GetFloat();
+    opacity              = CVar.GetCVar("m8f_ts_opacity"      , player).GetFloat();
 
     pip           = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
     emptyPip      = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();
@@ -151,25 +155,19 @@ class m8f_ts_Settings
     colors[10] = CVar.GetCVar("m8f_ts_cr_10", player).GetInt();
     colors[11] = CVar.GetCVar("m8f_ts_cr_11", player).GetInt();
 
-    pipSource      = Repeat(pip,      50);
-    emptyPipSource = Repeat(emptyPip, 50);
+    pipSource      = m8f_ts_String.Repeat(pip,      50);
+    emptyPipSource = m8f_ts_String.Repeat(emptyPip, 50);
 
     // prevent division by zero
     if (textScale  == 0.0) { textScale  = 1.0; }
     if (crossScale == 0.0) { crossScale = 1.0; }
+    if (frameScale == 0.0) { frameScale = 1.0; }
   }
 
   m8f_ts_Settings Init(PlayerInfo player)
   {
     read(player);
     return self;
-  }
-
-  string Repeat(string s, int times)
-  {
-    string result = "";
-    for (int i = 0; i < times; ++i) { result.AppendFormat("%s", s); }
-    return result;
   }
 
 } // class m8f_ts_Settings

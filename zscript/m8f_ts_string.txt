@@ -64,14 +64,14 @@ class m8f_ts_String
   }
 
   ui static string MakeHpBar( int    health
-                             , int    maxHealth
-                             , bool   logScale
-                             , string pipSource
-                             , string emptyPipSource
-                             , bool   greenRedTheme
-                             , int    greenColor
-                             , int    redColor
-                             )
+                            , int    maxHealth
+                            , bool   logScale
+                            , string pipSource
+                            , string emptyPipSource
+                            , bool   greenRedTheme
+                            , int    greenColor
+                            , int    redColor
+                            )
   {
     int length;
     if      (logScale)          { length = int(Log(maxHealth)) * 2; }
@@ -107,6 +107,13 @@ class m8f_ts_String
                                pipColor,   pipSource.Left(pips),
                                emptyColor, emptyPipSource.Left(length - pips));
 
+  }
+
+  static string Repeat(string s, int times)
+  {
+    string result = "";
+    for (int i = 0; i < times; ++i) { result.AppendFormat("%s", s); }
+    return result;
   }
 
 } // class m8f_ts_String

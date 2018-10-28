@@ -88,6 +88,7 @@ OptionMenu   "m8f_ts_VisualOptions"
   Option "Health bar log scale"    , "m8f_ts_bar_log_scale" , "OnOff"
   Option "Vertical position"       , "m8f_ts_y"             , "m8f_ts_y_values"
   Slider "Offset"                  , "m8f_ts_y_offset"      , -0.2, 0.2, 0.0025, 4
+  Slider "Opacity"                 , "m8f_ts_opacity"       , 0.0, 1.0, 0.05, 2
 
   StaticText ""
   StaticText "Target Frame", "Blue"
@@ -201,6 +202,7 @@ OptionMenu "m8f_ts_Crosshairs"
   Slider "X Adjustment"        , "m8f_ts_x_adjustment" , -50, 50, 0.5, 1
   Slider "Scale"               , "m8f_ts_cross_scale"  , 0.5, 3.0, 0.05, 2
   Option "Font"                , "m8f_ts_cr_font"      , "m8f_ts_font_values"
+  Slider "Opacity"             , "m8f_ts_cr_opacity"   , 0.0, 1.0, 0.05, 2
 
   StaticText ""
   StaticText ""
