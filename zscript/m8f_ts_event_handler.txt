@@ -80,13 +80,13 @@ class m8f_ts_EventHandler : EventHandler
 
 
     for (int i = 0; i < MAXPLAYERS; ++i)
+    {
+      let lastTargetInfo = multiLastTargetInfo.get(i);
+      if (lastTargetInfo.a == damagedThing)
       {
-        let lastTargetInfo = multiLastTargetInfo.get(i);
-        if (lastTargetInfo.a == damagedThing)
-          {
-            lastTargetInfo.hurtTime = level.time;
-          }
+        lastTargetInfo.hurtTime = level.time;
       }
+    }
   }
 
   override void RenderOverlay(RenderEvent event)
@@ -163,7 +163,7 @@ class m8f_ts_EventHandler : EventHandler
       Vector2 topRight    = (right.x, top.y);
       Vector2 bottomLeft  = (left.x,  bottom.y);
       Vector2 bottomRight = (right.x, bottom.y);
-      double  scale       = 0.5 / multiSettings.get(playerNumber).frameScale;
+      double  scale       = 0.5 / settings.frameScale;
 
       switch (settings.frameStyle)
       {
@@ -337,30 +337,30 @@ class m8f_ts_EventHandler : EventHandler
     }
 
     if (targetMaxHealth < settings.minHealth && targetMaxHealth != 0)
-      {
-        drawCrosshairs(target, crossCol, crossFont, playerNumber);
-        return; // not worth showing
-      }
+    {
+      drawCrosshairs(target, crossCol, crossFont, playerNumber);
+      return; // not worth showing
+    }
 
     int targetHealth = target.health;
     if (targetHealth < 1 && !settings.showCorps) // target is dead
-      {
-        drawCrosshairs(target, crossCol, crossFont, playerNumber);
-        return;
-      }
+    {
+      drawCrosshairs(target, crossCol, crossFont, playerNumber);
+      return;
+    }
 
     int tagColor;
     if (targetMaxHealth < 100) { tagColor = settings.weakCol; }
     else                       { tagColor = settings.nameCol; }
-    int customColor = CustomTargetColor(target);
+    int customColor = m8f_ts_ActorInfo.CustomTargetColor(target);
     if (customColor)           { tagColor = customColor; }
 
     int percent = 10;
     if (showHealth)
-      {
-        if (targetHealth > targetMaxHealth) { percent = 11; }
-        else { percent = targetHealth * 10 / targetMaxHealth; }
-      }
+    {
+      if (targetHealth > targetMaxHealth) { percent = 11; }
+      else { percent = targetHealth * 10 / targetMaxHealth; }
+    }
 
     if (percent < 0) { percent = 0; }
     int targetColor = settings.colors[percent];
@@ -373,45 +373,45 @@ class m8f_ts_EventHandler : EventHandler
     double opacity   = settings.opacity;
 
     if (settings.showBar && showHealth)
-      {
-        string hpBar = m8f_ts_String.MakeHpBar( targetHealth
-                                              , targetMaxHealth
-                                              , settings.logScale
-                                              , settings.pipSource
-                                              , settings.emptyPipSource
-                                              , settings.altHpCols
-                                              , settings.greenCr
-                                              , settings.redCr
-                                              );
-        drawTextCenter(hpBar, targetColor, textScale, y, font, 0.0, opacity);
-        y += newline;
-      }
+    {
+      string hpBar = m8f_ts_String.MakeHpBar( targetHealth
+                                            , targetMaxHealth
+                                            , settings.logScale
+                                            , settings.pipSource
+                                            , settings.emptyPipSource
+                                            , settings.altHpCols
+                                            , settings.greenCr
+                                            , settings.redCr
+                                            );
+      drawTextCenter(hpBar, targetColor, textScale, y, font, 0.0, opacity);
+      y += newline;
+    }
 
     int nameColor = tagColor;
     if (targetHealth < 1) { nameColor = targetColor; }
 
     if (settings.showName)
+    {
+      string targetName = GetTargetName(target, dehackedGameType, playerNumber);
+      if (targetHealth < 1)
       {
-        string targetName = GetTargetName(target, dehackedGameType, playerNumber);
-        if (targetHealth < 1)
-          {
-            targetName = StringStruct.Format("Remains of %s", targetName);
-            nameColor  = targetColor;
-          }
-
-        drawTextCenter(targetName, nameColor, textScale, y, font, 0.0, opacity);
-        y += newline;
+        targetName = StringStruct.Format("Remains of %s", targetName);
+        nameColor  = targetColor;
       }
+
+      drawTextCenter(targetName, nameColor, textScale, y, font, 0.0, opacity);
+      y += newline;
+    }
 
     if (settings.showInfo)
+    {
+      string targetFlags = m8f_ts_ActorInfo.GetTargetFlags(target);
+      if (targetFlags.Length() > 0)
       {
-        string targetFlags = m8f_ts_ActorInfo.GetTargetFlags(target);
-        if (targetFlags.Length() > 0)
-          {
-            drawTextCenter(targetFlags, nameColor, textScale, y, font, 0.0, opacity);
-            y += newline;
-          }
+        drawTextCenter(targetFlags, nameColor, textScale, y, font, 0.0, opacity);
+        y += newline;
       }
+    }
 
     if (showHealth)
     {
@@ -477,13 +477,13 @@ class m8f_ts_EventHandler : EventHandler
   }
 
   private ui void drawTextCenter( string text
-                                , int    color
-                                , double scale
-                                , double relativeY
-                                , Font   font
-                                , double xAdjustment
-                                , double opacity
-                                )
+                                  , int    color
+                                  , double scale
+                                  , double relativeY
+                                  , Font   font
+                                  , double xAdjustment
+                                  , double opacity
+    )
   {
     int width    = int(scale * Screen.GetWidth());
     int height   = int(scale * (Screen.GetHeight() - font.GetHeight()));
@@ -556,56 +556,44 @@ class m8f_ts_EventHandler : EventHandler
     if (isInBlackList) { return null; }
 
     switch (gameType)
-      {
+    {
       case 1: targetClass.AppendFormat("_free" ); break; // Freedoom
       case 2: targetClass.AppendFormat("_rekkr"); break; // Rekkr
-      }
+    }
 
     // everything without name in REKKR is "blacklisted"
     if (targetClass.IndexOf("_rekkr") != -1)
-      {
-        string specialName = data.specialNames.get(targetClass);
-        if (specialName.length() == 0) { return null; }
-      }
+    {
+      string specialName = data.specialNames.get(targetClass);
+      if (specialName.length() == 0) { return null; }
+    }
 
     if (target.bISMONSTER)
-      {
-        bool targetIsHidden = (target.bSHADOW || target.bSTEALTH);
-        if (!settings.showHidden  && targetIsHidden)   { return null; }
-        if (!settings.showFriends && target.bFRIENDLY) { return null; }
-        if (!settings.showIdle    && IsIdle(target))   { return null; }
-      }
+    {
+      bool targetIsHidden = (target.bSHADOW || target.bSTEALTH);
+      if (!settings.showHidden  && targetIsHidden)   { return null; }
+      if (!settings.showFriends && target.bFRIENDLY) { return null; }
+      if (!settings.showIdle    && m8f_ts_ActorInfo.IsIdle(target)) { return null; }
+    }
     else // not monsters
-      {
-        if (target.player) { return target; }
+    {
+      if (target.player) { return target; }
 
-        switch (settings.showObjects)
-          {
-          case 0: return null;
-          case 1:
-            if (target.bSHOOTABLE) { return target; }
-            else                   { return null;   }
-          case 2:
-            if (target.bSHOOTABLE || target is "Inventory") { return target; }
-            else                                            { return null;   }
-          case 3:
-            return target;
-          }
+      switch (settings.showObjects)
+      {
+        case 0: return null;
+        case 1:
+          if (target.bSHOOTABLE) { return target; }
+          else                   { return null;   }
+        case 2:
+          if (target.bSHOOTABLE || target is "Inventory") { return target; }
+          else                                            { return null;   }
+        case 3:
+          return target;
       }
+    }
 
     return target;
-  }
-
-  private ui bool IsIdle(Actor a) const
-  {
-    return a.target == null;
-  }
-
-  private ui int CustomTargetColor(Actor target)
-  {
-    string customColorTokenClass = "tr_color_token";
-    int customColor = target.CountInv(customColorTokenClass);
-    return customColor;
   }
 
   private ui string GetTargetName(Actor target, int gameType, int playerNumber)
@@ -615,39 +603,39 @@ class m8f_ts_EventHandler : EventHandler
     string targetClass = target.GetClassName();
 
     switch (multiSettings.get(playerNumber).showInternalNames)
-      {
+    {
       case 0: break;
       case 1: return targetClass;
       case 2: return m8f_ts_String.Beautify(targetClass);
-      }
+    }
 
     switch (gameType)
-      {
+    {
       case 1: targetClass.AppendFormat("_free" ); break; // Freedoom
       case 2: targetClass.AppendFormat("_rekkr"); break; // Rekkr
-      }
+    }
 
     // if target name was found before, just return it
     if (cache.cachedClass == targetClass)
-      {
-        return AddAdditionalInfo(target, cache.cachedTag, playerNumber);
-      }
+    {
+      return AddAdditionalInfo(target, cache.cachedTag, playerNumber);
+    }
 
     // if target name is set via actor tag, return it
     string targetName = target.GetTag();
     if (targetName != targetClass && !(gameType != 0))
-      {
-        cache.SetCache(targetClass, targetName);
-        return AddAdditionalInfo(target, targetName, playerNumber);
-      }
+    {
+      cache.SetCache(targetClass, targetName);
+      return AddAdditionalInfo(target, targetName, playerNumber);
+    }
 
     string specialName = data.specialNames.get(targetClass);
     if (specialName.Length() != 0)
-      {
-        targetName = specialName;
-        cache.SetCache(targetClass, targetName);
-        return AddAdditionalInfo(target, targetName, playerNumber);
-      }
+    {
+      targetName = specialName;
+      cache.SetCache(targetClass, targetName);
+      return AddAdditionalInfo(target, targetName, playerNumber);
+    }
 
     // if target name is not found, compose tag from class name
     targetName = m8f_ts_String.Beautify(targetName);
@@ -660,20 +648,20 @@ class m8f_ts_EventHandler : EventHandler
   {
     Inventory inv = Inventory(target);
     if (inv)
+    {
+      int amount = inv.amount;
+      if (amount == 1)
       {
-        int amount = inv.amount;
-        if (amount == 1)
-          {
-            BasicArmorPickup armor = BasicArmorPickup(inv);
-            if (armor) { amount = armor.SaveAmount; }
-          }
-        if (amount == 1) { return name; }
-        else             { return StringStruct.Format("%s (%i)", name, amount); }
+        BasicArmorPickup armor = BasicArmorPickup(inv);
+        if (armor) { amount = armor.SaveAmount; }
       }
+      if (amount == 1) { return name; }
+      else             { return StringStruct.Format("%s (%i)", name, amount); }
+    }
     else
-      {
-        return PrependChampionColor(target, name, playerNumber);
-      }
+    {
+      return PrependChampionColor(target, name, playerNumber);
+    }
   }
 
   private ui string PrependChampionColor(Actor target, string name, int playerNumber)

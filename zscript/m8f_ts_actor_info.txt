@@ -24,21 +24,21 @@ class m8f_ts_ActorInfo
     string result = "";
 
     if (target.bFRIENDLY && !target.player)
-      {
-        result = "Friendly";
-      }
+    {
+      result = "Friendly";
+    }
 
     if (target.bINVULNERABLE)
-      {
-        if (result.Length() > 0) { result.AppendFormat(" "); }
-        result.AppendFormat("Invulnerable");
-      }
+    {
+      if (result.Length() > 0) { result.AppendFormat(" "); }
+      result.AppendFormat("Invulnerable");
+    }
 
     if (target.bBOSS)
-      {
-        if (result.Length() > 0) { result.AppendFormat(" "); }
-        result.AppendFormat("Boss");
-      }
+    {
+      if (result.Length() > 0) { result.AppendFormat(" "); }
+      result.AppendFormat("Boss");
+    }
 
     return result;
   }
@@ -52,6 +52,18 @@ class m8f_ts_ActorInfo
 
     int maxHealth = a.SpawnHealth();
     return maxHealth;
+  }
+
+  static ui bool IsIdle(Actor a)
+  {
+    return a.target == null;
+  }
+
+  static ui int CustomTargetColor(Actor target)
+  {
+    string customColorTokenClass = "tr_color_token";
+    int customColor = target.CountInv(customColorTokenClass);
+    return customColor;
   }
 
 } // class m8f_ts_ActorInfo
