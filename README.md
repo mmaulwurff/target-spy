@@ -14,11 +14,14 @@ This mods provides configurable health bar for targets.
 * Frame around target (off by default);
 * netplay support.
 
+## Todo
+* an option to tie target info to target position on screen.
+
 ## Thanks
 * Blue Shadow for examples of code.
 * Spaceman333, Rowsol, Churrupez, Cyanide, isaacpop23, TheRailgunner,
-Lud, Beed28, Ahpiox, ramon.dexter, Dutchygamer, and Tesculpture for
-ideas and bug reports.
+Lud, Beed28, Ahpiox, ramon.dexter, Dutchygamer, Tesculpture, and
+vapidscum for ideas and bug reports.
 * Silentdarkness12 and Zhs2 for testing netplay.
 
 ## Info
@@ -26,6 +29,7 @@ ideas and bug reports.
 Author: m8f (mmaulwurff@gmail.com)
 
 License: GPLv3 (see copying.txt).
+
 License doesn't apply to fonts included in the archive. See credits.
 
 [Git](https://gitlab.com/mmaulwurff/target-spy)
