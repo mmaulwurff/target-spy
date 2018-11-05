@@ -32,7 +32,7 @@ OptionString "m8f_ts_crosshair_font_values"
   "SMSKFONT"        , "Solid Snake"
   "GARGSMAL"        , "Gargoyle Wing"
   "XHAIRPCS"        , "Crosshair Pieces"
-  "XHAIRPCSNB"      , "Crosshair Pieces [No Border]"
+  "XHAIRPCSNB"      , "Crosshair Pieces (No Border)"
 }
 
 OptionValue "m8f_ts_health_numbers_values"
