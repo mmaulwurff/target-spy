@@ -7,3 +7,13 @@ JenocideFontRed
 {
   Template JNCRD%03d
 }
+
+XHAIRPCS
+{
+  Template XHRPC%03d
+}
+
+XHAIRPCSNB
+{
+  Template XHRNB%03d
+}

@@ -4,7 +4,7 @@ OptionValue "m8f_ts_y_values"
   0.10, "Below top"
   0.35, "Above crosshair"
   0.60, "Below crosshair"
-  0.90,  "Bottom"
+  0.90, "Bottom"
 }
 
 OptionString "m8f_ts_font_values"
@@ -18,6 +18,21 @@ OptionString "m8f_ts_font_values"
   "JenocideFontRed" , "Jenocide"
   "SMSKFONT"        , "Solid Snake"
   "GARGSMAL"        , "Gargoyle Wing"
+}
+
+OptionString "m8f_ts_crosshair_font_values"
+{
+  "SMALLFONT"       , "Small font"
+  "BIGFONT"         , "Big font"
+  "CONFONT"         , "Console font"
+  "MM2SFNTO"        , "Mementwo"
+  "ESFONT"          , "Enlightening"
+  "CYBERFNT"        , "Cyberfonter"
+  "JenocideFontRed" , "Jenocide"
+  "SMSKFONT"        , "Solid Snake"
+  "GARGSMAL"        , "Gargoyle Wing"
+  "XHAIRPCS"        , "Crosshair Pieces"
+  "XHAIRPCSNB"      , "Crosshair Pieces [No Border]"
 }
 
 OptionValue "m8f_ts_health_numbers_values"
@@ -201,8 +216,9 @@ OptionMenu "m8f_ts_Crosshairs"
   Slider "Bottom part offset"  , "m8f_ts_bot_offset"   , -0.1, 0.1, 0.005, 3
   Slider "X Adjustment"        , "m8f_ts_x_adjustment" , -50, 50, 0.5, 1
   Slider "Scale"               , "m8f_ts_cross_scale"  , 0.5, 3.0, 0.05, 2
-  Option "Font"                , "m8f_ts_cr_font"      , "m8f_ts_font_values"
   Slider "Opacity"             , "m8f_ts_cr_opacity"   , 0.0, 1.0, 0.05, 2
+  Option "Font"                , "m8f_ts_cr_font"      , "m8f_ts_crosshair_font_values"
+  SubMenu "Crosshair Pieces Reference", "m8f_ts_cr_pieces_ref"
 
   StaticText ""
   StaticText ""
@@ -222,6 +238,12 @@ OptionMenu "m8f_ts_Crosshairs"
   Command "Clear"    , "m8f_ts_cross_bottom \"\""
 
   StaticText ""
+}
+
+ListMenu "m8f_ts_cr_pieces_ref"
+{
+  StaticTextCentered  160,  0, "Crosshair Pieces Reference"
+  StaticPatchCentered 160, 40, "tscp_graph_scaled"
 }
 
 OptionMenu "m8f_ts_ColorSetup"
