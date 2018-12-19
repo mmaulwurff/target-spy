@@ -146,6 +146,8 @@ class m8f_ts_EventHandler : EventHandler
       // this is the coordinates where you're drawing to:
       Vector2 centerPos     = m8f_ts_GlobalMaths.ndcToViewPort(ndcPos);
       double  distance      = player.mo.Distance3D(target);
+      if (distance == 0) { return; }
+
       double  height        = target.height;
       double  radius        = target.radius;
       double  visibleRadius = radius * 2000.0 / distance;
