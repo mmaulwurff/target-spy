@@ -88,7 +88,7 @@ OptionMenu   "m8f_ts_VisualOptions"
   Option     "Names:"             , "m8f_class_as_tag"    , "m8f_ts_class_as_tag_values"
 
   StaticText ""
-  StaticText "Show:"               , "Blue"
+  StaticText "Show:"               , 1
   Option "Health bar"              , "m8f_ts_show_bar"     , "OnOff"
   Option "Health numbers"          , "m8f_ts_show_numbers" , "m8f_ts_health_numbers_values"
   Option "Name"                    , "m8f_ts_show_name"    , "OnOff"
@@ -97,7 +97,7 @@ OptionMenu   "m8f_ts_VisualOptions"
   StaticText "Includes: Friendly, Invulnerable, Boss"      , "Black"
 
   StaticText ""
-  StaticText "Health bar"          , "Blue"
+  StaticText "Health bar"          , 1
   TextField "Filled bar symbol"    , "m8f_ts_pip"
   TextField "Empty bar symbol"     , "m8f_ts_empty_pip"
   Option "Health bar log scale"    , "m8f_ts_bar_log_scale" , "OnOff"
@@ -106,7 +106,7 @@ OptionMenu   "m8f_ts_VisualOptions"
   Slider "Opacity"                 , "m8f_ts_opacity"       , 0.0, 1.0, 0.05, 2
 
   StaticText ""
-  StaticText "Target Frame", "Blue"
+  StaticText "Target Frame", 1
   Option     "Style" , "m8f_ts_frame_style" , "m8f_ts_frame_style_values"
   Slider     "Scale" , "m8f_ts_frame_scale" , 0.5, 3.0, 0.05, 2
 
@@ -260,7 +260,7 @@ OptionMenu "m8f_ts_ColorSetup"
   Option "Dead/Almost dead color", "m8f_ts_cr_alm_dead", "TextColors"
 
   StaticText ""
-  StaticText "Color for %", "Blue"
+  StaticText "Color for %", 1
   Option "  0%"       , "m8f_ts_cr_0"  , "TextColors"
   Option " 10%"       , "m8f_ts_cr_1"  , "TextColors"
   Option " 20%"       , "m8f_ts_cr_2"  , "TextColors"
@@ -275,7 +275,7 @@ OptionMenu "m8f_ts_ColorSetup"
   Option "Overhealed" , "m8f_ts_cr_11" , "TextColors"
 
   StaticText ""
-  StaticText "Alternative two-color theme", "Blue"
+  StaticText "Alternative two-color theme", 1
   Option "Enabled"      , "m8f_ts_alt_hp_color" , "OnOff"
   Option "Filled color" , "m8f_ts_green_color"  , "TextColors"
   Option "Empty color"  , "m8f_ts_red_color"    , "TextColors"
