@@ -63,6 +63,7 @@ user int    m8f_ts_cr_alm_dead   = 12; // black
 user string m8f_ts_cr_font       = "MM2SFNTO";
 user float  m8f_ts_cr_opacity    = 1.0;
 user float  m8f_ts_length_mult   = 1.0;
+user int    m8f_ts_on_target     = 0;
 
 // see m8f_ts_Settings for frame styles enumaration
 user int    m8f_ts_frame_style   = 0;

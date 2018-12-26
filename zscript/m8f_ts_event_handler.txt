@@ -297,31 +297,81 @@ class m8f_ts_EventHandler : EventHandler
     double topBottomShift  = 0.02;
 
     double topY            = baseCenterY - topBottomShift + settings.topOff;
+    double topX            = 0.5;
     double centerY         = baseCenterY                  + settings.crossOff;
     double bottomY         = baseCenterY + topBottomShift + settings.botOff;
     double dx              = settings.xAdjustment;
     double opacity         = settings.crossOpacity;
 
-    drawTextCenter(settings.crossTop,  crosshairColor, scale, topY   , font, dx, opacity);
-    drawTextCenter(settings.crosshair, crosshairColor, scale, centerY, font, dx, opacity);
-    drawTextCenter(settings.crossBot,  crosshairColor, scale, bottomY, font, dx, opacity);
+    drawTextCenter(settings.crossTop,  crosshairColor, scale, topX, topY   , font, dx, opacity);
+    drawTextCenter(settings.crosshair, crosshairColor, scale, topX, centerY, font, dx, opacity);
+    drawTextCenter(settings.crossBot,  crosshairColor, scale, topX, bottomY, font, dx, opacity);
+  }
+
+  private ui Vector2 getDefaultRelativeXY(m8f_ts_Settings settings)
+  {
+    Vector2 result;
+    result.x = 0.5;
+    result.y = settings.yStart + settings.yOffset;
+    return result;
+  }
+
+  private ui vector2 getRelativeXY( Actor           target
+                                  , PlayerInfo      player
+                                  , RenderEvent     event
+                                  , m8f_ts_Settings settings
+                                  )
+  {
+    if (target == null) { return getDefaultRelativeXY(settings); }
+
+    if (settings.barsOnTarget)
+    {
+      let worldToClip = m8f_ts_Matrix.worldToClip( event.viewPos
+                                                 , event.viewAngle
+                                                 , event.viewPitch
+                                                 , event.viewRoll
+                                                 , player.FOV
+                                                 );
+      double y = (settings.barsOnTarget == m8f_ts_Settings.ON_TARGET_ABOVE)
+               ? target.height * 1.2
+               : -5;
+      Vector3 adjustedWorldPos = event.viewPos + LevelLocals.vec3Diff(event.viewPos, target.pos);
+      Vector3 ndcPos           = worldToClip.multiplyVector3(adjustedWorldPos + (0, 0, y)).asVector3();
+
+      if (-1 < ndcPos.z && ndcPos.z <= 1)
+      {
+        // this is the coordinates where you're drawing to:
+        Vector2 centerPos = m8f_ts_GlobalMaths.ndcToViewPort(ndcPos);
+        Vector2 result;
+        result.x = centerPos.x / Screen.GetWidth();
+        result.y = clamp(centerPos.y / Screen.GetHeight(), 0.1, 0.9);
+        return result;
+      }
+    }
+
+    return getDefaultRelativeXY(settings);
   }
 
   private ui void draw(Actor target, int playerNumber, RenderEvent event)
   {
-    let    settings = multiSettings.get(playerNumber);
-    double y        = settings.yStart + settings.yOffset;
-    double newline  = 0.03 * settings.stepMult;
-    if (y >= 0.80) { newline = -newline; }
+    let        settings = multiSettings.get(playerNumber);
+    PlayerInfo player   = players[playerNumber];
+
+    vector2 xy = getRelativeXY(target, player, event, settings);
+    double  x  = xy.x;
+    double  y  = xy.y;
+
+    double newline = 0.03 * settings.stepMult;
+    if ((y >= 0.80 && settings.barsOnTarget != m8f_ts_Settings.ON_TARGET_BELOW)
+        || settings.barsOnTarget == m8f_ts_Settings.ON_TARGET_ABOVE) { newline = -newline; }
 
     Font font      = Font.GetFont(settings.fontName);
     Font crossfont = Font.GetFont(settings.crossFontName);
 
-    y = drawKillConfirmed(y, newline, font, playerNumber);
+    y = drawKillConfirmed(x, y, newline, font, playerNumber);
 
-    PlayerInfo player    = players[playerNumber];
-    bool       hasTarget = (target != null);
-    int        crossCol  = settings.crossCol;
+    bool hasTarget = (target != null);
+    int  crossCol  = settings.crossCol;
 
     if (!hasTarget)
     {
@@ -386,7 +436,7 @@ class m8f_ts_EventHandler : EventHandler
                                             , settings.redCr
                                             , settings.lengthMultiplier
                                             );
-      drawTextCenter(hpBar, targetColor, textScale, y, font, 0.0, opacity);
+      drawTextCenter(hpBar, targetColor, textScale, x, y, font, 0.0, opacity);
       y += newline;
     }
 
@@ -402,7 +452,7 @@ class m8f_ts_EventHandler : EventHandler
         nameColor  = targetColor;
       }
 
-      drawTextCenter(targetName, nameColor, textScale, y, font, 0.0, opacity);
+      drawTextCenter(targetName, nameColor, textScale, x, y, font, 0.0, opacity);
       y += newline;
     }
 
@@ -411,7 +461,7 @@ class m8f_ts_EventHandler : EventHandler
       string targetFlags = m8f_ts_ActorInfo.GetTargetFlags(target);
       if (targetFlags.Length() > 0)
       {
-        drawTextCenter(targetFlags, nameColor, textScale, y, font, 0.0, opacity);
+        drawTextCenter(targetFlags, nameColor, textScale, x, y, font, 0.0, opacity);
         y += newline;
       }
     }
@@ -425,13 +475,13 @@ class m8f_ts_EventHandler : EventHandler
         case 1:
           drawTextCenter(StringStruct.Format("%d/%d",
                                              targetHealth, targetMaxHealth),
-                         targetColor, textScale, y, font, 0.0, opacity);
+                         targetColor, textScale, x, y, font, 0.0, opacity);
           y += newline;
           break;
 
         case 2:
           drawTextCenter(StringStruct.Format("%d", targetHealth),
-                         targetColor, textScale, y, font, 0.0, opacity);
+                         targetColor, textScale, x, y, font, 0.0, opacity);
           y += newline;
           break;
 
@@ -441,7 +491,7 @@ class m8f_ts_EventHandler : EventHandler
           else { percent100 = targetHealth * 100 / targetMaxHealth; }
 
           drawTextCenter(StringStruct.Format("%d%", percent100),
-                         targetColor, textScale, y, font, 0.0, opacity);
+                         targetColor, textScale, x, y, font, 0.0, opacity);
           y += newline;
           break;
       }
@@ -453,7 +503,8 @@ class m8f_ts_EventHandler : EventHandler
     }
   }
 
-  private ui double drawKillConfirmed( double y
+  private ui double drawKillConfirmed( double x
+                                     , double y
                                      , double newline
                                      , Font   font
                                      , int    playerNumber
@@ -472,7 +523,7 @@ class m8f_ts_EventHandler : EventHandler
       double scale     = 0.5 / settings.textScale;
       double opacity   = settings.opacity;
       int    nameColor = settings.nameCol;
-      drawTextCenter("Kill Confirmed", nameColor, scale, y, font, 0.0, opacity);
+      drawTextCenter("Kill Confirmed", nameColor, scale, x, y, font, 0.0, opacity);
       y += newline;
     }
 
@@ -480,19 +531,20 @@ class m8f_ts_EventHandler : EventHandler
   }
 
   private ui void drawTextCenter( string text
-                                  , int    color
-                                  , double scale
-                                  , double relativeY
-                                  , Font   font
-                                  , double xAdjustment
-                                  , double opacity
-    )
+                                , int    color
+                                , double scale
+                                , double relativeX
+                                , double relativeY
+                                , Font   font
+                                , double xAdjustment
+                                , double opacity
+                                )
   {
     int width    = int(scale * Screen.GetWidth());
     int height   = int(scale * (Screen.GetHeight() - font.GetHeight()));
     int position = width - font.StringWidth(text);
 
-    double x = position * 0.5 + xAdjustment;
+    double x = position * relativeX + xAdjustment;
     double y = height   * relativeY;
 
     Screen.DrawText( font

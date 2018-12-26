@@ -30,6 +30,13 @@ class m8f_ts_Settings
     FRAME_GRAPHIC,
   };
 
+  enum BarsOnTargetPosition
+  {
+    ON_TARGET_DISABLED,
+    ON_TARGET_ABOVE,
+    ON_TARGET_BELOW,
+  }
+
   int colors[12];
 
   bool showKillConfirmation;
@@ -75,6 +82,8 @@ class m8f_ts_Settings
   int    minimalLightLevel;
   float  crossOpacity;
   float  opacity;
+  float  lengthMultiplier;
+  int    barsOnTarget;
 
   string pip;
   string emptyPip;
@@ -88,8 +97,6 @@ class m8f_ts_Settings
   string emptyPipSource;
 
   bool   initialized;
-
-  float  lengthMultiplier;
 
   void read(PlayerInfo player)
   {
@@ -136,6 +143,7 @@ class m8f_ts_Settings
     crossOpacity         = CVar.GetCVar("m8f_ts_cr_opacity"   , player).GetFloat();
     opacity              = CVar.GetCVar("m8f_ts_opacity"      , player).GetFloat();
     lengthMultiplier     = CVar.GetCVar("m8f_ts_length_mult"  , player).GetFloat();
+    barsOnTarget         = CVar.GetCVar("m8f_ts_on_target"    , player).GetInt();
 
     pip           = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
     emptyPip      = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();
