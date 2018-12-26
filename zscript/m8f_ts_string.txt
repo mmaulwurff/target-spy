@@ -71,6 +71,7 @@ class m8f_ts_String
                             , bool   greenRedTheme
                             , int    greenColor
                             , int    redColor
+                            , double lengthMultiplier
                             )
   {
     int length;
@@ -78,6 +79,8 @@ class m8f_ts_String
     else if (maxHealth >= 2000) { length = 30; }
     else if (maxHealth >= 500)  { length = 20; }
     else                        { length = 10; }
+
+    length *= lengthMultiplier;
 
     int pips;
     if (maxHealth < 1)

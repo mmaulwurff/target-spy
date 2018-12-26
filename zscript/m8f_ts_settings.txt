@@ -89,6 +89,8 @@ class m8f_ts_Settings
 
   bool   initialized;
 
+  float  lengthMultiplier;
+
   void read(PlayerInfo player)
   {
     showKillConfirmation = CVar.GetCVar("m8f_ts_show_confirm" , player).GetInt();
@@ -133,6 +135,7 @@ class m8f_ts_Settings
     minimalLightLevel    = CVar.GetCVar("m8f_ts_light_level"  , player).GetInt();
     crossOpacity         = CVar.GetCVar("m8f_ts_cr_opacity"   , player).GetFloat();
     opacity              = CVar.GetCVar("m8f_ts_opacity"      , player).GetFloat();
+    lengthMultiplier     = CVar.GetCVar("m8f_ts_length_mult"  , player).GetFloat();
 
     pip           = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
     emptyPip      = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();

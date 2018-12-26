@@ -104,6 +104,7 @@ OptionMenu   "m8f_ts_VisualOptions"
   Option "Vertical position"       , "m8f_ts_y"             , "m8f_ts_y_values"
   Slider "Offset"                  , "m8f_ts_y_offset"      , -0.2, 0.2, 0.0025, 4
   Slider "Opacity"                 , "m8f_ts_opacity"       , 0.0, 1.0, 0.05, 2
+  Slider "Length Multiplier"       , "m8f_ts_length_mult"   , 0.5, 10.0, 0.1
 
   StaticText ""
   StaticText "Target Frame", 1

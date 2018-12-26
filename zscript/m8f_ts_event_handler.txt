@@ -384,6 +384,7 @@ class m8f_ts_EventHandler : EventHandler
                                             , settings.altHpCols
                                             , settings.greenCr
                                             , settings.redCr
+                                            , settings.lengthMultiplier
                                             );
       drawTextCenter(hpBar, targetColor, textScale, y, font, 0.0, opacity);
       y += newline;
