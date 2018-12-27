@@ -112,10 +112,12 @@ class m8f_ts_String
 
   }
 
-  static string Repeat(string s, int times)
+  static string MakeRepeating(string s)
   {
-    string result = "";
-    for (int i = 0; i < times; ++i) { result.AppendFormat("%s", s); }
+    string result =
+      "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
+      "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo";
+    result.replace("o", s);
     return result;
   }
 

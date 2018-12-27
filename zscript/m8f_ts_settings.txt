@@ -166,8 +166,8 @@ class m8f_ts_Settings
     colors[10] = CVar.GetCVar("m8f_ts_cr_10", player).GetInt();
     colors[11] = CVar.GetCVar("m8f_ts_cr_11", player).GetInt();
 
-    pipSource      = m8f_ts_String.Repeat(pip,      50);
-    emptyPipSource = m8f_ts_String.Repeat(emptyPip, 50);
+    pipSource      = m8f_ts_String.MakeRepeating(pip);
+    emptyPipSource = m8f_ts_String.MakeRepeating(emptyPip);
 
     // prevent division by zero
     if (textScale  == 0.0) { textScale  = 1.0; }
