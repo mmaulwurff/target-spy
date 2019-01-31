@@ -107,14 +107,14 @@ class m8f_ts_Matrix {
 			return z, x, y;
 		}
 		else {
-			float x1 = -asin(get(0, 2));
-			float x2 = 180 - x1;
+			double x1 = -asin(get(0, 2));
+			double x2 = 180 - x1;
 
-			float y1 = atan2(get(1, 2) / cos(x1), get(2, 2) / cos(x1));
-			float y2 = atan2(get(1, 2) / cos(x2), get(2, 2) / cos(x2));
+			double y1 = atan2(get(1, 2) / cos(x1), get(2, 2) / cos(x1));
+			double y2 = atan2(get(1, 2) / cos(x2), get(2, 2) / cos(x2));
 
-			float z1 = atan2(get(0, 1) / cos(x1), get(0, 0) / cos(x1));
-			float z2 = atan2(get(0, 1) / cos(x2), get(0, 0) / cos(x2));
+			double z1 = atan2(get(0, 1) / cos(x1), get(0, 0) / cos(x1));
+			double z2 = atan2(get(0, 1) / cos(x2), get(0, 0) / cos(x2));
 
 			if ((abs(x1) + abs(y1) + abs(z1)) <= (abs(x2) + abs(y2) + abs(z2))) {
 				return z1, x1, y1;
@@ -166,7 +166,7 @@ class m8f_ts_Matrix {
 		// all of this is basically lifted and converted from PolyRenderer::SetupPerspectiveMatrix(),
 		// so credit goes to Graf Zahl/dpJudas/whoever else
 		// pitch needs to be adjusted by the pixel ratio
-		float pixelRatio = level.pixelstretch;
+		double pixelRatio = level.pixelstretch;
 		double angx = cos(pitch);
 		double angy = sin(pitch) * pixelRatio;
 		double alen = sqrt(angx * angx + angy * angy);

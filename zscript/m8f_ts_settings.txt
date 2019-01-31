@@ -76,13 +76,13 @@ class m8f_ts_Settings
   double xAdjustment;
   bool   noCrossOnSlot1;
   int    frameStyle;
-  float  frameScale;
+  double frameScale;
   bool   showIdle;
   bool   hideInDarkness;
   int    minimalLightLevel;
-  float  crossOpacity;
-  float  opacity;
-  float  lengthMultiplier;
+  double crossOpacity;
+  double opacity;
+  double lengthMultiplier;
   int    barsOnTarget;
 
   string pip;
