@@ -137,7 +137,7 @@ class m8f_ts_EventHandler : EventHandler
                                                         , event.viewRoll
                                                         , player.FOV
                                                         );
-    Vector3 adjustedWorldPos = event.viewPos + level.vec3Diff(event.viewPos, target.pos);
+    Vector3 adjustedWorldPos = event.viewPos + LevelLocals.vec3Diff(event.viewPos, target.pos);
     Vector3 ndcPos           = worldToClip.multiplyVector3(adjustedWorldPos + (0, 0, target.height / 2.0))
                                           .asVector3();
 
@@ -335,7 +335,7 @@ class m8f_ts_EventHandler : EventHandler
       double y = (settings.barsOnTarget == m8f_ts_Settings.ON_TARGET_ABOVE)
                ? target.height * 1.2
                : -5;
-      Vector3 adjustedWorldPos = event.viewPos + level.vec3Diff(event.viewPos, target.pos);
+      Vector3 adjustedWorldPos = event.viewPos + LevelLocals.vec3Diff(event.viewPos, target.pos);
       Vector3 ndcPos           = worldToClip.multiplyVector3(adjustedWorldPos + (0, 0, y)).asVector3();
 
       if (-1 < ndcPos.z && ndcPos.z <= 1)
