@@ -101,7 +101,7 @@ OptionMenu   "m8f_ts_VisualOptions"
   Option "Name"                    , "m8f_ts_show_name"    , "OnOff"
   Option "Kill Confirmation"       , "m8f_ts_show_confirm" , "OnOff"
   Option "Additional info"         , "m8f_ts_show_info"    , "OnOff"
-  StaticText "Includes: Friendly, Invulnerable, Boss"      , "Black"
+  StaticText "Includes: Friendly, Invulnerable, Boss."     , "Black"
 
   StaticText ""
   StaticText "Health bar"          , 1
@@ -137,7 +137,7 @@ OptionMenu   "m8f_ts_Filters"
   StaticText ""
   Option "Hide targets in darkness", "m8f_ts_hide_in_dark" , "OnOff"
   Slider "Minimal light level"     , "m8f_ts_light_level"  , 0, 250, 10, 0
-  StaticText "Targets are hidden if light is less than this", "Black"
+  StaticText "Targets are hidden if the light level is less than this.", "Black"
 
   StaticText ""
 }
@@ -147,9 +147,9 @@ OptionMenu   "m8f_ts_BehaviorOptions"
   Title      "Target Spy Behavior Options"
 
   StaticText ""
-  TextField  "Minimal health"     , "m8f_ts_min_health"
-  StaticText "Target spy will be hidden for targets"      , "Black"
-  StaticText "with max health less than this."            , "Black"
+  TextField  "Minimal health"                   , "m8f_ts_min_health"
+  StaticText "Target spy will hide for targets" , "Black"
+  StaticText "with max health less than this."  , "Black"
 
   StaticText ""
 }
@@ -160,7 +160,7 @@ OptionMenu   "m8f_ts_CrossOptions"
 
   StaticText ""
   Option     "Special names for Champions" , "m8f_ts_show_champion", "OnOff"
-  StaticText "Champions is a monster mod by Mikk-", "Black"
+  StaticText "Champions is a monster mod by Mikk-.", "Black"
 
   StaticText ""
 }
