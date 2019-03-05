@@ -16,12 +16,12 @@
  * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class ts_Math
+class m8f_ts_Math
 {
 
   ui static double round(double value)
   {
-    return int(value + 1.0);
+    return int(value + 0.5);
   }
 
 } // class m8f_ts_Math

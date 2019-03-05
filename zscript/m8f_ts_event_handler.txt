@@ -210,8 +210,8 @@ class m8f_ts_EventHandler : EventHandler
             bool      animate        = false;
             Screen.SetClipRect( int(topLeft.x)
                               , int(topLeft.y)
-                              , int(ts_Math.round(bottomRight.x - topLeft.x + 1))
-                              , int(ts_Math.round(bottomRight.y - topLeft.y + 1))
+                              , int(m8f_ts_Math.round(bottomRight.x - topLeft.x + 1))
+                              , int(m8f_ts_Math.round(bottomRight.y - topLeft.y + 1))
                               );
             Screen.DrawTexture(topLeftTex,     animate, topLeft.x,     topLeft.y    );
             Screen.DrawTexture(topRightTex,    animate, topRight.x,    topRight.y   );
@@ -488,10 +488,34 @@ class m8f_ts_EventHandler : EventHandler
         case 3:
           int percent100;
           if (targetMaxHealth == 0) { percent100 = 100; }
-          else { percent100 = targetHealth * 100 / targetMaxHealth; }
+          else { percent100 = m8f_ts_Math.round(targetHealth * 100.0 / targetMaxHealth); }
 
-          drawTextCenter(StringStruct.Format("%d%", percent100),
-                         targetColor, textScale, x, y, font, 0.0, opacity);
+          drawTextCenter( StringStruct.Format("%d%%", percent100)
+                        , targetColor
+                        , textScale
+                        , x
+                        , y
+                        , font
+                        , 0.0
+                        , opacity
+                        );
+          y += newline;
+          break;
+
+        case 4:
+          double percent100dot00;
+          if (targetMaxHealth == 0) { percent100dot00 = 100; }
+          else { percent100dot00 = targetHealth * 100.0 / targetMaxHealth; }
+
+          drawTextCenter( StringStruct.Format("%.2f%%", percent100dot00)
+                        , targetColor
+                        , textScale
+                        , x
+                        , y
+                        , font
+                        , 0.0
+                        , opacity
+                        );
           y += newline;
           break;
       }

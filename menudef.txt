@@ -40,7 +40,8 @@ OptionValue "m8f_ts_health_numbers_values"
   0, "Off"
   1, "On: current/max"
   2, "On: current"
-  3, "On: %"
+  3, "On: 100%"
+  4, "On: 100.00%"
 }
 
 OptionValue "m8f_ts_show_objects_values"
