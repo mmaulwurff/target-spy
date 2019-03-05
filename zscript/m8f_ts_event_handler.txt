@@ -368,7 +368,15 @@ class m8f_ts_EventHandler : EventHandler
     Font font      = Font.GetFont(settings.fontName);
     Font crossfont = Font.GetFont(settings.crossFontName);
 
-    y = drawKillConfirmed(x, y, newline, font, playerNumber);
+    if (settings.barsOnTarget == m8f_ts_Settings.ON_TARGET_DISABLED)
+    {
+      y = drawKillConfirmed(x, y, newline, font, playerNumber);
+    }
+    else
+    {
+      vector2 defaultXy = getDefaultRelativeXY(settings);
+      drawKillConfirmed(defaultXy.x, defaultXy.y, newline, font, playerNumber);
+    }
 
     bool hasTarget = (target != null);
     int  crossCol  = settings.crossCol;
