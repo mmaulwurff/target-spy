@@ -97,8 +97,8 @@ class m8f_ts_String
     string emptyColor;
     if (greenRedTheme)
       {
-        pipColor   = StringStruct.Format("\c%c", 97 + greenColor); // 'a'
-        emptyColor = StringStruct.Format("\c%c", 97 + redColor);   // 'a'
+        pipColor   = String.Format("\c%c", 97 + greenColor); // 'a'
+        emptyColor = String.Format("\c%c", 97 + redColor);   // 'a'
       }
     else
       {
@@ -106,9 +106,9 @@ class m8f_ts_String
         emptyColor = "";
       }
 
-    return StringStruct.Format("%s%s%s%s",
-                               pipColor,   pipSource.Left(pips),
-                               emptyColor, emptyPipSource.Left(length - pips));
+    return String.Format("%s%s%s%s",
+                         pipColor,   pipSource.Left(pips),
+                         emptyColor, emptyPipSource.Left(length - pips));
 
   }
 

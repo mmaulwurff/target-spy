@@ -456,7 +456,7 @@ class m8f_ts_EventHandler : EventHandler
       string targetName = GetTargetName(target, dehackedGameType, playerNumber);
       if (targetHealth < 1)
       {
-        targetName = StringStruct.Format("Remains of %s", targetName);
+        targetName = String.Format("Remains of %s", targetName);
         nameColor  = targetColor;
       }
 
@@ -481,14 +481,14 @@ class m8f_ts_EventHandler : EventHandler
         case 0: break;
 
         case 1:
-          drawTextCenter(StringStruct.Format("%d/%d",
+          drawTextCenter(String.Format("%d/%d",
                                              targetHealth, targetMaxHealth),
                          targetColor, textScale, x, y, font, 0.0, opacity);
           y += newline;
           break;
 
         case 2:
-          drawTextCenter(StringStruct.Format("%d", targetHealth),
+          drawTextCenter(String.Format("%d", targetHealth),
                          targetColor, textScale, x, y, font, 0.0, opacity);
           y += newline;
           break;
@@ -498,7 +498,7 @@ class m8f_ts_EventHandler : EventHandler
           if (targetMaxHealth == 0) { percent100 = 100; }
           else { percent100 = m8f_ts_Math.round(targetHealth * 100.0 / targetMaxHealth); }
 
-          drawTextCenter( StringStruct.Format("%d%%", percent100)
+          drawTextCenter( String.Format("%d%%", percent100)
                         , targetColor
                         , textScale
                         , x
@@ -515,7 +515,7 @@ class m8f_ts_EventHandler : EventHandler
           if (targetMaxHealth == 0) { percent100dot00 = 100; }
           else { percent100dot00 = targetHealth * 100.0 / targetMaxHealth; }
 
-          drawTextCenter( StringStruct.Format("%.2f%%", percent100dot00)
+          drawTextCenter( String.Format("%.2f%%", percent100dot00)
                         , targetColor
                         , textScale
                         , x
@@ -743,7 +743,7 @@ class m8f_ts_EventHandler : EventHandler
         if (armor) { amount = armor.SaveAmount; }
       }
       if (amount == 1) { return name; }
-      else             { return StringStruct.Format("%s (%i)", name, amount); }
+      else             { return String.Format("%s (%i)", name, amount); }
     }
     else
     {
