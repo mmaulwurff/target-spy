@@ -24,6 +24,7 @@ user bool   m8f_ts_show_friends  = true;
 user int    m8f_ts_show_objects  = 1;
 user bool   m8f_ts_cross_only_tg = false;
 user bool   m8f_ts_show_confirm  = false;
+user bool   m8f_ts_named_confirm = false;
 user bool   m8f_ts_show_champion = true;
 user bool   m8f_ts_show_corpses  = false;
 user float  m8f_ts_step_mult     = 1.0;
@@ -65,7 +66,7 @@ user float  m8f_ts_cr_opacity    = 1.0;
 user float  m8f_ts_length_mult   = 1.0;
 user int    m8f_ts_on_target     = 0;
 
-// see m8f_ts_Settings for frame styles enumaration
+// see m8f_ts_Settings for frame styles enumeration
 user int    m8f_ts_frame_style   = 0;
 user float  m8f_ts_frame_scale   = 1.0;
 

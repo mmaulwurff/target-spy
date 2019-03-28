@@ -40,6 +40,7 @@ class m8f_ts_Settings
   int colors[12];
 
   bool showKillConfirmation;
+  bool namedConfirmation;
   bool isEnabled;
 
   int    minHealth;
@@ -101,6 +102,7 @@ class m8f_ts_Settings
   void read(PlayerInfo player)
   {
     showKillConfirmation = CVar.GetCVar("m8f_ts_show_confirm" , player).GetInt();
+    namedConfirmation    = CVar.GetCVar("m8f_ts_named_confirm", player).GetInt();
     isEnabled            = CVar.GetCVar("m8f_ts_enabled"      , player).GetInt();
     minHealth            = CVar.GetCVar("m8f_ts_min_health"   , player).GetInt();
     yStart               = CVar.GetCVar("m8f_ts_y"            , player).GetFloat();

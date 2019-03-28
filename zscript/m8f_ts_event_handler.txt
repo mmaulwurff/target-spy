@@ -555,7 +555,11 @@ class m8f_ts_EventHandler : EventHandler
       double scale     = 0.5 / settings.textScale;
       double opacity   = settings.opacity;
       int    nameColor = settings.nameCol;
-      drawTextCenter("Kill Confirmed", nameColor, scale, x, y, font, 0.0, opacity);
+      string text = (settings.namedConfirmation)
+        ? GetTargetName(lastTargetInfo.a, dehackedGameType, playerNumber) .. " killed"
+        : "Kill Confirmed";
+
+      drawTextCenter(text, nameColor, scale, x, y, font, 0.0, opacity);
       y += newline;
     }
 
