@@ -69,6 +69,7 @@ user int    m8f_ts_on_target     = 0;
 // see m8f_ts_Settings for frame styles enumeration
 user int    m8f_ts_frame_style   = 0;
 user float  m8f_ts_frame_scale   = 1.0;
+user float  m8f_ts_frame_size    = 1.0;
 
 // interface for other mods
 user bool   m8f_ts_has_target;

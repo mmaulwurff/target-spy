@@ -78,6 +78,7 @@ class m8f_ts_Settings
   bool   noCrossOnSlot1;
   int    frameStyle;
   double frameScale;
+  double frameSize;
   bool   showIdle;
   bool   hideInDarkness;
   int    minimalLightLevel;
@@ -139,6 +140,7 @@ class m8f_ts_Settings
     noCrossOnSlot1       = CVar.GetCVar("m8f_ts_no_cross_on_1", player).GetInt();
     frameStyle           = CVar.GetCVar("m8f_ts_frame_style"  , player).GetInt();
     frameScale           = CVar.GetCVar("m8f_ts_frame_scale"  , player).GetFloat();
+    frameSize            = CVar.GetCVar("m8f_ts_frame_size"   , player).GetFloat();
     showIdle             = CVar.GetCVar("m8f_ts_show_idle"    , player).GetInt();
     hideInDarkness       = CVar.GetCVar("m8f_ts_hide_in_dark" , player).GetInt();
     minimalLightLevel    = CVar.GetCVar("m8f_ts_light_level"  , player).GetInt();
