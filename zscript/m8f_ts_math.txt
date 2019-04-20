@@ -19,7 +19,7 @@
 class m8f_ts_Math
 {
 
-  ui static double round(double value)
+  ui static int round(double value)
   {
     return int(value + 0.5);
   }
