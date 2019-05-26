@@ -31,6 +31,8 @@ class m8f_ts_EventHandler : EventHandler
   private m8f_ts_TagCache cache;
   private m8f_ts_PlayToUiTranslator translator;
 
+  private transient Cvar _preciseY;
+
   // EventHandler overrides section ////////////////////////////////////////////
 
   override void OnRegister()
@@ -291,13 +293,15 @@ class m8f_ts_EventHandler : EventHandler
       }
     }
 
+    PlayerInfo player = players[playerNumber];
+
     double scale           = 0.5 / settings.crossScale;
     int    x, y, width, height;
     [x, y, width, height]  = Screen.GetViewWindow();
     int    screenHeight    = Screen.GetHeight();
     int    statusBarHeight = screenHeight - height - x;
     double relativeStatusBarHeight = double(statusBarHeight) * scale / screenHeight;
-    double baseCenterY     = 0.51 - relativeStatusBarHeight;
+    double baseCenterY     = readY(player, font) - relativeStatusBarHeight;
     double topBottomShift  = 0.02;
 
     double topY            = baseCenterY - topBottomShift + settings.topOff;
@@ -773,6 +777,25 @@ class m8f_ts_EventHandler : EventHandler
 
     championTag.AppendFormat(" %s", name);
     return championTag;
+  }
+
+  private play
+  bool isPreciseYAvailable(PlayerInfo player) const
+  {
+    if (_preciseY != null) { return true; }
+
+    _preciseY = Cvar.GetCVar("pc_y", player);
+
+    return (_preciseY != null);
+  }
+
+  private play
+  double readY(PlayerInfo player, Font f) const
+  {
+    return isPreciseYAvailable(player)
+      ? (_preciseY.GetFloat() - f.GetHeight() / 2) / Screen.GetHeight()
+      : 0.51
+      ;
   }
 
 } // class m8f_ts_EventHandler
