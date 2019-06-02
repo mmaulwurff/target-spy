@@ -1,20 +1,20 @@
 version "3.2.0"
 
-#include "zscript/m8f_ts_event_handler.txt"
+#include "zscript/m8f_ts_event_handler.zs"
 
-#include "zscript/m8f_ts_data.txt"
-#include "zscript/m8f_ts_settings.txt"
-#include "zscript/m8f_ts_multisettings.txt"
+#include "zscript/m8f_ts_data.zs"
+#include "zscript/m8f_ts_settings.zs"
+#include "zscript/m8f_ts_multisettings.zs"
 
-#include "zscript/m8f_ts_last_target_info.txt"
-#include "zscript/m8f_ts_multi_last_target_info.txt"
-#include "zscript/m8f_ts_tag_cache.txt"
-#include "zscript/m8f_ts_play_to_ui_translator.txt"
+#include "zscript/m8f_ts_last_target_info.zs"
+#include "zscript/m8f_ts_multi_last_target_info.zs"
+#include "zscript/m8f_ts_tag_cache.zs"
+#include "zscript/m8f_ts_play_to_ui_translator.zs"
 
-#include "zscript/m8f_ts_string.txt"
-#include "zscript/m8f_ts_game.txt"
-#include "zscript/m8f_ts_math.txt"
-#include "zscript/m8f_ts_actor_info.txt"
+#include "zscript/m8f_ts_string.zs"
+#include "zscript/m8f_ts_game.zs"
+#include "zscript/m8f_ts_math.zs"
+#include "zscript/m8f_ts_actor_info.zs"
 
 // https://gitlab.com/Gutawer/gzdoom-gutamatics
 #include "zscript/m8f_ts_Gutamatics/GlobalMaths.zsc"
