@@ -124,4 +124,13 @@ class m8f_ts_String
     return result;
   }
 
+  static
+  string appendWithSpace(string head, string tail)
+  {
+    string result = head;
+    if (result.Length() > 0) { result.AppendFormat(" "); }
+    result.AppendFormat(tail);
+    return result;
+  }
+
 } // class m8f_ts_String

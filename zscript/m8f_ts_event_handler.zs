@@ -2,47 +2,34 @@
  *
  * This file is part of Target Spy.
  *
- * Target Spy is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Target Spy is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * Target Spy is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Target Spy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 class m8f_ts_EventHandler : EventHandler
 {
 
-  // Attributes section ////////////////////////////////////////////////////////
-
-  private m8f_ts_MultiSettings       multiSettings;
-  private m8f_ts_MultiLastTargetInfo multiLastTargetInfo;
-
-  private m8f_ts_Data     data;
-  private bool            isTitlemap;
-  private int             dehackedGameType;
-
-  private m8f_ts_TagCache cache;
-  private m8f_ts_PlayToUiTranslator translator;
-
-  private transient Cvar _preciseY;
-
   // EventHandler overrides section ////////////////////////////////////////////
 
-  override void OnRegister()
+  override
+  void OnRegister()
   {
     multiSettings       = new("m8f_ts_MultiSettings").init();
     multiLastTargetInfo = new("m8f_ts_MultiLastTargetInfo").init();
     translator          = new("m8f_ts_PlayToUiTranslator");
   }
 
-  override void WorldLoaded(WorldEvent e)
+  override
+  void WorldLoaded(WorldEvent e)
   {
     data               = new("m8f_ts_Data").init();
     isTitlemap         = m8f_ts_Game.CheckTitlemap();
@@ -51,12 +38,13 @@ class m8f_ts_EventHandler : EventHandler
     cache              = new("m8f_ts_TagCache").init();
   }
 
-  override void WorldThingDied(WorldEvent event)
+  override
+  void WorldThingDied(WorldEvent event)
   {
-    if (event == null) { return; }
+    if (event == NULL) { return; }
 
     Actor died = event.thing;
-    if (died == null) { return; }
+    if (died == NULL) { return; }
 
     for (int i = 0; i < MAXPLAYERS; ++i)
     {
@@ -68,12 +56,13 @@ class m8f_ts_EventHandler : EventHandler
     }
   }
 
-  override void WorldThingDamaged(WorldEvent event)
+  override
+  void WorldThingDamaged(WorldEvent event)
   {
-    if (event == null) { return; }
+    if (event == NULL) { return; }
 
     Actor damagedThing = event.thing;
-    if (damagedThing == null) { return; }
+    if (damagedThing == NULL) { return; }
 
 
     for (int i = 0; i < MAXPLAYERS; ++i)
@@ -86,7 +75,8 @@ class m8f_ts_EventHandler : EventHandler
     }
   }
 
-  override void RenderOverlay(RenderEvent event)
+  override
+  void RenderOverlay(RenderEvent event)
   {
     if (isTitlemap) { return; }
 
@@ -102,7 +92,8 @@ class m8f_ts_EventHandler : EventHandler
 
   // Helper functions section //////////////////////////////////////////////////
 
-  private ui void drawEverything(int playerNumber, RenderEvent event)
+  private ui
+  void drawEverything(int playerNumber, RenderEvent event)
   {
     PlayerInfo player = players[playerNumber];
     if (!CVar.GetCVar("m8f_ts_enabled", player).GetInt()) { return; }
@@ -111,7 +102,7 @@ class m8f_ts_EventHandler : EventHandler
 
     draw(target, playerNumber, event);
 
-    bool hasTarget = (target != null);
+    bool hasTarget = (target != NULL);
     CVar.GetCVar("m8f_ts_has_target", player).SetInt(hasTarget);
     Cvar.GetCVar("m8f_ts_friendly_target", player).SetInt(hasTarget && target.bFRIENDLY);
 
@@ -122,7 +113,8 @@ class m8f_ts_EventHandler : EventHandler
   }
 
   // https://forum.zdoom.org/viewtopic.php?f=122&t=61330#p1064117
-  private ui void drawFrame(RenderEvent event, int playerNumber, Actor target, int color)
+  private ui
+  void drawFrame(RenderEvent event, int playerNumber, Actor target, int color)
   {
     PlayerInfo player = players[playerNumber];
 
@@ -223,7 +215,8 @@ class m8f_ts_EventHandler : EventHandler
     }
   }
 
-  private static ui void drawCleanText(Vector2 pos, string str, Font f, int color, double scale)
+  private static ui
+  void drawCleanText(Vector2 pos, string str, Font f, int color, double scale)
   {
     int width  = int(scale * Screen.GetWidth());
     int height = int(scale * (Screen.GetHeight() - f.GetHeight()));
@@ -242,16 +235,18 @@ class m8f_ts_EventHandler : EventHandler
 
   // Wrapper to access lastTarget in scope play from ui scope.
   // not really const, but lastTarget doesn't affect gameplay.
-  private void SetLastTarget(Actor newLastTarget, int playerNumber) const
+  private
+  void SetLastTarget(Actor newLastTarget, int playerNumber) const
   {
     multiLastTargetInfo.get(playerNumber).a = newLastTarget;
   }
 
-  private play bool isSlot1Weapon(int playerNumber) const
+  private play
+  bool isSlot1Weapon(int playerNumber) const
   {
     PlayerInfo player = players[playerNumber];
     Weapon w = player.readyWeapon;
-    if (w == null) { return true; }
+    if (w == NULL) { return true; }
 
     int located;
     int slot;
@@ -260,11 +255,12 @@ class m8f_ts_EventHandler : EventHandler
     return (slot == 1);
   }
 
-  private ui void drawCrosshairs( Actor target
-                                , int   crosshairColor
-                                , Font  font
-                                , int   playerNumber
-                                )
+  private ui
+  void drawCrosshairs( Actor target
+                     , int   crosshairColor
+                     , Font  font
+                     , int   playerNumber
+                     )
   {
     let settings = multiSettings.get(playerNumber);
 
@@ -309,7 +305,8 @@ class m8f_ts_EventHandler : EventHandler
     drawTextCenter(settings.crossBot(),  crosshairColor, scale, topX, bottomY, font, dx, opacity);
   }
 
-  private ui Vector2 getDefaultRelativeXY(m8f_ts_Settings settings)
+  private ui
+  Vector2 getDefaultRelativeXY(m8f_ts_Settings settings)
   {
     Vector2 result;
     result.x = 0.5;
@@ -317,13 +314,14 @@ class m8f_ts_EventHandler : EventHandler
     return result;
   }
 
-  private ui vector2 getRelativeXY( Actor           target
-                                  , PlayerInfo      player
-                                  , RenderEvent     event
-                                  , m8f_ts_Settings settings
-                                  )
+  private ui
+  vector2 getRelativeXY( Actor           target
+                       , PlayerInfo      player
+                       , RenderEvent     event
+                       , m8f_ts_Settings settings
+                       )
   {
-    if (target == null) { return getDefaultRelativeXY(settings); }
+    if (target == NULL) { return getDefaultRelativeXY(settings); }
 
     if (settings.barsOnTarget())
     {
@@ -353,7 +351,8 @@ class m8f_ts_EventHandler : EventHandler
     return getDefaultRelativeXY(settings);
   }
 
-  private ui void draw(Actor target, int playerNumber, RenderEvent event)
+  private ui
+  void draw(Actor target, int playerNumber, RenderEvent event)
   {
     let        settings = multiSettings.get(playerNumber);
     PlayerInfo player   = players[playerNumber];
@@ -379,7 +378,7 @@ class m8f_ts_EventHandler : EventHandler
       drawKillConfirmed(defaultXy.x, defaultXy.y, newline, font, playerNumber);
     }
 
-    bool hasTarget = (target != null);
+    bool hasTarget = (target != NULL);
     int  crossCol  = settings.crossCol();
 
     if (!hasTarget)
@@ -549,12 +548,13 @@ class m8f_ts_EventHandler : EventHandler
     }
   }
 
-  private ui double drawKillConfirmed( double x
-                                     , double y
-                                     , double newline
-                                     , Font   font
-                                     , int    playerNumber
-                                     )
+  private ui
+  double drawKillConfirmed( double x
+                          , double y
+                          , double newline
+                          , Font   font
+                          , int    playerNumber
+                          )
   {
     let settings = multiSettings.get(playerNumber);
 
@@ -580,15 +580,16 @@ class m8f_ts_EventHandler : EventHandler
     return y;
   }
 
-  private ui void drawTextCenter( string text
-                                , int    color
-                                , double scale
-                                , double relativeX
-                                , double relativeY
-                                , Font   font
-                                , double xAdjustment
-                                , double opacity
-                                )
+  private ui
+  void drawTextCenter( string text
+                     , int    color
+                     , double scale
+                     , double relativeX
+                     , double relativeY
+                     , Font   font
+                     , double xAdjustment
+                     , double opacity
+                     )
   {
     int width    = int(scale * Screen.GetWidth());
     int height   = int(scale * (Screen.GetHeight() - font.GetHeight()));
@@ -609,43 +610,44 @@ class m8f_ts_EventHandler : EventHandler
                    );
   }
 
-  private ui Actor GetTarget(int playerNumber, int gameType)
+  private ui
+  Actor GetTarget(int playerNumber, int gameType)
   {
     PlayerInfo player = players[playerNumber];
-    if (!player) { return null; }
+    if (!player) { return NULL; }
     Actor playerActor = player.mo;
-    if (!playerActor) { return null; }
+    if (!playerActor) { return NULL; }
 
     // try an easy way to get a target (also works with autoaim)
     Actor target   = translator.AimTargetWrapper(player.mo);
     let   settings = multiSettings.get(playerNumber);
 
     // if target is not found by easy way, try the difficult way
-    if (target == null)
+    if (target == NULL)
     {
       target = translator.LineAttackTargetWrapper(player.mo, player.viewheight);
     }
 
-    if (target == null && settings.showObjects() > 1)
+    if (target == NULL && settings.showObjects() > 1)
     {
       target = translator.AimLineAttackWrapper(player.mo);
     }
 
     // give up
-    if (target == null) { return null; }
+    if (target == NULL) { return NULL; }
 
     // target is found
 
     // check sector lighting
     if (settings.hideInDarkness())
     {
-      bool noLightAmplifier = (playerActor.FindInventory("PowerLightAmp") == null)
-        && (playerActor.FindInventory("PowerInvulnerable") == null);
+      bool noLightAmplifier = (playerActor.FindInventory("PowerLightAmp") == NULL)
+        && (playerActor.FindInventory("PowerInvulnerable") == NULL);
       if (noLightAmplifier)
       {
         Sector targetSector = target.curSector;
         int    lightlevel   = targetSector.lightlevel;
-        if (lightLevel < settings.minimalLightLevel()) { return null; }
+        if (lightLevel < settings.minimalLightLevel()) { return NULL; }
       }
     }
 
@@ -658,7 +660,7 @@ class m8f_ts_EventHandler : EventHandler
     }
 
     bool isInBlackList = data.blackList.contains(targetClass);
-    if (isInBlackList) { return null; }
+    if (isInBlackList) { return NULL; }
 
     switch (gameType)
     {
@@ -670,15 +672,15 @@ class m8f_ts_EventHandler : EventHandler
     if (targetClass.IndexOf("_rekkr") != -1)
     {
       string specialName = data.specialNames.get(targetClass);
-      if (specialName.length() == 0) { return null; }
+      if (specialName.length() == 0) { return NULL; }
     }
 
     if (target.bISMONSTER)
     {
       bool targetIsHidden = (target.bSHADOW || target.bSTEALTH);
-      if (!settings.showHidden()  && targetIsHidden)   { return null; }
-      if (!settings.showFriends() && target.bFRIENDLY) { return null; }
-      if (!settings.showIdle()    && m8f_ts_ActorInfo.IsIdle(target)) { return null; }
+      if (!settings.showHidden()  && targetIsHidden)   { return NULL; }
+      if (!settings.showFriends() && target.bFRIENDLY) { return NULL; }
+      if (!settings.showIdle()    && m8f_ts_ActorInfo.IsIdle(target)) { return NULL; }
     }
     else // not monsters
     {
@@ -686,13 +688,13 @@ class m8f_ts_EventHandler : EventHandler
 
       switch (settings.showObjects())
       {
-        case 0: return null;
+        case 0: return NULL;
         case 1:
           if (target.bSHOOTABLE) { return target; }
-          else                   { return null;   }
+          else                   { return NULL;   }
         case 2:
           if (target.bSHOOTABLE || target is "Inventory") { return target; }
-          else                                            { return null;   }
+          else                                            { return NULL;   }
         case 3:
           return target;
       }
@@ -701,7 +703,8 @@ class m8f_ts_EventHandler : EventHandler
     return target;
   }
 
-  private ui string GetTargetName(Actor target, int gameType, int playerNumber)
+  private ui
+  string GetTargetName(Actor target, int gameType, int playerNumber)
   {
     if (target.player) { return target.player.GetUserName(); }
 
@@ -749,7 +752,8 @@ class m8f_ts_EventHandler : EventHandler
     return AddAdditionalInfo(target, targetName, playerNumber);
   }
 
-  private ui string AddAdditionalInfo(Actor target, string name, int playerNumber)
+  private ui
+  string AddAdditionalInfo(Actor target, string name, int playerNumber)
   {
     Inventory inv = Inventory(target);
     if (inv)
@@ -769,7 +773,8 @@ class m8f_ts_EventHandler : EventHandler
     }
   }
 
-  private ui string PrependChampionColor(Actor target, string name, int playerNumber)
+  private ui
+  string PrependChampionColor(Actor target, string name, int playerNumber)
   {
     if (!multiSettings.get(playerNumber).showChampion()) { return name; }
 
@@ -788,11 +793,11 @@ class m8f_ts_EventHandler : EventHandler
   private play
   bool isPreciseYAvailable(PlayerInfo player) const
   {
-    if (_preciseY != null) { return true; }
+    if (_preciseY != NULL) { return true; }
 
     _preciseY = Cvar.GetCVar("pc_y", player);
 
-    return (_preciseY != null);
+    return (_preciseY != NULL);
   }
 
   private play
@@ -803,5 +808,19 @@ class m8f_ts_EventHandler : EventHandler
       : 0.51
       ;
   }
+
+  // private: //////////////////////////////////////////////////////////////////
+
+  private m8f_ts_MultiSettings       multiSettings;
+  private m8f_ts_MultiLastTargetInfo multiLastTargetInfo;
+
+  private m8f_ts_Data     data;
+  private bool            isTitlemap;
+  private int             dehackedGameType;
+
+  private m8f_ts_TagCache cache;
+  private m8f_ts_PlayToUiTranslator translator;
+
+  private transient Cvar _preciseY;
 
 } // class m8f_ts_EventHandler
