@@ -19,3 +19,13 @@ version "3.2.0"
 // https://gitlab.com/Gutawer/gzdoom-gutamatics
 #include "zscript/m8f_ts_Gutamatics/GlobalMaths.zsc"
 #include "zscript/m8f_ts_Gutamatics/Matrix.zsc"
+
+// Settings ////////////////////////////////////////////////////////////////////
+
+#include "zscript/settings/m8f_ts_bool_setting.zs"
+#include "zscript/settings/m8f_ts_cvar_setting.zs"
+#include "zscript/settings/m8f_ts_double_setting.zs"
+#include "zscript/settings/m8f_ts_int_setting.zs"
+#include "zscript/settings/m8f_ts_settings_base.zs"
+#include "zscript/settings/m8f_ts_settings_pack.zs"
+#include "zscript/settings/m8f_ts_string_setting.zs"

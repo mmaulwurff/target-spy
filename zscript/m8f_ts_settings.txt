@@ -2,22 +2,23 @@
  *
  * This file is part of Target Spy.
  *
- * Target Spy is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Target Spy is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * Target Spy is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Target Spy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class m8f_ts_Settings
+class m8f_ts_Settings : m8f_ts_SettingsPack
 {
+
+  // public: ///////////////////////////////////////////////////////////////////
 
   enum FrameStyles
   {
@@ -37,152 +38,204 @@ class m8f_ts_Settings
     ON_TARGET_BELOW,
   }
 
-  int colors[12];
+  // public: ///////////////////////////////////////////////////////////////////
 
-  bool showKillConfirmation;
-  bool namedConfirmation;
-  bool isEnabled;
+  // n must be from [0, 11]
+  int    colors         (int n) { checkInit(); return _colors[n].value(); }
 
-  int    minHealth;
-  double yStart;
-  double yOffset;
-  bool   logScale;
-  bool   showBar;
-  bool   showName;
-  int    showNums;
-  bool   showInfo;
-  bool   showCorps;
-  bool   crossOn;
-  int    crossCol;
-  int    nameCol;
-  int    weakCol;
-  bool   altHpCols;
-  double stepMult;
-  bool   almDeadCr;
-  int    crAlmDead;
-  double crossOff;
-  double topOff;
-  double botOff;
-  int    greenCr;
-  int    redCr;
-  bool   showChampion;
-  int    showObjects;
-  int    showInternalNames;
-  bool   showHidden;
-  bool   showFriends;
-  double crossScale;
-  bool   hitConfirmation;
-  int    hitColor;
-  double textScale;
-  double xAdjustment;
-  bool   noCrossOnSlot1;
-  int    frameStyle;
-  double frameScale;
-  double frameSize;
-  bool   showIdle;
-  bool   hideInDarkness;
-  int    minimalLightLevel;
-  double crossOpacity;
-  double opacity;
-  double lengthMultiplier;
-  int    barsOnTarget;
+  bool   showKillConfirmation() { checkInit(); return _showKillConfirmation.value(); }
+  bool   namedConfirmation   () { checkInit(); return _namedConfirmation   .value(); }
+  bool   isEnabled           () { checkInit(); return _isEnabled           .value(); }
 
-  string pip;
-  string emptyPip;
-  string fontName;
-  string crosshair;
-  string crossTop;
-  string crossBot;
-  string crossFontName;
+  int    minHealth           () { checkInit(); return _minHealth           .value(); }
+  double yStart              () { checkInit(); return _yStart              .value(); }
+  double yOffset             () { checkInit(); return _yOffset             .value(); }
+  bool   logScale            () { checkInit(); return _logScale            .value(); }
+  bool   showBar             () { checkInit(); return _showBar             .value(); }
+  bool   showName            () { checkInit(); return _showName            .value(); }
+  int    showNums            () { checkInit(); return _showNums            .value(); }
+  bool   showInfo            () { checkInit(); return _showInfo            .value(); }
+  bool   showCorps           () { checkInit(); return _showCorps           .value(); }
+  bool   crossOn             () { checkInit(); return _crossOn             .value(); }
+  int    crossCol            () { checkInit(); return _crossCol            .value(); }
+  int    nameCol             () { checkInit(); return _nameCol             .value(); }
+  int    weakCol             () { checkInit(); return _weakCol             .value(); }
+  bool   altHpCols           () { checkInit(); return _altHpCols           .value(); }
+  double stepMult            () { checkInit(); return _stepMult            .value(); }
+  bool   almDeadCr           () { checkInit(); return _almDeadCr           .value(); }
+  int    crAlmDead           () { checkInit(); return _crAlmDead           .value(); }
+  double crossOff            () { checkInit(); return _crossOff            .value(); }
+  double topOff              () { checkInit(); return _topOff              .value(); }
+  double botOff              () { checkInit(); return _botOff              .value(); }
+  int    greenCr             () { checkInit(); return _greenCr             .value(); }
+  int    redCr               () { checkInit(); return _redCr               .value(); }
+  bool   showChampion        () { checkInit(); return _showChampion        .value(); }
+  int    showObjects         () { checkInit(); return _showObjects         .value(); }
+  int    showInternalNames   () { checkInit(); return _showInternalNames   .value(); }
+  bool   showHidden          () { checkInit(); return _showHidden          .value(); }
+  bool   showFriends         () { checkInit(); return _showFriends         .value(); }
+  double crossScale          () { checkInit(); return _crossScale.value() ? _crossScale.value() : 1; }
+  bool   hitConfirmation     () { checkInit(); return _hitConfirmation     .value(); }
+  int    hitColor            () { checkInit(); return _hitColor            .value(); }
+  double textScale           () { checkInit(); return _textScale.value() ? _textScale.value() : 1; }
+  double xAdjustment         () { checkInit(); return _xAdjustment         .value(); }
+  bool   noCrossOnSlot1      () { checkInit(); return _noCrossOnSlot1      .value(); }
+  int    frameStyle          () { checkInit(); return _frameStyle          .value(); }
+  double frameScale          () { checkInit(); return _frameScale.value() ? _frameScale.value() : 1; }
+  double frameSize           () { checkInit(); return _frameSize           .value(); }
+  bool   showIdle            () { checkInit(); return _showIdle            .value(); }
+  bool   hideInDarkness      () { checkInit(); return _hideInDarkness      .value(); }
+  int    minimalLightLevel   () { checkInit(); return _minimalLightLevel   .value(); }
+  double crossOpacity        () { checkInit(); return _crossOpacity        .value(); }
+  double opacity             () { checkInit(); return _opacity             .value(); }
+  double lengthMultiplier    () { checkInit(); return _lengthMultiplier    .value(); }
+  int    barsOnTarget        () { checkInit(); return _barsOnTarget        .value(); }
 
-  string pipSource;
-  string emptyPipSource;
+  string pip                 () { checkInit(); return _pip                 .value(); }
+  string emptyPip            () { checkInit(); return _emptyPip            .value(); }
+  string fontName            () { checkInit(); return _fontName            .value(); }
+  string crosshair           () { checkInit(); return _crosshair           .value(); }
+  string crossTop            () { checkInit(); return _crossTop            .value(); }
+  string crossBot            () { checkInit(); return _crossBot            .value(); }
+  string crossFontName       () { checkInit(); return _crossFontName       .value(); }
 
-  bool   initialized;
+  // private: //////////////////////////////////////////////////////////////////
 
-  void read(PlayerInfo player)
+  private
+  void checkInit()
   {
-    showKillConfirmation = CVar.GetCVar("m8f_ts_show_confirm" , player).GetInt();
-    namedConfirmation    = CVar.GetCVar("m8f_ts_named_confirm", player).GetInt();
-    isEnabled            = CVar.GetCVar("m8f_ts_enabled"      , player).GetInt();
-    minHealth            = CVar.GetCVar("m8f_ts_min_health"   , player).GetInt();
-    yStart               = CVar.GetCVar("m8f_ts_y"            , player).GetFloat();
-    yOffset              = CVar.GetCVar("m8f_ts_y_offset"     , player).GetFloat();
-    logScale             = CVar.GetCVar("m8f_ts_bar_log_scale", player).GetInt();
-    showBar              = CVar.GetCVar("m8f_ts_show_bar"     , player).GetInt();
-    showName             = CVar.GetCVar("m8f_ts_show_name"    , player).GetInt();
-    showNums             = CVar.GetCVar("m8f_ts_show_numbers" , player).GetInt();
-    showInfo             = CVar.GetCVar("m8f_ts_show_info"    , player).GetInt();
-    showCorps            = CVar.GetCVar("m8f_ts_show_corpses" , player).GetInt();
-    crossOn              = CVar.GetCVar("m8f_ts_crosshair_on" , player).GetInt();
-    crossCol             = CVar.GetCVar("m8f_ts_def_color_crs", player).GetInt();
-    nameCol              = CVar.GetCVar("m8f_ts_def_color_tag", player).GetInt();
-    weakCol              = CVar.GetCVar("m8f_ts_def_cl_tag_wk", player).GetInt();
-    altHpCols            = CVar.GetCVar("m8f_ts_alt_hp_color" , player).GetInt();
-    crAlmDead            = CVar.GetCVar("m8f_ts_cr_alm_dead"  , player).GetInt();
-    stepMult             = CVar.GetCVar("m8f_ts_step_mult"    , player).GetFloat();
-    almDeadCr            = CVar.GetCVar("m8f_ts_alm_dead_cr"  , player).GetInt();
-    crossOff             = CVar.GetCVar("m8f_ts_cross_offset" , player).GetFloat();
-    topOff               = CVar.GetCVar("m8f_ts_top_offset"   , player).GetFloat();
-    botOff               = CVar.GetCVar("m8f_ts_bot_offset"   , player).GetFloat();
-    greenCr              = CVar.GetCVar("m8f_ts_green_color"  , player).GetInt();
-    redCr                = CVar.GetCVar("m8f_ts_red_color"    , player).GetInt();
-    showChampion         = CVar.GetCVar("m8f_ts_show_champion", player).GetInt();
-    showObjects          = CVar.GetCVar("m8f_ts_show_objects" , player).GetInt();
-    showInternalNames    = CVar.GetCVar("m8f_class_as_tag"    , player).GetInt();
-    showHidden           = CVar.GetCVar("m8f_ts_show_hidden"  , player).GetInt();
-    showFriends          = CVar.GetCVar("m8f_ts_show_friends" , player).GetInt();
-    crossScale           = CVar.GetCVar("m8f_ts_cross_scale"  , player).GetFloat();
-    hitConfirmation      = CVar.GetCVar("m8f_ts_hit_confirm"  , player).GetInt();
-    hitColor             = CVar.GetCVar("m8f_ts_hit_color"    , player).GetInt();
-    textScale            = CVar.GetCVar("m8f_ts_text_scale"   , player).GetFloat();
-    xAdjustment          = CVar.GetCVar("m8f_ts_x_adjustment" , player).GetFloat();
-    noCrossOnSlot1       = CVar.GetCVar("m8f_ts_no_cross_on_1", player).GetInt();
-    frameStyle           = CVar.GetCVar("m8f_ts_frame_style"  , player).GetInt();
-    frameScale           = CVar.GetCVar("m8f_ts_frame_scale"  , player).GetFloat();
-    frameSize            = CVar.GetCVar("m8f_ts_frame_size"   , player).GetFloat();
-    showIdle             = CVar.GetCVar("m8f_ts_show_idle"    , player).GetInt();
-    hideInDarkness       = CVar.GetCVar("m8f_ts_hide_in_dark" , player).GetInt();
-    minimalLightLevel    = CVar.GetCVar("m8f_ts_light_level"  , player).GetInt();
-    crossOpacity         = CVar.GetCVar("m8f_ts_cr_opacity"   , player).GetFloat();
-    opacity              = CVar.GetCVar("m8f_ts_opacity"      , player).GetFloat();
-    lengthMultiplier     = CVar.GetCVar("m8f_ts_length_mult"  , player).GetFloat();
-    barsOnTarget         = CVar.GetCVar("m8f_ts_on_target"    , player).GetInt();
+    if (_isInitialized) { return; }
+    clear();
+    _isInitialized = true;
 
-    pip           = CVar.GetCVar("m8f_ts_pip"          , player).GetString();
-    emptyPip      = CVar.GetCVar("m8f_ts_empty_pip"    , player).GetString();
-    fontName      = CVar.GetCVar("m8f_ts_font"         , player).GetString();
-    crosshair     = CVar.GetCVar("m8f_ts_crosshair"    , player).GetString();
-    crossTop      = CVar.GetCVar("m8f_ts_cross_top"    , player).GetString();
-    crossBot      = CVar.GetCVar("m8f_ts_cross_bottom" , player).GetString();
-    crossFontName = CVar.GetCVar("m8f_ts_cr_font"      , player).GetString();
+    push(_showKillConfirmation = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_confirm"  , _player));
+    push(_namedConfirmation    = new("m8f_ts_BoolSetting"  ).init("m8f_ts_named_confirm" , _player));
+    push(_isEnabled            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_enabled"       , _player));
 
-    colors[ 0] = CVar.GetCVar("m8f_ts_cr_0" , player).GetInt();
-    colors[ 1] = CVar.GetCVar("m8f_ts_cr_1" , player).GetInt();
-    colors[ 2] = CVar.GetCVar("m8f_ts_cr_2" , player).GetInt();
-    colors[ 3] = CVar.GetCVar("m8f_ts_cr_3" , player).GetInt();
-    colors[ 4] = CVar.GetCVar("m8f_ts_cr_4" , player).GetInt();
-    colors[ 5] = CVar.GetCVar("m8f_ts_cr_5" , player).GetInt();
-    colors[ 6] = CVar.GetCVar("m8f_ts_cr_6" , player).GetInt();
-    colors[ 7] = CVar.GetCVar("m8f_ts_cr_7" , player).GetInt();
-    colors[ 8] = CVar.GetCVar("m8f_ts_cr_8" , player).GetInt();
-    colors[ 9] = CVar.GetCVar("m8f_ts_cr_9" , player).GetInt();
-    colors[10] = CVar.GetCVar("m8f_ts_cr_10", player).GetInt();
-    colors[11] = CVar.GetCVar("m8f_ts_cr_11", player).GetInt();
+    push(_minHealth            = new("m8f_ts_IntSetting"   ).init("m8f_ts_min_health"    , _player));
+    push(_yStart               = new("m8f_ts_DoubleSetting").init("m8f_ts_y"             , _player));
+    push(_yOffset              = new("m8f_ts_DoubleSetting").init("m8f_ts_y_offset"      , _player));
+    push(_logScale             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_bar_log_scale" , _player));
+    push(_showBar              = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_bar"      , _player));
+    push(_showName             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_name"     , _player));
+    push(_showNums             = new("m8f_ts_IntSetting"   ).init("m8f_ts_show_numbers"  , _player));
+    push(_showInfo             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_info"     , _player));
+    push(_showCorps            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_corpses"  , _player));
+    push(_crossOn              = new("m8f_ts_BoolSetting"  ).init("m8f_ts_crosshair_on"  , _player));
+    push(_crossCol             = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_crs" , _player));
+    push(_nameCol              = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_tag" , _player));
+    push(_weakCol              = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_cl_tag_wk" , _player));
+    push(_altHpCols            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_alt_hp_color"  , _player));
+    push(_crAlmDead            = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_alm_dead"   , _player));
+    push(_stepMult             = new("m8f_ts_DoubleSetting").init("m8f_ts_step_mult"     , _player));
+    push(_almDeadCr            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_alm_dead_cr"   , _player));
+    push(_crossOff             = new("m8f_ts_DoubleSetting").init("m8f_ts_cross_offset"  , _player));
+    push(_topOff               = new("m8f_ts_DoubleSetting").init("m8f_ts_top_offset"    , _player));
+    push(_botOff               = new("m8f_ts_DoubleSetting").init("m8f_ts_bot_offset"    , _player));
+    push(_greenCr              = new("m8f_ts_IntSetting"   ).init("m8f_ts_green_color"   , _player));
+    push(_redCr                = new("m8f_ts_IntSetting"   ).init("m8f_ts_red_color"     , _player));
+    push(_showChampion         = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_champion" , _player));
+    push(_showObjects          = new("m8f_ts_IntSetting"   ).init("m8f_ts_show_objects"  , _player));
+    push(_showInternalNames    = new("m8f_ts_IntSetting"   ).init("m8f_class_as_tag"     , _player));
+    push(_showHidden           = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_hidden"   , _player));
+    push(_showFriends          = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_friends"  , _player));
+    push(_crossScale           = new("m8f_ts_DoubleSetting").init("m8f_ts_cross_scale"   , _player));
+    push(_hitConfirmation      = new("m8f_ts_BoolSetting"  ).init("m8f_ts_hit_confirm"   , _player));
+    push(_hitColor             = new("m8f_ts_IntSetting"   ).init("m8f_ts_hit_color"     , _player));
+    push(_textScale            = new("m8f_ts_DoubleSetting").init("m8f_ts_text_scale"    , _player));
+    push(_xAdjustment          = new("m8f_ts_DoubleSetting").init("m8f_ts_x_adjustment"  , _player));
+    push(_noCrossOnSlot1       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_no_cross_on_1" , _player));
+    push(_frameStyle           = new("m8f_ts_IntSetting"   ).init("m8f_ts_frame_style"   , _player));
+    push(_frameScale           = new("m8f_ts_DoubleSetting").init("m8f_ts_frame_scale"   , _player));
+    push(_frameSize            = new("m8f_ts_DoubleSetting").init("m8f_ts_frame_size"    , _player));
+    push(_showIdle             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_idle"     , _player));
+    push(_hideInDarkness       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_hide_in_dark"  , _player));
+    push(_minimalLightLevel    = new("m8f_ts_IntSetting"   ).init("m8f_ts_light_level"   , _player));
+    push(_crossOpacity         = new("m8f_ts_DoubleSetting").init("m8f_ts_cr_opacity"    , _player));
+    push(_opacity              = new("m8f_ts_DoubleSetting").init("m8f_ts_opacity"       , _player));
+    push(_lengthMultiplier     = new("m8f_ts_DoubleSetting").init("m8f_ts_length_mult"   , _player));
+    push(_barsOnTarget         = new("m8f_ts_IntSetting"   ).init("m8f_ts_on_target"     , _player));
 
-    pipSource      = m8f_ts_String.MakeRepeating(pip);
-    emptyPipSource = m8f_ts_String.MakeRepeating(emptyPip);
+    push(_pip                  = new("m8f_ts_StringSetting").init("m8f_ts_pip"           , _player));
+    push(_emptyPip             = new("m8f_ts_StringSetting").init("m8f_ts_empty_pip"     , _player));
+    push(_fontName             = new("m8f_ts_StringSetting").init("m8f_ts_font"          , _player));
+    push(_crosshair            = new("m8f_ts_StringSetting").init("m8f_ts_crosshair"     , _player));
+    push(_crossTop             = new("m8f_ts_StringSetting").init("m8f_ts_cross_top"     , _player));
+    push(_crossBot             = new("m8f_ts_StringSetting").init("m8f_ts_cross_bottom"  , _player));
+    push(_crossFontName        = new("m8f_ts_StringSetting").init("m8f_ts_cr_font"       , _player));
 
-    // prevent division by zero
-    if (textScale  == 0.0) { textScale  = 1.0; }
-    if (crossScale == 0.0) { crossScale = 1.0; }
-    if (frameScale == 0.0) { frameScale = 1.0; }
+    push(_colors[ 0]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_0"          , _player));
+    push(_colors[ 1]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_1"          , _player));
+    push(_colors[ 2]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_2"          , _player));
+    push(_colors[ 3]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_3"          , _player));
+    push(_colors[ 4]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_4"          , _player));
+    push(_colors[ 5]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_5"          , _player));
+    push(_colors[ 6]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_6"          , _player));
+    push(_colors[ 7]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_7"          , _player));
+    push(_colors[ 8]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_8"          , _player));
+    push(_colors[ 9]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_9"          , _player));
+    push(_colors[10]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_10"         , _player));
+    push(_colors[11]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_11"         , _player));
   }
 
-  m8f_ts_Settings Init(PlayerInfo player)
-  {
-    read(player);
-    return self;
-  }
+  // private: //////////////////////////////////////////////////////////////////
+
+  private m8f_ts_BoolSetting   _showKillConfirmation;
+  private m8f_ts_BoolSetting   _namedConfirmation;
+  private m8f_ts_BoolSetting   _isEnabled;
+
+  private m8f_ts_IntSetting    _minHealth;
+  private m8f_ts_DoubleSetting _yStart;
+  private m8f_ts_DoubleSetting _yOffset;
+  private m8f_ts_BoolSetting   _logScale;
+  private m8f_ts_BoolSetting   _showBar;
+  private m8f_ts_BoolSetting   _showName;
+  private m8f_ts_IntSetting    _showNums;
+  private m8f_ts_BoolSetting   _showInfo;
+  private m8f_ts_BoolSetting   _showCorps;
+  private m8f_ts_BoolSetting   _crossOn;
+  private m8f_ts_IntSetting    _crossCol;
+  private m8f_ts_IntSetting    _nameCol;
+  private m8f_ts_IntSetting    _weakCol;
+  private m8f_ts_BoolSetting   _altHpCols;
+  private m8f_ts_DoubleSetting _stepMult;
+  private m8f_ts_BoolSetting   _almDeadCr;
+  private m8f_ts_IntSetting    _crAlmDead;
+  private m8f_ts_DoubleSetting _crossOff;
+  private m8f_ts_DoubleSetting _topOff;
+  private m8f_ts_DoubleSetting _botOff;
+  private m8f_ts_IntSetting    _greenCr;
+  private m8f_ts_IntSetting    _redCr;
+  private m8f_ts_BoolSetting   _showChampion;
+  private m8f_ts_IntSetting    _showObjects;
+  private m8f_ts_IntSetting    _showInternalNames;
+  private m8f_ts_BoolSetting   _showHidden;
+  private m8f_ts_BoolSetting   _showFriends;
+  private m8f_ts_DoubleSetting _crossScale;
+  private m8f_ts_BoolSetting   _hitConfirmation;
+  private m8f_ts_IntSetting    _hitColor;
+  private m8f_ts_DoubleSetting _textScale;
+  private m8f_ts_DoubleSetting _xAdjustment;
+  private m8f_ts_BoolSetting   _noCrossOnSlot1;
+  private m8f_ts_IntSetting    _frameStyle;
+  private m8f_ts_DoubleSetting _frameScale;
+  private m8f_ts_DoubleSetting _frameSize;
+  private m8f_ts_BoolSetting   _showIdle;
+  private m8f_ts_BoolSetting   _hideInDarkness;
+  private m8f_ts_IntSetting    _minimalLightLevel;
+  private m8f_ts_DoubleSetting _crossOpacity;
+  private m8f_ts_DoubleSetting _opacity;
+  private m8f_ts_DoubleSetting _lengthMultiplier;
+  private m8f_ts_IntSetting    _barsOnTarget;
+
+  private m8f_ts_StringSetting _pip;
+  private m8f_ts_StringSetting _emptyPip;
+  private m8f_ts_StringSetting _fontName;
+  private m8f_ts_StringSetting _crosshair;
+  private m8f_ts_StringSetting _crossTop;
+  private m8f_ts_StringSetting _crossBot;
+  private m8f_ts_StringSetting _crossFontName;
+
+  private m8f_ts_IntSetting    _colors[12];
 
 } // class m8f_ts_Settings

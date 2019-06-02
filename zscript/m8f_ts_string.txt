@@ -2,18 +2,17 @@
  *
  * This file is part of Target Spy.
  *
- * Target Spy is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Target Spy is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * Target Spy is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Target Spy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 class m8f_ts_String
@@ -63,16 +62,17 @@ class m8f_ts_String
     return (65 <= code && code <= 90);
   }
 
-  ui static string MakeHpBar( int    health
-                            , int    maxHealth
-                            , bool   logScale
-                            , string pipSource
-                            , string emptyPipSource
-                            , bool   greenRedTheme
-                            , int    greenColor
-                            , int    redColor
-                            , double lengthMultiplier
-                            )
+  ui static
+  string MakeHpBar( int    health
+                  , int    maxHealth
+                  , bool   logScale
+                  , bool   greenRedTheme
+                  , int    greenColor
+                  , int    redColor
+                  , double lengthMultiplier
+                  , string pip
+                  , string emptyPip
+                  )
   {
     int length;
     if      (logScale)          { length = int(Log(maxHealth)) * 2; }
@@ -82,42 +82,44 @@ class m8f_ts_String
 
     length = m8f_ts_Math.round(length * lengthMultiplier);
 
-    int pips;
+    int nPips;
     if (maxHealth < 1)
     {
-      pips = 1;
+      nPips = 1;
     }
     else
     {
-      pips = health * length / maxHealth;
-      pips = clamp(pips, 1, length);
+      nPips = health * length / maxHealth;
+      nPips = clamp(nPips, 1, length);
     }
 
     string pipColor;
     string emptyColor;
     if (greenRedTheme)
-      {
-        pipColor   = String.Format("\c%c", 97 + greenColor); // 'a'
-        emptyColor = String.Format("\c%c", 97 + redColor);   // 'a'
-      }
+    {
+      pipColor   = String.Format("\c%c", 97 + greenColor); // 'a'
+      emptyColor = String.Format("\c%c", 97 + redColor);   // 'a'
+    }
     else
-      {
-        pipColor   = "";
-        emptyColor = "";
-      }
+    {
+      pipColor   = "";
+      emptyColor = "";
+    }
 
-    return String.Format("%s%s%s%s",
-                         pipColor,   pipSource.Left(pips),
-                         emptyColor, emptyPipSource.Left(length - pips));
+    return String.Format( "%s%s%s%s"
+                        , pipColor
+                        , MakeRepeating(pip, nPips)
+                        , emptyColor
+                        , MakeRepeating(emptyPip, length - nPips)
+                        );
 
   }
 
-  static string MakeRepeating(string s)
+  static string MakeRepeating(string s, int n)
   {
-    string result =
-      "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
-      "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo";
-    result.replace("o", s);
+    string format = String.Format("%%%ds", n);
+    string result = String.Format(format, " ");
+    result.replace(" ", s);
     return result;
   }
 

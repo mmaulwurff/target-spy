@@ -35,7 +35,6 @@ user float  m8f_ts_top_offset    = 0.0;
 user float  m8f_ts_bot_offset    = 0.0;
 user int    m8f_ts_green_color   = 3;
 user int    m8f_ts_red_color     = 6;
-user int    m8f_ts_update_period = 35;
 user float  m8f_ts_cross_scale   = 1.0;
 user bool   m8f_ts_hit_confirm   = true;
 user int    m8f_ts_hit_color     = 6; // red

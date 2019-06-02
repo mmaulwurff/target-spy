@@ -52,14 +52,6 @@ OptionValue "m8f_ts_show_objects_values"
   3, "Everything"
 }
 
-OptionValue "m8f_ts_update_period_values"
-{
-  -1, "Never"
-   0, "Immediately"
-  35, "Every second"
- 105, "Every three seconds"
-}
-
 OptionValue "m8f_ts_class_as_tag_values"
 {
   0, "Tags"
@@ -186,7 +178,6 @@ OptionMenu   "m8f_ts_Options"
 
   StaticText ""
   Option     "Target Spy enabled" , "m8f_ts_enabled"       , "OnOff"
-  Option     "Options update"     , "m8f_ts_update_period" , "m8f_ts_update_period_values"
 
   StaticText ""
   SubMenu    "Visuals"            , "m8f_ts_VisualOptions"
