@@ -1,3 +1,5 @@
+// Option values ///////////////////////////////////////////////////////////////
+
 OptionValue "m8f_ts_y_values"
 {
   0.02, "Top"
@@ -77,6 +79,8 @@ OptionValue "m8f_ts_on_target_values"
   2, "Below"
 }
 
+// Option menus ////////////////////////////////////////////////////////////////
+
 OptionMenu   "m8f_ts_VisualOptions"
 {
   Title      "Target Spy Visual Options"
@@ -89,19 +93,20 @@ OptionMenu   "m8f_ts_VisualOptions"
 
   StaticText ""
   StaticText "Show:"               , 1
-  Option "Health bar"              , "m8f_ts_show_bar"     , "OnOff"
+  Option "Health bar"              , "m8f_ts_show_bar"     , OnOff
   Option "Health numbers"          , "m8f_ts_show_numbers" , "m8f_ts_health_numbers_values"
-  Option "Name"                    , "m8f_ts_show_name"    , "OnOff"
-  Option "Kill Confirmation"       , "m8f_ts_show_confirm" , "OnOff"
-  Option "Named Confirmation"      , "m8f_ts_named_confirm", "OnOff"
-  Option "Additional info"         , "m8f_ts_show_info"    , "OnOff"
-  StaticText "Includes: Friendly, Invulnerable, Boss."     , "Black"
+  Option "Name"                    , "m8f_ts_show_name"    , OnOff
+  Option "Kill Confirmation"       , "m8f_ts_show_confirm" , OnOff
+  Option "Named Confirmation"      , "m8f_ts_named_confirm", OnOff
+  Option "Additional info"         , "m8f_ts_show_info"    , OnOff
+  StaticText "Includes: friendly, invulnerable, boss,"     , Black
+  StaticText "dormant, buddha, nodamage."                  , Black
 
   StaticText ""
   StaticText "Health bar"          , 1
   TextField "Filled bar symbol"    , "m8f_ts_pip"
   TextField "Empty bar symbol"     , "m8f_ts_empty_pip"
-  Option "Health bar log scale"    , "m8f_ts_bar_log_scale" , "OnOff"
+  Option "Health bar log scale"    , "m8f_ts_bar_log_scale" , OnOff
   Option "Vertical position"       , "m8f_ts_y"             , "m8f_ts_y_values"
   Slider "Offset"                  , "m8f_ts_y_offset"      , -0.2, 0.2, 0.0025, 4
   Slider "Opacity"                 , "m8f_ts_opacity"       , 0.0, 1.0, 0.05, 2
@@ -122,17 +127,18 @@ OptionMenu   "m8f_ts_Filters"
   Title "Target Filters"
 
   StaticText ""
-  Option "Stealth/shadow monsters" , "m8f_ts_show_hidden"  , "OnOff"
-  Option "Friendly targets"        , "m8f_ts_show_friends" , "OnOff"
+  Option "Stealth/shadow monsters" , "m8f_ts_show_hidden"  , OnOff
+  Option "Friendly targets"        , "m8f_ts_show_friends" , OnOff
+  Option "Dormant targets"         , "m8f_ts_show_dormant" , OnOff
   Option "Objects"                 , "m8f_ts_show_objects" , "m8f_ts_show_objects_values"
-  Option "Corpses"                 , "m8f_ts_show_corpses" , "OnOff"
-  Option "Idle targets"            , "m8f_ts_show_idle"    , "OnOff"
-  StaticText "Recommended: OFF if the game contains mimics.", "Black"
+  Option "Corpses"                 , "m8f_ts_show_corpses" , OnOff
+  Option "Idle targets"            , "m8f_ts_show_idle"    , OnOff
+  StaticText "Recommended: OFF if the game contains mimics.", Black
 
   StaticText ""
-  Option "Hide targets in darkness", "m8f_ts_hide_in_dark" , "OnOff"
+  Option "Hide targets in darkness", "m8f_ts_hide_in_dark" , OnOff
   Slider "Minimal light level"     , "m8f_ts_light_level"  , 0, 250, 10, 0
-  StaticText "Targets are hidden if the light level is less than this.", "Black"
+  StaticText "Targets are hidden if the light level is less than this.", Black
 
   StaticText ""
 }
@@ -143,8 +149,8 @@ OptionMenu   "m8f_ts_BehaviorOptions"
 
   StaticText ""
   TextField  "Minimal health"                   , "m8f_ts_min_health"
-  StaticText "Target spy will hide for targets" , "Black"
-  StaticText "with max health less than this."  , "Black"
+  StaticText "Target spy will hide for targets" , Black
+  StaticText "with max health less than this."  , Black
 
   StaticText ""
 }
@@ -154,8 +160,8 @@ OptionMenu   "m8f_ts_CrossOptions"
   Title      "Target Spy Cross-mod Options"
 
   StaticText ""
-  Option     "Special names for Champions" , "m8f_ts_show_champion", "OnOff"
-  StaticText "Champions is a monster mod by Mikk-.", "Black"
+  Option     "Special names for Champions" , "m8f_ts_show_champion", OnOff
+  StaticText "Champions is a monster mod by Mikk-.", Black
 
   StaticText ""
 }
@@ -177,7 +183,7 @@ OptionMenu   "m8f_ts_Options"
   Title      "Target Spy Options"
 
   StaticText ""
-  Option     "Target Spy enabled" , "m8f_ts_enabled"       , "OnOff"
+  Option     "Target Spy enabled" , "m8f_ts_enabled"       , OnOff
 
   StaticText ""
   SubMenu    "Visuals"            , "m8f_ts_VisualOptions"
@@ -208,10 +214,10 @@ OptionMenu "m8f_ts_Crosshairs"
   Title "Target Spy Crosshairs Setup"
 
   StaticText ""
-  Option "Enabled"             , "m8f_ts_crosshair_on"  , "OnOff"
-  Option "Only on target"      , "m8f_ts_cross_only_tg" , "OnOff"
-  Option "Hide for Slot 1"     , "m8f_ts_no_cross_on_1" , "OnOff"
-  Option "Change color on hit" , "m8f_ts_hit_confirm"   , "OnOff"
+  Option "Enabled"             , "m8f_ts_crosshair_on"  , OnOff
+  Option "Only on target"      , "m8f_ts_cross_only_tg" , OnOff
+  Option "Hide for Slot 1"     , "m8f_ts_no_cross_on_1" , OnOff
+  Option "Change color on hit" , "m8f_ts_hit_confirm"   , OnOff
   Option "Hit color"           , "m8f_ts_hit_color"     , "TextColors"
 
   Slider "Top part offset"     , "m8f_ts_top_offset"   , -0.1, 0.1, 0.005, 3
@@ -259,7 +265,7 @@ OptionMenu "m8f_ts_ColorSetup"
   Option "Weaker enemy tag color"  , "m8f_ts_def_cl_tag_wk" , "TextColors"
 
   StaticText ""
-  Option "Show special color for almost dead" , "m8f_ts_alm_dead_cr", "OnOff"
+  Option "Show special color for almost dead" , "m8f_ts_alm_dead_cr", OnOff
   Option "Dead/Almost dead color", "m8f_ts_cr_alm_dead", "TextColors"
 
   StaticText ""
@@ -279,15 +285,17 @@ OptionMenu "m8f_ts_ColorSetup"
 
   StaticText ""
   StaticText "Alternative two-color theme", 1
-  Option "Enabled"      , "m8f_ts_alt_hp_color" , "OnOff"
+  Option "Enabled"      , "m8f_ts_alt_hp_color" , OnOff
   Option "Filled color" , "m8f_ts_green_color"  , "TextColors"
   Option "Empty color"  , "m8f_ts_red_color"    , "TextColors"
 
   StaticText ""
 }
 
-AddOptionMenu "OptionsMenu"
+// Entry point /////////////////////////////////////////////////////////////////
+
+AddOptionMenu OptionsMenu
 {
   StaticText ""
-  Submenu "Target Spy Options", "m8f_ts_Options"
+  Submenu    "Target Spy Options", "m8f_ts_Options"
 }

@@ -74,6 +74,7 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
   int    showInternalNames   () { checkInit(); return _showInternalNames   .value(); }
   bool   showHidden          () { checkInit(); return _showHidden          .value(); }
   bool   showFriends         () { checkInit(); return _showFriends         .value(); }
+  bool   showDormant         () { checkInit(); return _showDormant         .value(); }
   double crossScale          () { checkInit(); return _crossScale.value() ? _crossScale.value() : 1; }
   bool   hitConfirmation     () { checkInit(); return _hitConfirmation     .value(); }
   int    hitColor            () { checkInit(); return _hitColor            .value(); }
@@ -139,6 +140,7 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
     push(_showInternalNames    = new("m8f_ts_IntSetting"   ).init("m8f_class_as_tag"     , _player));
     push(_showHidden           = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_hidden"   , _player));
     push(_showFriends          = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_friends"  , _player));
+    push(_showDormant          = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_dormant"  , _player));
     push(_crossScale           = new("m8f_ts_DoubleSetting").init("m8f_ts_cross_scale"   , _player));
     push(_hitConfirmation      = new("m8f_ts_BoolSetting"  ).init("m8f_ts_hit_confirm"   , _player));
     push(_hitColor             = new("m8f_ts_IntSetting"   ).init("m8f_ts_hit_color"     , _player));
@@ -211,6 +213,7 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
   private m8f_ts_IntSetting    _showInternalNames;
   private m8f_ts_BoolSetting   _showHidden;
   private m8f_ts_BoolSetting   _showFriends;
+  private m8f_ts_BoolSetting   _showDormant;
   private m8f_ts_DoubleSetting _crossScale;
   private m8f_ts_BoolSetting   _hitConfirmation;
   private m8f_ts_IntSetting    _hitColor;

@@ -680,6 +680,7 @@ class m8f_ts_EventHandler : EventHandler
       bool targetIsHidden = (target.bSHADOW || target.bSTEALTH);
       if (!settings.showHidden()  && targetIsHidden)   { return NULL; }
       if (!settings.showFriends() && target.bFRIENDLY) { return NULL; }
+      if (!settings.showDormant() && target.bDORMANT)  { return NULL; }
       if (!settings.showIdle()    && m8f_ts_ActorInfo.IsIdle(target)) { return NULL; }
     }
     else // not monsters

@@ -22,6 +22,7 @@ user bool   m8f_ts_alt_hp_color  = false;
 user bool   m8f_ts_show_hidden   = true;
 user bool   m8f_ts_show_friends  = true;
 user int    m8f_ts_show_objects  = 1;
+user bool   m8f_ts_show_dormant  = false;
 user bool   m8f_ts_cross_only_tg = false;
 user bool   m8f_ts_show_confirm  = false;
 user bool   m8f_ts_named_confirm = false;
