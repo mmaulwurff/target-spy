@@ -1,4 +1,4 @@
-/* Copyright Alexander 'm8f' Kromm (mmaulwurff@gmail.com) 2019
+/* Copyright Alexander 'm8f' Kromm (mmaulwurff@gmail.com) 2018-2019
  *
  * This file is a part of Ultimate Custom Doom.
  *
