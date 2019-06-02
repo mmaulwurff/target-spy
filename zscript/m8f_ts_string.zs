@@ -117,6 +117,7 @@ class m8f_ts_String
 
   static string MakeRepeating(string s, int n)
   {
+    if (n == 0) { return ""; }
     string format = String.Format("%%%ds", n);
     string result = String.Format(format, " ");
     result.replace(" ", s);
