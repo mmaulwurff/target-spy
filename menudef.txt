@@ -20,6 +20,7 @@ OptionString "m8f_ts_font_values"
   "JenocideFontRed" , "Jenocide"
   "SMSKFONT"        , "Solid Snake"
   "GARGSMAL"        , "Gargoyle Wing"
+  "NewSmallFont"    , "New small font"
 }
 
 OptionString "m8f_ts_crosshair_font_values"
@@ -35,6 +36,7 @@ OptionString "m8f_ts_crosshair_font_values"
   "GARGSMAL"        , "Gargoyle Wing"
   "XHAIRPCS"        , "Crosshair Pieces"
   "XHAIRPCSNB"      , "Crosshair Pieces (No Border)"
+  "NewSmallFont"    , "New small font"
 }
 
 OptionValue "m8f_ts_health_numbers_values"
