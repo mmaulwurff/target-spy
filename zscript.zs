@@ -17,8 +17,8 @@ version "3.2.0"
 #include "zscript/m8f_ts_actor_info.zs"
 
 // https://gitlab.com/Gutawer/gzdoom-gutamatics
-#include "zscript/m8f_ts_Gutamatics/GlobalMaths.zsc"
-#include "zscript/m8f_ts_Gutamatics/Matrix.zsc"
+#include "zscript/m8f_ts_Gutamatics/GlobalMaths.zs"
+#include "zscript/m8f_ts_Gutamatics/Matrix.zs"
 
 // Settings ////////////////////////////////////////////////////////////////////
 
