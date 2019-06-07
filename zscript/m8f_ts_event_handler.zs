@@ -235,10 +235,12 @@ class m8f_ts_EventHandler : EventHandler
 
   // Wrapper to access lastTarget in scope play from ui scope.
   // not really const, but lastTarget doesn't affect gameplay.
-  private
-  void SetLastTarget(Actor newLastTarget, int playerNumber) const
+  private ui
+  void SetLastTarget(Actor newLastTarget, int playerNumber)
   {
-    multiLastTargetInfo.get(playerNumber).a = newLastTarget;
+    let lastTarget  = multiLastTargetInfo.get(playerNumber);
+    lastTarget.a    = newLastTarget;
+    lastTarget.name = GetTargetName(newLastTarget, dehackedGameType, playerNumber);
   }
 
   private play
@@ -570,7 +572,7 @@ class m8f_ts_EventHandler : EventHandler
       double opacity   = settings.opacity();
       int    nameColor = settings.nameCol();
       string text = (settings.namedConfirmation())
-        ? GetTargetName(lastTargetInfo.a, dehackedGameType, playerNumber) .. " killed"
+        ? lastTargetInfo.name .. " killed"
         : "Kill Confirmed";
 
       drawTextCenter(text, nameColor, scale, x, y, font, 0.0, opacity);

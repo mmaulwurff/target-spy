@@ -19,9 +19,10 @@
 class m8f_ts_LastTargetInfo
 {
 
-  Actor a;
-  int   killTime;
-  int   hurtTime;
+  Actor  a;
+  String name;
+  int    killTime;
+  int    hurtTime;
 
   m8f_ts_LastTargetInfo init()
   {
