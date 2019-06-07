@@ -36,6 +36,7 @@ License: GPLv3 (see copying.txt).
 License doesn't apply to fonts included in the archive. See credits.
 
 [Git](https://github.com/mmaulwurff/target-spy)
+
 [Forum topic](https://forum.zdoom.org/viewtopic.php?f=43&t=60784&p=1057216#p1057216)
 
 ## Credits
