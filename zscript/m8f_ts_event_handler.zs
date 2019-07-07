@@ -577,6 +577,7 @@ class m8f_ts_EventHandler : EventHandler
         ? lastTargetInfo.name .. " killed"
         : "Kill Confirmed";
 
+      lastTargetInfo.name.replace('\c', String.Format("%c", 28));
       drawTextCenter(text, nameColor, scale, x, y, font, 0.0, opacity);
       y += newline;
     }
