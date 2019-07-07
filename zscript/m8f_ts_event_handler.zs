@@ -456,6 +456,8 @@ class m8f_ts_EventHandler : EventHandler
     if (settings.showName())
     {
       string targetName = GetTargetName(target, dehackedGameType, playerNumber);
+      targetName.replace('\c', String.Format("%c", 28));
+
       if (targetHealth < 1)
       {
         targetName = String.Format("Remains of %s", targetName);
