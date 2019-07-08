@@ -241,6 +241,7 @@ class m8f_ts_EventHandler : EventHandler
     let lastTarget  = multiLastTargetInfo.get(playerNumber);
     lastTarget.a    = newLastTarget;
     lastTarget.name = GetTargetName(newLastTarget, dehackedGameType, playerNumber);
+    lastTarget.name = enableExtendedColorCode(lastTarget.name);
   }
 
   private play
@@ -456,7 +457,7 @@ class m8f_ts_EventHandler : EventHandler
     if (settings.showName())
     {
       string targetName = GetTargetName(target, dehackedGameType, playerNumber);
-      targetName.replace('\c', String.Format("%c", 28));
+      targetName = enableExtendedColorCode(targetName);
 
       if (targetHealth < 1)
       {
@@ -577,7 +578,6 @@ class m8f_ts_EventHandler : EventHandler
         ? lastTargetInfo.name .. " killed"
         : "Kill Confirmed";
 
-      lastTargetInfo.name.replace('\c', String.Format("%c", 28));
       drawTextCenter(text, nameColor, scale, x, y, font, 0.0, opacity);
       y += newline;
     }
@@ -813,6 +813,13 @@ class m8f_ts_EventHandler : EventHandler
       ? (_preciseY.GetFloat() - f.GetHeight() / 2) / Screen.GetHeight()
       : 0.51
       ;
+  }
+
+  private ui
+  string enableExtendedColorCode(string str)
+  {
+    str.replace('\c', String.Format("%c", 28));
+    return str;
   }
 
   // private: //////////////////////////////////////////////////////////////////
