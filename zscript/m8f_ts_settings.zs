@@ -53,6 +53,7 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
   bool   logScale            () { checkInit(); return _logScale            .value(); }
   bool   showBar             () { checkInit(); return _showBar             .value(); }
   bool   showName            () { checkInit(); return _showName            .value(); }
+  bool   showNameAndTag      () { checkInit(); return _showNameAndTag      .value(); }
   int    showNums            () { checkInit(); return _showNums            .value(); }
   bool   showInfo            () { checkInit(); return _showInfo            .value(); }
   bool   showCorps           () { checkInit(); return _showCorps           .value(); }
@@ -119,6 +120,7 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
     push(_logScale             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_bar_log_scale" , _player));
     push(_showBar              = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_bar"      , _player));
     push(_showName             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_name"     , _player));
+    push(_showNameAndTag       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_name_tag" , _player));
     push(_showNums             = new("m8f_ts_IntSetting"   ).init("m8f_ts_show_numbers"  , _player));
     push(_showInfo             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_info"     , _player));
     push(_showCorps            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_corpses"  , _player));
@@ -192,6 +194,7 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
   private m8f_ts_BoolSetting   _logScale;
   private m8f_ts_BoolSetting   _showBar;
   private m8f_ts_BoolSetting   _showName;
+  private m8f_ts_BoolSetting   _showNameAndTag;
   private m8f_ts_IntSetting    _showNums;
   private m8f_ts_BoolSetting   _showInfo;
   private m8f_ts_BoolSetting   _showCorps;

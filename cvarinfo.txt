@@ -4,6 +4,7 @@ user float  m8f_ts_y_offset      = 0.0;
 user bool   m8f_ts_enabled       = true;
 user int    m8f_ts_min_health    = 0;
 user bool   m8f_ts_show_name     = true;
+user bool   m8f_ts_show_name_tag = false;
 user int    m8f_ts_show_numbers  = 0;
 user bool   m8f_ts_show_bar      = true;
 user bool   m8f_ts_show_info     = false;

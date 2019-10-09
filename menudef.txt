@@ -96,8 +96,9 @@ OptionMenu   "m8f_ts_VisualOptions"
   StaticText ""
   StaticText "Show:"               , 1
   Option "Health bar"              , "m8f_ts_show_bar"     , OnOff
-  Option "Health numbers"          , "m8f_ts_show_numbers" , "m8f_ts_health_numbers_values"
+  Option "Health numbers"          , "m8f_ts_show_numbers" , m8f_ts_health_numbers_values
   Option "Name"                    , "m8f_ts_show_name"    , OnOff
+  Option "And class name, if different" , "m8f_ts_show_name_tag", OnOff
   Option "Kill Confirmation"       , "m8f_ts_show_confirm" , OnOff
   Option "Named Confirmation"      , "m8f_ts_named_confirm", OnOff
   Option "Additional info"         , "m8f_ts_show_info"    , OnOff
