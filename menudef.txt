@@ -142,8 +142,6 @@ OptionMenu   "m8f_ts_Filters"
   Option "Hide targets in darkness", "m8f_ts_hide_in_dark" , OnOff
   Slider "Minimal light level"     , "m8f_ts_light_level"  , 0, 250, 10, 0
   StaticText "Targets are hidden if the light level is less than this.", Black
-
-  StaticText ""
 }
 
 OptionMenu   "m8f_ts_BehaviorOptions"
@@ -154,8 +152,6 @@ OptionMenu   "m8f_ts_BehaviorOptions"
   TextField  "Minimal health"                   , "m8f_ts_min_health"
   StaticText "Target spy will hide for targets" , Black
   StaticText "with max health less than this."  , Black
-
-  StaticText ""
 }
 
 OptionMenu   "m8f_ts_CrossOptions"
@@ -165,8 +161,6 @@ OptionMenu   "m8f_ts_CrossOptions"
   StaticText ""
   Option     "Special names for Champions" , "m8f_ts_show_champion", OnOff
   StaticText "Champions is a monster mod by Mikk-.", Black
-
-  StaticText ""
 }
 
 OptionMenu   "m8f_ts_Controls"
@@ -177,8 +171,6 @@ OptionMenu   "m8f_ts_Controls"
   StaticText ""
   Control    "Toggle"       , "m8f_ts_toggle"
   Control    "Hold to show" , "+m8f_ts_hold"
-
-  StaticText ""
 }
 
 OptionMenu   "m8f_ts_Options"
@@ -208,8 +200,6 @@ OptionMenu   "m8f_ts_Options"
 
   StaticText ""
   SubMenu    "Cross-mod options"  , "m8f_ts_CrossOptions"
-
-  StaticText ""
 }
 
 OptionMenu "m8f_ts_Crosshairs"
@@ -248,8 +238,6 @@ OptionMenu "m8f_ts_Crosshairs"
 
   TextField "Bottom" , "m8f_ts_cross_bottom"
   Command "Clear"    , "m8f_ts_cross_bottom \"\""
-
-  StaticText ""
 }
 
 ListMenu "m8f_ts_cr_pieces_ref"
@@ -291,14 +279,11 @@ OptionMenu "m8f_ts_ColorSetup"
   Option "Enabled"      , "m8f_ts_alt_hp_color" , OnOff
   Option "Filled color" , "m8f_ts_green_color"  , "TextColors"
   Option "Empty color"  , "m8f_ts_red_color"    , "TextColors"
-
-  StaticText ""
 }
 
 // Entry point /////////////////////////////////////////////////////////////////
 
 AddOptionMenu OptionsMenu
 {
-  StaticText ""
   Submenu    "Target Spy Options", "m8f_ts_Options"
 }
