@@ -18,7 +18,7 @@
 class m8f_ts_ActorInfo
 {
 
-  // public: ///////////////////////////////////////////////////////////////////
+// public: /////////////////////////////////////////////////////////////////////
 
   static ui
   string GetTargetFlags(Actor target)
@@ -45,6 +45,13 @@ class m8f_ts_ActorInfo
 
     int maxHealth = a.SpawnHealth();
 
+    string drpgToken = "DRPGMonsterStatsHandler";
+    if (a.CountInv(drpgToken) > 0)
+    {
+      ts_ActorInfoHelper helper;
+      maxHealth = helper.getDrpgMaxHealth(a);
+    }
+
     string legendaryToken = "LDLegendaryMonsterToken";
     if (a.CountInv(legendaryToken) > 0)
     {
@@ -69,3 +76,22 @@ class m8f_ts_ActorInfo
   }
 
 } // class m8f_ts_ActorInfo
+
+class ts_ActorInfoHelper
+{
+
+// public: /////////////////////////////////////////////////////////////////////
+
+  play
+  int getDrpgMaxHealth(Actor a) const
+  {
+    return a.ACS_ScriptCall("GetMonsterHealthMax");
+  }
+
+  play
+  int getDrpgLevel(Actor a) const
+  {
+    return a.ACS_ScriptCall("GetMonsterLevel");
+  }
+
+} // class ts_ActorInfoHelper
