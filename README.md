@@ -23,7 +23,7 @@ This mods provides configurable health bar for targets.
 * Blue Shadow for examples of code.
 * Spaceman333, Rowsol, Churrupez, Cyanide, isaacpop23, TheRailgunner, Lud,
 Beed28, Ahpiox, ramon.dexter, Dutchygamer, Tesculpture, vapidscum,
-CthulhuInACan, Someone64, and Major Cooke for ideas, feature suggestions, and
+CthulhuInACan, Someone64, Major Cooke, and ProydohaRupert for ideas, feature suggestions, and
 bug reports.
 * Silentdarkness12 and Zhs2 for testing netplay.
 

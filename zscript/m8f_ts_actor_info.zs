@@ -44,6 +44,13 @@ class m8f_ts_ActorInfo
     if (a.player && a.player.mo) { return a.player.mo.GetMaxHealth(); }
 
     int maxHealth = a.SpawnHealth();
+
+    string legendaryToken = "LDLegendaryMonsterToken";
+    if (a.CountInv(legendaryToken) > 0)
+    {
+      maxHealth = maxHealth * Cvar.GetCvar("LD_legendaryhealth").GetInt() / 100;
+    }
+
     return maxHealth;
   }
 

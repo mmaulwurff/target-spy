@@ -392,12 +392,6 @@ class m8f_ts_EventHandler : EventHandler
 
     int    targetMaxHealth = m8f_ts_ActorInfo.GetActorMaxHealth(target);
     bool   showHealth      = (targetMaxHealth != 0);
-    string legendaryToken  = "LDLegendaryMonsterToken";
-
-    if (target.CountInv(legendaryToken) > 0)
-    {
-      targetMaxHealth *= 3;
-    }
 
     if (targetMaxHealth < settings.minHealth() && targetMaxHealth != 0)
     {
