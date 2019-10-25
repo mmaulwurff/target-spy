@@ -481,69 +481,38 @@ class m8f_ts_EventHandler : EventHandler
 
     if (showHealth)
     {
+      string healthString;
       switch (settings.showNums())
       {
         case 0: break;
+        case 1: healthString = String.Format("%d/%d", targetHealth, targetMaxHealth); break;
+        case 2: healthString = String.Format("%d", targetHealth); break;
+        case 3: {
+          int percent100 = (targetMaxHealth == 0)
+            ? 100
+            : round(targetHealth * 100.0 / targetMaxHealth);
+          healthString = String.Format("%d%%", percent100);
+          } break;
+        case 4: {
+          double percent100dot00 = (targetMaxHealth == 0)
+            ? 100
+            : targetHealth * 100.0 / targetMaxHealth;
+          healthString = String.Format("%.2f%%", percent100dot00);
+          } break;
+      }
 
-        case 1:
-          drawTextCenter( String.Format("%d/%d", targetHealth, targetMaxHealth)
-                        , targetColor
-                        , textScale
-                        , x
-                        , y
-                        , font
-                        , 0.0
-                        , opacity
-                        );
-          y += newline;
-          break;
-
-        case 2:
-          drawTextCenter( String.Format("%d", targetHealth)
-                        , targetColor
-                        , textScale
-                        , x
-                        , y
-                        , font
-                        , 0.0
-                        , opacity
-                        );
-          y += newline;
-          break;
-
-        case 3:
-          int percent100;
-          if (targetMaxHealth == 0) { percent100 = 100; }
-          else { percent100 = m8f_ts_Math.round(targetHealth * 100.0 / targetMaxHealth); }
-
-          drawTextCenter( String.Format("%d%%", percent100)
-                        , targetColor
-                        , textScale
-                        , x
-                        , y
-                        , font
-                        , 0.0
-                        , opacity
-                        );
-          y += newline;
-          break;
-
-        case 4:
-          double percent100dot00;
-          if (targetMaxHealth == 0) { percent100dot00 = 100; }
-          else { percent100dot00 = targetHealth * 100.0 / targetMaxHealth; }
-
-          drawTextCenter( String.Format("%.2f%%", percent100dot00)
-                        , targetColor
-                        , textScale
-                        , x
-                        , y
-                        , font
-                        , 0.0
-                        , opacity
-                        );
-          y += newline;
-          break;
+      if (healthString.length() > 0)
+      {
+        drawTextCenter( healthString
+                      , targetColor
+                      , textScale
+                      , x
+                      , y
+                      , font
+                      , 0.0
+                      , opacity
+                      );
+        y += newline;
       }
     }
 
