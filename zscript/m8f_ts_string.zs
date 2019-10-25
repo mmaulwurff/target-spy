@@ -80,7 +80,7 @@ class m8f_ts_String
     else if (maxHealth >= 500)  { length = 20; }
     else                        { length = 10; }
 
-    length = m8f_ts_Math.round(length * lengthMultiplier);
+    length = round(length * lengthMultiplier);
 
     int nPips;
     if (maxHealth < 1)

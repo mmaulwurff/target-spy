@@ -201,8 +201,8 @@ class m8f_ts_EventHandler : EventHandler
             bool      animate        = false;
             Screen.SetClipRect( int(topLeft.x)
                               , int(topLeft.y)
-                              , int(m8f_ts_Math.round(bottomRight.x - topLeft.x + 1))
-                              , int(m8f_ts_Math.round(bottomRight.y - topLeft.y + 1))
+                              , int(round(bottomRight.x - topLeft.x + 1))
+                              , int(round(bottomRight.y - topLeft.y + 1))
                               );
             Screen.DrawTexture(topLeftTex,     animate, topLeft.x,     topLeft.y    );
             Screen.DrawTexture(topRightTex,    animate, topRight.x,    topRight.y   );
