@@ -322,6 +322,7 @@ class m8f_ts_EventHandler : EventHandler
                        , PlayerInfo      player
                        , RenderEvent     event
                        , m8f_ts_Settings settings
+                       , bool            isAbove
                        )
   {
     if (target == NULL) { return getDefaultRelativeXY(settings); }
@@ -334,7 +335,7 @@ class m8f_ts_EventHandler : EventHandler
                                                  , event.viewRoll
                                                  , player.FOV
                                                  );
-      double y = (settings.barsOnTarget() == m8f_ts_Settings.ON_TARGET_ABOVE)
+      double y = isAbove
                ? target.height * 1.2
                : -5;
       Vector3 adjustedWorldPos = event.viewPos + LevelLocals.vec3Diff(event.viewPos, target.pos);
@@ -360,7 +361,8 @@ class m8f_ts_EventHandler : EventHandler
     let        settings = multiSettings.get(playerNumber);
     PlayerInfo player   = players[playerNumber];
 
-    vector2 xy = getRelativeXY(target, player, event, settings);
+    bool    isAbove = (settings.barsOnTarget() == m8f_ts_Settings.ON_TARGET_ABOVE);
+    vector2 xy = getRelativeXY(target, player, event, settings, isAbove);
     double  x  = xy.x;
     double  y  = xy.y;
 
