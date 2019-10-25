@@ -103,7 +103,7 @@ OptionMenu   "m8f_ts_VisualOptions"
   Option "Named Confirmation"      , "m8f_ts_named_confirm", OnOff
   Option "Additional info"         , "m8f_ts_show_info"    , OnOff
   StaticText "Includes: friendly, invulnerable, boss,"     , Black
-  StaticText "dormant, buddha, nodamage."                  , Black
+  StaticText "dormant, buddha, nodamage, DoomRPG level."   , Black
 
   StaticText ""
   StaticText "Health bar"          , 1
