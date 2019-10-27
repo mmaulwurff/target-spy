@@ -25,7 +25,8 @@ class m8f_ts_ActorInfo
   {
     string result = "";
 
-    if (target.CountInv(DRPG_TOKEN) > 0)
+    string drpgToken = "DRPGMonsterStatsHandler";
+    if (target.CountInv(drpgToken) > 0)
     {
       ts_ActorInfoHelper helper;
       result = String.Format("LVL %d", helper.getDrpgLevel(target));
@@ -51,7 +52,8 @@ class m8f_ts_ActorInfo
 
     int maxHealth = a.SpawnHealth();
 
-    if (a.CountInv(DRPG_TOKEN) > 0)
+    string drpgToken = "DRPGMonsterStatsHandler";
+    if (a.CountInv(drpgToken) > 0)
     {
       ts_ActorInfoHelper helper;
       maxHealth = helper.getDrpgMaxHealth(a);
@@ -79,10 +81,6 @@ class m8f_ts_ActorInfo
     int customColor = target.CountInv(customColorTokenClass);
     return customColor;
   }
-
-// private: ////////////////////////////////////////////////////////////////////
-
-  const DRPG_TOKEN = "DRPGMonsterStatsHandler";
 
 } // class m8f_ts_ActorInfo
 
