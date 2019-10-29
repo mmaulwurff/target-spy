@@ -33,7 +33,7 @@ gzdoom -glversion 3 \
        \ #-iwad ~/Programs/Games/wads/doom/freedoom2.wad \
        -file \
        $name.pk3 \
-       ~/Programs/Games/wads/maps/DOOMTEST.wad \
+       ~/Programs/Games/wads/maps/test/DOOMTEST.wad \
        "$1" "$2" \
        +map test \
        \ #-nomonsters \

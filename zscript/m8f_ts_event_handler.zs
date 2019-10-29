@@ -29,6 +29,13 @@ class m8f_ts_EventHandler : EventHandler
   }
 
   override
+  void WorldTick()
+  {
+    if (!_isInitialized) { initialize(); }
+    prepareProjection();
+  }
+
+  override
   void WorldLoaded(WorldEvent e)
   {
     data               = new("m8f_ts_Data").init();
@@ -79,6 +86,7 @@ class m8f_ts_EventHandler : EventHandler
   void RenderOverlay(RenderEvent event)
   {
     if (isTitlemap) { return; }
+    if (!_isInitialized || !_isPrepared) { return; }
 
     int        playerNumber = event.camera.PlayerNumber();
     PlayerInfo player       = players[playerNumber];
@@ -112,106 +120,110 @@ class m8f_ts_EventHandler : EventHandler
     }
   }
 
-  // https://forum.zdoom.org/viewtopic.php?f=122&t=61330#p1064117
+  private ui
+  Vector2 makeDrawPos(PlayerInfo player, RenderEvent event, Actor target, double offset)
+  {
+    _projection.CacheResolution();
+    _projection.CacheFov(player.fov);
+    _projection.OrientForRenderOverlay(event);
+    _projection.BeginProjection();
+
+    _projection.ProjectWorldPos(target.pos + (0, 0, offset));
+
+    ts_Le_Viewport viewport;
+    viewport.FromHud();
+
+    Vector2 drawPos = viewport.SceneToWindow(_projection.ProjectToNormal());
+
+    return drawPos;
+  }
+
   private ui
   void drawFrame(RenderEvent event, int playerNumber, Actor target, int color)
   {
     PlayerInfo player = players[playerNumber];
 
-    let     worldToClip      = m8f_ts_Matrix.worldToClip( event.viewPos
-                                                        , event.viewAngle
-                                                        , event.viewPitch
-                                                        , event.viewRoll
-                                                        , player.FOV
-                                                        );
-    Vector3 adjustedWorldPos = event.viewPos + LevelLocals.vec3Diff(event.viewPos, target.pos);
-    Vector3 ndcPos           = worldToClip.multiplyVector3(adjustedWorldPos + (0, 0, target.height / 2.0))
-                                          .asVector3();
+    Vector2 centerPos = makeDrawPos(player, event, target, target.height / 2.0);
 
-    if (-1 < ndcPos.z && ndcPos.z <= 1)
+    double  distance      = player.mo.Distance3D(target);
+    if (distance == 0) { return; }
+
+    double  height        = target.height;
+    double  radius        = target.radius;
+    double  visibleRadius = radius * 2000.0 / distance;
+    double  visibleHeight = height * 1000.0 / distance;
+
+    let  settings         = multiSettings.get(playerNumber);
+    let  f                = Font.GetFont(settings.fontName());
+
+    double  size       = settings.frameSize();
+    double  halfWidth  = visibleRadius / 2.0 * size;
+    double  halfHeight = visibleHeight / 2.0 * size;
+
+    Vector2 left   = (centerPos.x - halfWidth, centerPos.y);
+    Vector2 right  = (centerPos.x + halfWidth, centerPos.y);
+    Vector2 top    = (centerPos.x, centerPos.y - halfHeight);
+    Vector2 bottom = (centerPos.x, centerPos.y + halfHeight);
+
+    Vector2 topLeft     = (left.x,  top.y);
+    Vector2 topRight    = (right.x, top.y);
+    Vector2 bottomLeft  = (left.x,  bottom.y);
+    Vector2 bottomRight = (right.x, bottom.y);
+    double  scale       = 0.5 / settings.frameScale();
+
+    switch (settings.frameStyle())
     {
-      // this is the coordinates where you're drawing to:
-      Vector2 centerPos     = m8f_ts_GlobalMaths.ndcToViewPort(ndcPos);
-      double  distance      = player.mo.Distance3D(target);
-      if (distance == 0) { return; }
+      case settings.FRAME_DISABLED:
+        break;
 
-      double  height        = target.height;
-      double  radius        = target.radius;
-      double  visibleRadius = radius * 2000.0 / distance;
-      double  visibleHeight = height * 1000.0 / distance;
+      case settings.FRAME_SLASH:
+        drawCleanText(topLeft,     "/", f, color, scale);
+        drawCleanText(bottomRight, "/", f, color, scale);
+        break;
 
-      let  settings         = multiSettings.get(playerNumber);
-      let  f                = Font.GetFont(settings.fontName());
+      case settings.FRAME_DOTS:
+        drawCleanText(topLeft,     ".", f, color, scale);
+        drawCleanText(topRight,    ".", f, color, scale);
+        drawCleanText(bottomLeft,  ".", f, color, scale);
+        drawCleanText(bottomRight, ".", f, color, scale);
+        break;
 
-      double  size       = settings.frameSize();
-      double  halfWidth  = visibleRadius / 2.0 * size;
-      double  halfHeight = visibleHeight / 2.0 * size;
+      case settings.FRAME_LESS_GREATER:
+        drawCleanText(left,  "<", f, color, scale);
+        drawCleanText(right, ">", f, color, scale);
+        break;
 
-      Vector2 left   = (centerPos.x - halfWidth, centerPos.y);
-      Vector2 right  = (centerPos.x + halfWidth, centerPos.y);
-      Vector2 top    = (centerPos.x, centerPos.y - halfHeight);
-      Vector2 bottom = (centerPos.x, centerPos.y + halfHeight);
+      case settings.FRAME_GREATER_LESS:
+        drawCleanText(left,  ">", f, color, scale);
+        drawCleanText(right, "<", f, color, scale);
+        break;
 
-      Vector2 topLeft     = (left.x,  top.y);
-      Vector2 topRight    = (right.x, top.y);
-      Vector2 bottomLeft  = (left.x,  bottom.y);
-      Vector2 bottomRight = (right.x, bottom.y);
-      double  scale       = 0.5 / settings.frameScale();
+      case settings.FRAME_BARS:
+        drawCleanText(top,    ".", f, color, scale);
+        drawCleanText(left,   "I", f, color, scale);
+        drawCleanText(right,  "I", f, color, scale);
+        drawCleanText(bottom, ".", f, color, scale);
+        break;
 
-      switch (settings.frameStyle())
-      {
-        case settings.FRAME_DISABLED:
-          break;
-
-        case settings.FRAME_SLASH:
-          drawCleanText(topLeft,     "/", f, color, scale);
-          drawCleanText(bottomRight, "/", f, color, scale);
-          break;
-
-        case settings.FRAME_DOTS:
-          drawCleanText(topLeft,     ".", f, color, scale);
-          drawCleanText(topRight,    ".", f, color, scale);
-          drawCleanText(bottomLeft,  ".", f, color, scale);
-          drawCleanText(bottomRight, ".", f, color, scale);
-          break;
-
-        case settings.FRAME_LESS_GREATER:
-          drawCleanText(left,  "<", f, color, scale);
-          drawCleanText(right, ">", f, color, scale);
-          break;
-
-        case settings.FRAME_GREATER_LESS:
-          drawCleanText(left,  ">", f, color, scale);
-          drawCleanText(right, "<", f, color, scale);
-          break;
-
-        case settings.FRAME_BARS:
-          drawCleanText(top,    ".", f, color, scale);
-          drawCleanText(left,   "I", f, color, scale);
-          drawCleanText(right,  "I", f, color, scale);
-          drawCleanText(bottom, ".", f, color, scale);
-          break;
-
-        case settings.FRAME_GRAPHIC:
-          {
-            TextureID topLeftTex     = TexMan.CheckForTexture("ts_frame"              , TexMan.TryAny);
-            TextureID topRightTex    = TexMan.CheckForTexture("ts_frame_top_right"    , TexMan.TryAny);
-            TextureID bottomLeftTex  = TexMan.CheckForTexture("ts_frame_bottom_left"  , TexMan.TryAny);
-            TextureID bottomRightTex = TexMan.CheckForTexture("ts_frame_bottom_right" , TexMan.TryAny);
-            bool      animate        = false;
-            Screen.SetClipRect( int(topLeft.x)
-                              , int(topLeft.y)
-                              , int(round(bottomRight.x - topLeft.x + 1))
-                              , int(round(bottomRight.y - topLeft.y + 1))
-                              );
-            Screen.DrawTexture(topLeftTex,     animate, topLeft.x,     topLeft.y    );
-            Screen.DrawTexture(topRightTex,    animate, topRight.x,    topRight.y   );
-            Screen.DrawTexture(bottomLeftTex,  animate, bottomLeft.x,  bottomLeft.y );
-            Screen.DrawTexture(bottomRightTex, animate, bottomRight.x, bottomRight.y);
-            Screen.ClearClipRect();
-          }
-          break;
-      }
+      case settings.FRAME_GRAPHIC:
+        {
+          TextureID topLeftTex     = TexMan.CheckForTexture("ts_frame"              , TexMan.TryAny);
+          TextureID topRightTex    = TexMan.CheckForTexture("ts_frame_top_right"    , TexMan.TryAny);
+          TextureID bottomLeftTex  = TexMan.CheckForTexture("ts_frame_bottom_left"  , TexMan.TryAny);
+          TextureID bottomRightTex = TexMan.CheckForTexture("ts_frame_bottom_right" , TexMan.TryAny);
+          bool      animate        = false;
+          Screen.SetClipRect( int(topLeft.x)
+                            , int(topLeft.y)
+                            , int(round(bottomRight.x - topLeft.x + 1))
+                            , int(round(bottomRight.y - topLeft.y + 1))
+                            );
+          Screen.DrawTexture(topLeftTex,     animate, topLeft.x,     topLeft.y    );
+          Screen.DrawTexture(topRightTex,    animate, topRight.x,    topRight.y   );
+          Screen.DrawTexture(bottomLeftTex,  animate, bottomLeft.x,  bottomLeft.y );
+          Screen.DrawTexture(bottomRightTex, animate, bottomRight.x, bottomRight.y);
+          Screen.ClearClipRect();
+        }
+        break;
     }
   }
 
@@ -329,27 +341,14 @@ class m8f_ts_EventHandler : EventHandler
 
     if (settings.barsOnTarget())
     {
-      let worldToClip = m8f_ts_Matrix.worldToClip( event.viewPos
-                                                 , event.viewAngle
-                                                 , event.viewPitch
-                                                 , event.viewRoll
-                                                 , player.FOV
-                                                 );
       double y = isAbove
                ? target.height * 1.2
                : -5;
-      Vector3 adjustedWorldPos = event.viewPos + LevelLocals.vec3Diff(event.viewPos, target.pos);
-      Vector3 ndcPos           = worldToClip.multiplyVector3(adjustedWorldPos + (0, 0, y)).asVector3();
-
-      if (-1 < ndcPos.z && ndcPos.z <= 1)
-      {
-        // this is the coordinates where you're drawing to:
-        Vector2 centerPos = m8f_ts_GlobalMaths.ndcToViewPort(ndcPos);
-        Vector2 result;
-        result.x = centerPos.x / Screen.GetWidth();
-        result.y = clamp(centerPos.y / Screen.GetHeight(), 0.1, 0.9);
-        return result;
-      }
+      Vector2 centerPos = makeDrawPos(player, event, target, y);
+      Vector2 result;
+      result.x = centerPos.x / Screen.GetWidth();
+      result.y = clamp(centerPos.y / Screen.GetHeight(), 0.1, 0.9);
+      return result;
     }
 
     return getDefaultRelativeXY(settings);
@@ -793,6 +792,44 @@ class m8f_ts_EventHandler : EventHandler
     return str;
   }
 
+  private
+  void initialize()
+  {
+    PlayerInfo player = players[consolePlayer];
+
+    _glProjection  = new("ts_Le_GlScreen");
+    _swProjection  = new("ts_Le_SwScreen");
+    _cvarRenderer  = Cvar.GetCvar("vid_rendermode", player);
+
+    _isInitialized = true;
+  }
+
+  private
+  void prepareProjection()
+  {
+    if(_cvarRenderer)
+    {
+      switch (_cvarRenderer.GetInt())
+      {
+      default:
+        _projection = _glProjection;
+        break;
+
+      case 0:
+      case 1:
+        _projection = _swProjection;
+        break;
+      }
+    }
+    else
+    {
+      console.printf("warning, cannot get render mode");
+      _projection = _glProjection;
+    }
+
+    _isPrepared = (_projection != NULL);
+  }
+
   // private: //////////////////////////////////////////////////////////////////
 
   private m8f_ts_MultiSettings       multiSettings;
@@ -806,5 +843,13 @@ class m8f_ts_EventHandler : EventHandler
   private m8f_ts_PlayToUiTranslator translator;
 
   private transient Cvar _preciseY;
+
+  private transient bool   _isInitialized;
+  private transient bool   _isPrepared;
+  private transient CVar   _cvarRenderer;
+
+  private ts_Le_ProjScreen _projection;
+  private ts_Le_GlScreen   _glProjection;
+  private ts_Le_SwScreen   _swProjection;
 
 } // class m8f_ts_EventHandler

@@ -15,10 +15,6 @@ version "3.2.0"
 #include "zscript/m8f_ts_game.zs"
 #include "zscript/m8f_ts_actor_info.zs"
 
-// https://gitlab.com/Gutawer/gzdoom-gutamatics
-#include "zscript/m8f_ts_Gutamatics/GlobalMaths.zs"
-#include "zscript/m8f_ts_Gutamatics/Matrix.zs"
-
 // Settings ////////////////////////////////////////////////////////////////////
 
 #include "zscript/settings/m8f_ts_bool_setting.zs"
@@ -28,3 +24,11 @@ version "3.2.0"
 #include "zscript/settings/m8f_ts_settings_base.zs"
 #include "zscript/settings/m8f_ts_settings_pack.zs"
 #include "zscript/settings/m8f_ts_string_setting.zs"
+
+// libeye by KeksDose //////////////////////////////////////////////////////////
+// https://forum.zdoom.org/viewtopic.php?f=105&t=64566#p1102157
+
+#include "zscript/libeye/ts_projector gl.zs"
+#include "zscript/libeye/ts_projector planar.zs"
+#include "zscript/libeye/ts_projector.zs"
+#include "zscript/libeye/ts_viewport.zs"

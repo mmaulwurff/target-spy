@@ -26,6 +26,7 @@ Beed28, Ahpiox, ramon.dexter, Dutchygamer, Tesculpture, vapidscum,
 CthulhuInACan, Someone64, Major Cooke, and ProydohaRupert for ideas, feature suggestions, and
 bug reports.
 * Silentdarkness12 and Zhs2 for testing netplay.
+* Gutawer for [Gutamatics](https://gitlab.com/Gutawer/gzdoom-gutamatics). It was used in previous versions.
 
 ## Info
 
@@ -47,5 +48,5 @@ License doesn't apply to fonts included in the archive. See credits.
 * [Jenocide Small font by Jimmy](https://www.realm667.com/index.php/en/font-press/technical)
 * [Solid Snake Small font by Jimmy](https://www.realm667.com/index.php/en/font-press/technical)
 * [Gargoyle Wing Small font by NeuralStunner](https://www.realm667.com/index.php/en/font-press/medieval)
-* [Gutamatics by Gutawer](https://gitlab.com/Gutawer/gzdoom-gutamatics) (MIT License)
 * Crosshair Pieces graphics by vapidscum
+* [Libeye](https://forum.zdoom.org/viewtopic.php?f=105&t=64566#p1102157) by KeksDose
