@@ -87,13 +87,12 @@ class m8f_ts_EventHandler : EventHandler
   {
     if (isTitlemap) { return; }
     if (!_isInitialized || !_isPrepared) { return; }
+    if (automapActive) { return; }
 
     int        playerNumber = event.camera.PlayerNumber();
     PlayerInfo player       = players[playerNumber];
     Actor      playerActor  = player.mo;
     if (!playerActor) { return; }
-
-    if (automapActive) { return; }
 
     drawEverything(playerNumber, event);
   }
@@ -101,18 +100,29 @@ class m8f_ts_EventHandler : EventHandler
   // Helper functions section //////////////////////////////////////////////////
 
   private ui
+  void initCvars(PlayerInfo player)
+  {
+    if (_isEnabled != NULL) { return; }
+
+    _isEnabled = CVar.GetCVar("m8f_ts_enabled", player);
+    _hasTarget = CVar.GetCVar("m8f_ts_has_target", player);
+    _isFriendlyTarget = Cvar.GetCVar("m8f_ts_friendly_target", player);
+  }
+
+  private ui
   void drawEverything(int playerNumber, RenderEvent event)
   {
     PlayerInfo player = players[playerNumber];
-    if (!CVar.GetCVar("m8f_ts_enabled", player).GetInt()) { return; }
+    initCvars(player);
+    if (!_isEnabled.GetInt()) { return; }
 
     Actor target = GetTarget(playerNumber, 0);
 
     draw(target, playerNumber, event);
 
     bool hasTarget = (target != NULL);
-    CVar.GetCVar("m8f_ts_has_target", player).SetInt(hasTarget);
-    Cvar.GetCVar("m8f_ts_friendly_target", player).SetInt(hasTarget && target.bFRIENDLY);
+    _hasTarget.SetInt(hasTarget);
+    _isFriendlyTarget.SetInt(hasTarget && target.bFRIENDLY);
 
     if (hasTarget)
     {
@@ -851,5 +861,9 @@ class m8f_ts_EventHandler : EventHandler
   private ts_Le_ProjScreen _projection;
   private ts_Le_GlScreen   _glProjection;
   private ts_Le_SwScreen   _swProjection;
+
+  private transient ui CVar _isEnabled;
+  private transient ui CVar _hasTarget;
+  private transient ui CVar _isFriendlyTarget;
 
 } // class m8f_ts_EventHandler
