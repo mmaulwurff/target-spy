@@ -310,12 +310,7 @@ class m8f_ts_EventHandler : EventHandler
     PlayerInfo player = players[playerNumber];
 
     double scale           = 0.5 / settings.crossScale();
-    int    x, y, width, height;
-    [x, y, width, height]  = Screen.GetViewWindow();
-    int    screenHeight    = Screen.GetHeight();
-    int    statusBarHeight = screenHeight - height - x;
-    double relativeStatusBarHeight = double(statusBarHeight) * scale / screenHeight;
-    double baseCenterY     = readY(player, font) - relativeStatusBarHeight;
+    double baseCenterY     = readY(player, font, scale);
     double topBottomShift  = 0.02;
 
     double topY            = baseCenterY - topBottomShift + settings.topOff();
@@ -787,12 +782,18 @@ class m8f_ts_EventHandler : EventHandler
   }
 
   private play
-  double readY(PlayerInfo player, Font f) const
+  double readY(PlayerInfo player, Font f, double scale) const
   {
-    return isPreciseYAvailable(player)
-      ? (_preciseY.GetFloat() - f.GetHeight() / 2) / Screen.GetHeight()
-      : 0.51
-      ;
+    int    x, y, width, height;
+    [x, y, width, height]          = Screen.GetViewWindow();
+    int    screenHeight            = Screen.GetHeight();
+    int    statusBarHeight         = screenHeight - height - x;
+    double relativeStatusBarHeight = double(statusBarHeight) * scale / screenHeight;
+    double screenY = isPreciseYAvailable(player)
+      ? (_preciseY.GetFloat() - f.GetHeight() / 2) / (Screen.GetHeight() - relativeStatusBarHeight)
+      : 0.51 - relativeStatusBarHeight;
+
+    return screenY;
   }
 
   private ui
