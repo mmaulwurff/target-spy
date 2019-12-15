@@ -496,7 +496,7 @@ class m8f_ts_EventHandler : EventHandler
         case 3: {
           int percent100 = (targetMaxHealth == 0)
             ? 100
-            : round(targetHealth * 100.0 / targetMaxHealth);
+            : int(round(targetHealth * 100.0 / targetMaxHealth));
           healthString = String.Format("%d%%", percent100);
           } break;
         case 4: {
