@@ -15,18 +15,13 @@ git log --date=short --pretty=format:"-%d %ad %s%n" | \
     sed "s/- (tag: \(v\?[0-9.]*\))/\n\1\n-/" \
     > changelog.txt
 
-zip $name.pk3        \
-    graphics/*.lmp   \
-    graphics/*.png   \
-    graphics/*/*.png \
-    *.zs             \
-    zscript/*.zs     \
-    zscript/*/*.zs   \
-    zscript/*/*.zsc  \
-    *.txt  \
-    *.md   \
-    *.fon2 \
-    *.lmp
+zip -R $name.pk3 \
+    "*.lmp" \
+    "*.png" \
+    "*.txt" \
+    "*.zs"  \
+    "*.md"  \
+    "*.fon2"
 
 cp $name.pk3 $name-$(git describe --abbrev=0 --tags).pk3
 
