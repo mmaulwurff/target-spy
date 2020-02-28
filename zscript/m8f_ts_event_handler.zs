@@ -59,6 +59,7 @@ class m8f_ts_EventHandler : EventHandler
       if (lastTargetInfo.a == died)
       {
         lastTargetInfo.killTime = level.time;
+        lastTargetInfo.killName = lastTargetInfo.name;
       }
     }
   }
@@ -550,7 +551,7 @@ class m8f_ts_EventHandler : EventHandler
       double opacity   = settings.opacity();
       int    nameColor = settings.nameCol();
       string text = (settings.namedConfirmation())
-        ? lastTargetInfo.name .. " killed"
+        ? lastTargetInfo.killName .. " killed"
         : "Kill Confirmed";
 
       drawTextCenter(text, nameColor, scale, x, y, font, 0.0, opacity);

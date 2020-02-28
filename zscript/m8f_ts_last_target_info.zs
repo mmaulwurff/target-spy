@@ -23,6 +23,7 @@ class m8f_ts_LastTargetInfo
   String name;
   int    killTime;
   int    hurtTime;
+  String killName;
 
   m8f_ts_LastTargetInfo init()
   {

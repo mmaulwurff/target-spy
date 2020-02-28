@@ -22,9 +22,9 @@ This mods provides configurable health bar for targets.
   GZDoom;
 * Blue Shadow for examples of code.
 * Spaceman333, Rowsol, Churrupez, Cyanide, isaacpop23, TheRailgunner, Lud,
-Beed28, Ahpiox, ramon.dexter, Dutchygamer, Tesculpture, vapidscum,
-CthulhuInACan, Someone64, Major Cooke, and ProydohaRupert for ideas, feature suggestions, and
-bug reports.
+  Beed28, Ahpiox, ramon.dexter, Dutchygamer, Tesculpture, vapidscum,
+  CthulhuInACan, Someone64, Major Cooke, ProydohaRupert, and bogus for ideas,
+  feature suggestions, and bug reports.
 * Silentdarkness12 and Zhs2 for testing netplay.
 * Gutawer for [Gutamatics](https://gitlab.com/Gutawer/gzdoom-gutamatics). It was used in previous versions.
 
