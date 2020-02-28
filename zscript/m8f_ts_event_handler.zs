@@ -704,18 +704,18 @@ class m8f_ts_EventHandler : EventHandler
       case 2: targetClass.AppendFormat("_rekkr"); break; // Rekkr
     }
 
-    // if target name was found before, just return it
-    if (cache.cachedClass == targetClass)
-    {
-      return AddAdditionalInfo(target, cache.cachedTag, playerNumber);
-    }
-
     // if target name is set via actor tag, return it
     string targetName = target.GetTag();
     if (targetName != targetClass && !(gameType != 0))
     {
       cache.SetCache(targetClass, targetName);
       return AddAdditionalInfo(target, targetName, playerNumber);
+    }
+
+    // if target name was found before, just return it
+    if (cache.cachedClass == targetClass)
+    {
+      return AddAdditionalInfo(target, cache.cachedTag, playerNumber);
     }
 
     string specialName = data.specialNames.get(targetClass);
