@@ -161,8 +161,9 @@ class m8f_ts_EventHandler : EventHandler
 
     double  height        = target.height;
     double  radius        = target.radius;
-    double  visibleRadius = radius * 2000.0 / distance;
-    double  visibleHeight = height * 1000.0 / distance;
+    double  zoomFactor    = abs(sin(player.FOV));
+    double  visibleRadius = radius * 2000.0 / distance / zoomFactor;
+    double  visibleHeight = height * 1000.0 / distance / zoomFactor;
 
     let  settings         = multiSettings.get(playerNumber);
     let  f                = Font.GetFont(settings.fontName());
