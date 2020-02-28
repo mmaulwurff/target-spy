@@ -117,7 +117,8 @@ class m8f_ts_EventHandler : EventHandler
     initCvars(player);
     if (!_isEnabled.GetInt()) { return; }
 
-    Actor target = GetTarget(playerNumber, 0);
+    int   gameType = m8f_ts_Game.GetDehackedGameType();
+    Actor target   = GetTarget(playerNumber, gameType);
 
     draw(target, playerNumber, event);
 

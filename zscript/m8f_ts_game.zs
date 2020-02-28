@@ -27,13 +27,10 @@ class m8f_ts_Game
 
   static int GetDehackedGameType()
   {
-    string checkString = StringTable.Localize("$E1TEXT");
-    string rekkrString = "You've been through war.";
-    bool   isRekkr     = (checkString.IndexOf(rekkrString) >= 0);
+    bool isRekkr = (Wads.FindLump("REKCREDS") != -1);
     if (isRekkr) { return 2; }
 
-    string impName     = StringTable.Localize("$CC_IMP");
-    bool   isFreedoom  = (impName == "serpentipede");
+    bool isFreedoom = (Wads.FindLump("FREEDOOM") != -1);
     if (isFreedoom) { return 1; }
 
     return 0;
