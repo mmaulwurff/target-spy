@@ -38,6 +38,7 @@ class m8f_ts_ActorInfo
     if (target.bDORMANT                   ) { result = m8f_ts_String.appendWithSpace(result, "Dormant"     ); }
     if (target.bBUDDHA                    ) { result = m8f_ts_String.appendWithSpace(result, "Buddha"      ); }
     if (target.bNODAMAGE                  ) { result = m8f_ts_String.appendWithSpace(result, "Undamageable"); }
+    if (target.bNoBlockmap                ) { result = m8f_ts_String.appendWithSpace(result, "NoBlockmap"  ); }
 
     return result;
   }

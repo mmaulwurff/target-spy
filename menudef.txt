@@ -135,6 +135,7 @@ OptionMenu   "m8f_ts_Filters"
   Option "Dormant targets"         , "m8f_ts_show_dormant" , OnOff
   Option "Objects"                 , "m8f_ts_show_objects" , "m8f_ts_show_objects_values"
   Option "Corpses"                 , "m8f_ts_show_corpses" , OnOff
+  Option "NoBlockmap targets"      , "m8f_ts_show_noblockm", OnOff
   Option "Idle targets"            , "m8f_ts_show_idle"    , OnOff
   StaticText "Recommended: OFF if the game contains mimics.", Black
 

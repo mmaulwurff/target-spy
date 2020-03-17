@@ -57,6 +57,7 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
   int    showNums            () { checkInit(); return _showNums            .value(); }
   bool   showInfo            () { checkInit(); return _showInfo            .value(); }
   bool   showCorps           () { checkInit(); return _showCorps           .value(); }
+  bool   showNoBlockmap      () { checkInit(); return _showNoBlockmap      .value(); }
   bool   crossOn             () { checkInit(); return _crossOn             .value(); }
   int    crossCol            () { checkInit(); return _crossCol            .value(); }
   int    nameCol             () { checkInit(); return _nameCol             .value(); }
@@ -124,6 +125,7 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
     push(_showNums             = new("m8f_ts_IntSetting"   ).init("m8f_ts_show_numbers"  , _player));
     push(_showInfo             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_info"     , _player));
     push(_showCorps            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_corpses"  , _player));
+	push(_showNoBlockmap       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_noblockm" , _player));
     push(_crossOn              = new("m8f_ts_BoolSetting"  ).init("m8f_ts_crosshair_on"  , _player));
     push(_crossCol             = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_crs" , _player));
     push(_nameCol              = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_tag" , _player));
@@ -198,6 +200,7 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
   private m8f_ts_IntSetting    _showNums;
   private m8f_ts_BoolSetting   _showInfo;
   private m8f_ts_BoolSetting   _showCorps;
+  private m8f_ts_BoolSetting   _showNoBlockmap;
   private m8f_ts_BoolSetting   _crossOn;
   private m8f_ts_IntSetting    _crossCol;
   private m8f_ts_IntSetting    _nameCol;
