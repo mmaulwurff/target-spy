@@ -52,26 +52,49 @@ class m8f_ts_PlayToUiTranslator
       {
         if (nbmActor.bNoBlockmap == false) { continue; } else
         {
-          vector3 nbmActorCenter = (nbmActor.pos.x, nbmActor.pos.y, nbmActor.pos.z + nbmActor.height/2);
-          double nbmActorRadius = max(nbmActor.height,nbmActor.radius * 2)/2;
+          //Detect NoBlockmap actors by checking if line from LineTrace intersects sphere they are in.
+          //Line equation is:   P = LineStart + Direction * t
+          //Sphere equation is: (P - SphereCenter) dot (P - SphereCenter) = SphereRadius * SphereRadius
+          
+          //Line and Sphere share points (P) if they intersect:
+          //Combined equation:  (LineStart + Direction * t - SphereCenter) dot (LineStart + Direction * t - SphereCenter)
+          //Same equation rearranged:   t * t * (Direction dot Direction) + 2 * t * (Direction dot (LineStart - SphereCenter)) + ((LineStart - SphereCenter) dot (LineStart - SphereCenter)) - SphereRadius * SphereRadius = 0
+          //This is quadratic equation: t * t * a + t * b + c = 0
+          
+          vector3 SphereCenter = (nbmActor.pos.x, nbmActor.pos.y, nbmActor.pos.z + nbmActor.height/2);
+          double  SphereRadius = max(nbmActor.height,nbmActor.radius * 2)/2;
+          
           vector3 LineStart = (a.pos.x,a.pos.y,a.pos.z+offsetz);
-          vector3 LineEnd = lineTraceData.HitLocation;
+          vector3 LineEnd   = lineTraceData.HitLocation;
           vector3 Direction = (LineEnd - LineStart).Unit();
-          // a * x^2 + b*x + c = 0
+          
+          //a, b, c of the quadratic equation:
           double a = Direction dot Direction;
-          double b = 2 * Direction dot (LineStart - nbmActorCenter);
-          double c = (LineStart - nbmActorCenter) dot (LineStart - nbmActorCenter) - nbmActorRadius * nbmActorRadius;
-          // x = ( -b ± (b * b - 4 * a * c)^(1/2) ) / 2 * a
+          double b = 2 * (Direction dot (LineStart - SphereCenter));
+          double c = (LineStart - SphereCenter) dot (LineStart - SphereCenter) - SphereRadius * SphereRadius;
+          
+          // Line intersects or touches Sphere if t has solutions
+          // t has solution(s) if discriminant >= 0
+          // discriminant = b * b - 4 * a * c
+          // t = ( -b ± sqrt(discriminant) ) / 2 * a
           double discriminant = b * b - 4 * a * c;
           if (discriminant >= 0)
           {
-            if ((LineStart - LineEnd).Length() >= (LineStart - nbmActor.pos).Length())
+            double t1 = (-b + sqrt(discriminant)) / (2 * a);
+            double t2 = (-b - sqrt(discriminant)) / (2 * a);
+            //if both of those solutions are positive target is in front of the player
+            if (t1 > 0 && t2 > 0)
             {
-              if (closestNbmActor == NULL) { closestNbmActor = nbmActor; } else
+              //Discard actors that are further than LineEnd (most likely behind the wall)
+              if ((LineStart - LineEnd).Length() >= (LineStart - nbmActor.pos).Length())
               {
-                if ((LineStart - nbmActor.pos).Length() < (LineStart - closestNbmActor.pos).Length())
+                //Pick an actor closest to the player
+                if (closestNbmActor == NULL) { closestNbmActor = nbmActor; } else
                 {
-                    closestNbmActor = nbmActor;
+                  if ((LineStart - nbmActor.pos).Length() < (LineStart - closestNbmActor.pos).Length())
+                  {
+                      closestNbmActor = nbmActor;
+                  }
                 }
               }
             }
