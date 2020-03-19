@@ -35,7 +35,14 @@ class ts_NoblockmapDetection
     Actor closestNbmActor;
     while (nbmActor = Actor(noBlockmapActors.Next()))
     {
-      if (nbmActor.bNoBlockmap == false)
+      if (!nbmActor.bNoBlockmap)
+      {
+        continue;
+      }
+
+      // Do not target inventory items that belong to somebody.
+      let inv = Inventory(nbmActor);
+      if (inv && inv.Owner)
       {
         continue;
       }
