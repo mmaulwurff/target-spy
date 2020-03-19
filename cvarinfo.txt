@@ -29,7 +29,6 @@ user bool   m8f_ts_show_confirm  = false;
 user bool   m8f_ts_named_confirm = false;
 user bool   m8f_ts_show_champion = true;
 user bool   m8f_ts_show_corpses  = false;
-user bool   m8f_ts_show_noblockm = false;
 user float  m8f_ts_step_mult     = 1.0;
 user bool   m8f_ts_alm_dead_cr   = true;
 user int    m8f_class_as_tag     = 0; // 0 - tag, 1 - class, 2 - beautified class

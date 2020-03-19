@@ -53,7 +53,8 @@ OptionValue "m8f_ts_show_objects_values"
   0, "Off"
   1, "Shootable only"
   2, "Except decorations"
-  3, "Everything"
+  3, "Everything blocking"
+  4, "EVERYTHING"
 }
 
 OptionValue "m8f_ts_class_as_tag_values"
@@ -135,7 +136,6 @@ OptionMenu   "m8f_ts_Filters"
   Option "Dormant targets"         , "m8f_ts_show_dormant" , OnOff
   Option "Objects"                 , "m8f_ts_show_objects" , "m8f_ts_show_objects_values"
   Option "Corpses"                 , "m8f_ts_show_corpses" , OnOff
-  Option "NoBlockmap targets"      , "m8f_ts_show_noblockm", OnOff
   Option "Idle targets"            , "m8f_ts_show_idle"    , OnOff
   StaticText "Recommended: OFF if the game contains mimics.", Black
 

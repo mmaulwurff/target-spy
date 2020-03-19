@@ -57,7 +57,6 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
   int    showNums            () { checkInit(); return _showNums            .value(); }
   bool   showInfo            () { checkInit(); return _showInfo            .value(); }
   bool   showCorps           () { checkInit(); return _showCorps           .value(); }
-  bool   showNoBlockmap      () { checkInit(); return _showNoBlockmap      .value(); }
   bool   crossOn             () { checkInit(); return _crossOn             .value(); }
   int    crossCol            () { checkInit(); return _crossCol            .value(); }
   int    nameCol             () { checkInit(); return _nameCol             .value(); }

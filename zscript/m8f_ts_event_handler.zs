@@ -615,11 +615,17 @@ class m8f_ts_EventHandler : EventHandler
     {
       target = translator.AimLineAttackWrapper(player.mo);
     }
-    if (target == NULL && settings.showNoBlockmap()) {
-        target = translator.LineAttackNoBlockmapWrapper(player.mo, player.viewheight);
+
+    if (target == NULL && settings.showObjects() > 3)
+    {
+      target = translator.LineAttackNoBlockmapWrapper(player.mo, player.viewheight);
     }
+
     // give up
-    if (target == NULL) { return NULL; }
+    if (target == NULL)
+    {
+      return NULL;
+    }
 
     // target is found
 
