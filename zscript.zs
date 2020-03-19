@@ -15,6 +15,8 @@ version "3.2.0"
 #include "zscript/m8f_ts_game.zs"
 #include "zscript/m8f_ts_actor_info.zs"
 
+#include "zscript/ts_noblockmap_detection.zs"
+
 // Settings ////////////////////////////////////////////////////////////////////
 
 #include "zscript/settings/m8f_ts_bool_setting.zs"
