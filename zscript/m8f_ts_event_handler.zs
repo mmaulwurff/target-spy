@@ -823,12 +823,21 @@ class m8f_ts_EventHandler : EventHandler
     _swProjection  = new("ts_Le_SwScreen");
     _cvarRenderer  = Cvar.GetCvar("vid_rendermode", player);
 
+    // for LZDoom
+    if (_cvarRenderer == NULL)
+    {
+      _cvarRenderer = Cvar.GetCvar("vid_renderer", player);
+    }
+
     _isInitialized = true;
   }
 
   private
   void prepareProjection()
   {
+    // Projection type detection is not quite right here.
+    // vid_rendermode contains more complex information.
+    // If something breaks, look here.
     if(_cvarRenderer)
     {
       switch (_cvarRenderer.GetInt())
