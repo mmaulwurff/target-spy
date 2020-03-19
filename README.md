@@ -28,6 +28,18 @@ This mods provides configurable health bar for targets.
 * Silentdarkness12 and Zhs2 for testing netplay.
 * Gutawer for [Gutamatics](https://gitlab.com/Gutawer/gzdoom-gutamatics). It was used in previous versions.
 
+## Credits
+
+* [Mementwo font by Jimmy / Memento Mori 2 Team](https://forum.zdoom.org/viewtopic.php?f=37&t=33409#p632308).
+* [Enlightening Small font by Ola Björling / Jimmy](https://www.realm667.com/index.php/en/font-press/technical)
+* [Cyberfonter font by TerminusEst13](https://www.realm667.com/index.php/en/font-press/technical)
+* [Jenocide Small font by Jimmy](https://www.realm667.com/index.php/en/font-press/technical)
+* [Solid Snake Small font by Jimmy](https://www.realm667.com/index.php/en/font-press/technical)
+* [Gargoyle Wing Small font by NeuralStunner](https://www.realm667.com/index.php/en/font-press/medieval)
+* Crosshair Pieces graphics by vapidscum
+* [Libeye](https://forum.zdoom.org/viewtopic.php?f=105&t=64566#p1102157) by KeksDose
+* NoBlockmap objects detection code by Proydoha
+
 ## Info
 
 Author: m8f (mmaulwurff@gmail.com)
@@ -39,14 +51,3 @@ License doesn't apply to fonts included in the archive. See credits.
 [Git](https://github.com/mmaulwurff/target-spy)
 
 [Forum topic](https://forum.zdoom.org/viewtopic.php?f=43&t=60784&p=1057216#p1057216)
-
-## Credits
-
-* [Mementwo font by Jimmy / Memento Mori 2 Team](https://forum.zdoom.org/viewtopic.php?f=37&t=33409#p632308).
-* [Enlightening Small font by Ola Björling / Jimmy](https://www.realm667.com/index.php/en/font-press/technical)
-* [Cyberfonter font by TerminusEst13](https://www.realm667.com/index.php/en/font-press/technical)
-* [Jenocide Small font by Jimmy](https://www.realm667.com/index.php/en/font-press/technical)
-* [Solid Snake Small font by Jimmy](https://www.realm667.com/index.php/en/font-press/technical)
-* [Gargoyle Wing Small font by NeuralStunner](https://www.realm667.com/index.php/en/font-press/medieval)
-* Crosshair Pieces graphics by vapidscum
-* [Libeye](https://forum.zdoom.org/viewtopic.php?f=105&t=64566#p1102157) by KeksDose
