@@ -378,7 +378,7 @@ class m8f_ts_EventHandler : EventHandler
     double  x  = xy.x;
     double  y  = xy.y;
 
-    double newline = 0.03 * settings.stepMult();
+    double newline = settings.getNewlineHeight();
     if ((y >= 0.80 && settings.barsOnTarget() != m8f_ts_Settings.ON_TARGET_BELOW)
         || settings.barsOnTarget() == m8f_ts_Settings.ON_TARGET_ABOVE) { newline = -newline; }
 
@@ -404,8 +404,8 @@ class m8f_ts_EventHandler : EventHandler
       return;
     }
 
-    int    targetMaxHealth = m8f_ts_ActorInfo.GetActorMaxHealth(target);
-    bool   showHealth      = (targetMaxHealth != 0);
+    int  targetMaxHealth = m8f_ts_ActorInfo.GetActorMaxHealth(target);
+    bool showHealth      = (targetMaxHealth != 0);
 
     if (targetMaxHealth < settings.minHealth() && targetMaxHealth != 0)
     {
@@ -440,7 +440,7 @@ class m8f_ts_EventHandler : EventHandler
 
     drawCrosshairs(target, targetColor, crossFont, playerNumber);
 
-    double textScale = 0.5 / settings.textScale();
+    double textScale = settings.getTextScale();
     double opacity   = settings.opacity();
 
     if (settings.showBar() && showHealth)
@@ -493,47 +493,71 @@ class m8f_ts_EventHandler : EventHandler
       }
     }
 
-    if (showHealth)
+    if (showHealth && (settings.showNums() != 0))
     {
-      string healthString;
-      switch (settings.showNums())
+      string healthString = makeHealthString(settings, targetHealth, targetMaxHealth);
+      int    armor        = target.CountInv("BasicArmor");
+
+      if (armor)
       {
-        case 0: break;
-        case 1: healthString = String.Format("%d/%d", targetHealth, targetMaxHealth); break;
-        case 2: healthString = String.Format("%d", targetHealth); break;
-        case 3: {
-          int percent100 = (targetMaxHealth == 0)
-            ? 100
-            : int(round(targetHealth * 100.0 / targetMaxHealth));
-          healthString = String.Format("%d%%", percent100);
-          } break;
-        case 4: {
-          double percent100dot00 = (targetMaxHealth == 0)
-            ? 100
-            : targetHealth * 100.0 / targetMaxHealth;
-          healthString = String.Format("%.2f%%", percent100dot00);
-          } break;
+        healthString.AppendFormat(" Armor: %d", armor);
       }
 
-      if (healthString.length() > 0)
-      {
-        drawTextCenter( healthString
-                      , targetColor
-                      , textScale
-                      , x
-                      , y
-                      , font
-                      , 0.0
-                      , opacity
-                      );
-        y += newline;
-      }
+      y += drawTargetHealth(x, y, healthString, settings, targetColor, font);
     }
 
     if (settings.frameStyle() != settings.FRAME_DISABLED)
     {
       drawFrame(event, playerNumber, target, targetColor);
     }
+  }
+
+  private ui
+  string makeHealthString(m8f_ts_Settings settings, int targetHealth, int targetMaxHealth)
+  {
+    switch (settings.showNums())
+    {
+    case 1: return String.Format("%d/%d", targetHealth, targetMaxHealth);
+    case 2: return String.Format("%d", targetHealth);
+
+    case 3:
+    {
+      int percent100 = (targetMaxHealth == 0)
+        ? 100
+        : int(round(targetHealth * 100.0 / targetMaxHealth));
+      return String.Format("%d%%", percent100);
+    }
+
+    case 4:
+    {
+      double percent100dot00 = (targetMaxHealth == 0)
+        ? 100
+        : targetHealth * 100.0 / targetMaxHealth;
+      return String.Format("%.2f%%", percent100dot00);
+    }
+    }
+
+    console.printf("Unknown settings.showNums() result!");
+    return "";
+  }
+
+  private ui
+  double drawTargetHealth( double x
+                         , double y
+                         , string healthString
+                         , m8f_ts_Settings settings
+                         , int targetColor
+                         , Font font
+                         )
+  {
+    double textScale = settings.getTextScale();
+    double opacity   = settings.opacity();
+
+    drawTextCenter(healthString, targetColor, textScale, x, y, font, 0.0, opacity);
+
+    double newlineHeight = settings.getNewlineHeight();
+
+    return y + newlineHeight;
   }
 
   private ui
@@ -554,7 +578,7 @@ class m8f_ts_EventHandler : EventHandler
 
     if (level.time < lastTargetInfo.killTime + 35 * 1)
     {
-      double scale     = 0.5 / settings.textScale();
+      double scale     = settings.getTextScale();
       double opacity   = settings.opacity();
       int    nameColor = settings.nameCol();
       string text = (settings.namedConfirmation())

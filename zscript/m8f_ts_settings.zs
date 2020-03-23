@@ -63,7 +63,6 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
   int    nameCol             () { checkInit(); return _nameCol             .value(); }
   int    weakCol             () { checkInit(); return _weakCol             .value(); }
   bool   altHpCols           () { checkInit(); return _altHpCols           .value(); }
-  double stepMult            () { checkInit(); return _stepMult            .value(); }
   bool   almDeadCr           () { checkInit(); return _almDeadCr           .value(); }
   int    crAlmDead           () { checkInit(); return _crAlmDead           .value(); }
   double crossOff            () { checkInit(); return _crossOff            .value(); }
@@ -80,7 +79,6 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
   double crossScale          () { checkInit(); return _crossScale.value() ? _crossScale.value() : 1; }
   bool   hitConfirmation     () { checkInit(); return _hitConfirmation     .value(); }
   int    hitColor            () { checkInit(); return _hitColor            .value(); }
-  double textScale           () { checkInit(); return _textScale.value() ? _textScale.value() : 1; }
   double xAdjustment         () { checkInit(); return _xAdjustment         .value(); }
   bool   noCrossOnSlot1      () { checkInit(); return _noCrossOnSlot1      .value(); }
   int    frameStyle          () { checkInit(); return _frameStyle          .value(); }
@@ -102,7 +100,13 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
   string crossBot            () { checkInit(); return _crossBot            .value(); }
   string crossFontName       () { checkInit(); return _crossFontName       .value(); }
 
+  double getTextScale()     { return 0.5 / textScale(); }
+  double getNewlineHeight() { return 0.03 * stepMult(); }
+
   // private: //////////////////////////////////////////////////////////////////
+
+  double textScale() { checkInit(); return _textScale.value() ? _textScale.value() : 1; }
+  double stepMult () { checkInit(); return _stepMult.value(); }
 
   private
   void checkInit()
@@ -125,7 +129,7 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
     push(_showNums             = new("m8f_ts_IntSetting"   ).init("m8f_ts_show_numbers"  , _player));
     push(_showInfo             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_info"     , _player));
     push(_showCorps            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_corpses"  , _player));
-	push(_showNoBlockmap       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_noblockm" , _player));
+    push(_showNoBlockmap       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_noblockm" , _player));
     push(_crossOn              = new("m8f_ts_BoolSetting"  ).init("m8f_ts_crosshair_on"  , _player));
     push(_crossCol             = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_crs" , _player));
     push(_nameCol              = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_tag" , _player));
