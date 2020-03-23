@@ -72,7 +72,8 @@ OptionValue "m8f_ts_frame_style_values"
   3, "< >"
   4, "> <"
   5, "II"
-  6, "Graphics"
+  6, "White frame"
+  7, "Red frame"
 }
 
 OptionValue "m8f_ts_on_target_values"

@@ -183,8 +183,9 @@ class m8f_ts_EventHandler : EventHandler
     Vector2 bottomLeft  = (left.x,  bottom.y);
     Vector2 bottomRight = (right.x, bottom.y);
     double  scale       = 0.5 / settings.frameScale();
+    int     frameStyle  = settings.frameStyle();
 
-    switch (settings.frameStyle())
+    switch (frameStyle)
     {
       case settings.FRAME_DISABLED:
         break;
@@ -219,17 +220,21 @@ class m8f_ts_EventHandler : EventHandler
         break;
 
       case settings.FRAME_GRAPHIC:
+      case settings.FRAME_GRAPHIC_RED:
         {
-          TextureID topLeftTex     = TexMan.CheckForTexture("ts_frame"              , TexMan.TryAny);
-          TextureID topRightTex    = TexMan.CheckForTexture("ts_frame_top_right"    , TexMan.TryAny);
-          TextureID bottomLeftTex  = TexMan.CheckForTexture("ts_frame_bottom_left"  , TexMan.TryAny);
-          TextureID bottomRightTex = TexMan.CheckForTexture("ts_frame_bottom_right" , TexMan.TryAny);
-          bool      animate        = false;
+          let  frameName      = (frameStyle == settings.FRAME_GRAPHIC) ? "ts_frame" : "ts_framr";
+          let  topLeftTex     = TexMan.CheckForTexture(frameName                  , TexMan.TryAny);
+          let  topRightTex    = TexMan.CheckForTexture(frameName.."_top_right"    , TexMan.TryAny);
+          let  bottomLeftTex  = TexMan.CheckForTexture(frameName.."_bottom_left"  , TexMan.TryAny);
+          let  bottomRightTex = TexMan.CheckForTexture(frameName.."_bottom_right" , TexMan.TryAny);
+          bool animate        = false;
+
           Screen.SetClipRect( int(topLeft.x)
                             , int(topLeft.y)
                             , int(round(bottomRight.x - topLeft.x + 1))
                             , int(round(bottomRight.y - topLeft.y + 1))
                             );
+
           Screen.DrawTexture(topLeftTex,     animate, topLeft.x,     topLeft.y    );
           Screen.DrawTexture(topRightTex,    animate, topRight.x,    topRight.y   );
           Screen.DrawTexture(bottomLeftTex,  animate, bottomLeft.x,  bottomLeft.y );

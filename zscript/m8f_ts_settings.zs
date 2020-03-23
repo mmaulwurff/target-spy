@@ -29,6 +29,7 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
     FRAME_GREATER_LESS,
     FRAME_BARS,
     FRAME_GRAPHIC,
+    FRAME_GRAPHIC_RED,
   };
 
   enum BarsOnTargetPosition

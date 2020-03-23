@@ -1,3 +1,5 @@
+// White frame /////////////////////////////////////////////////////////////////
+
 Texture "ts_frame_top_right", 64, 64
 {
   Patch  ts_frame, 0, 0
@@ -25,6 +27,38 @@ Texture "ts_frame_bottom_right", 64, 64
   }
   Offset 64, 64
 }
+
+// Red frame ///////////////////////////////////////////////////////////////////
+
+Texture "ts_framr_top_right", 64, 64
+{
+  Patch  ts_framr, 0, 0
+  {
+    FlipX
+  }
+  Offset 64, 0
+}
+
+Texture "ts_framr_bottom_left", 64, 64
+{
+  Patch  ts_framr, 0, 0
+  {
+    FlipY
+  }
+  Offset 0, 64
+}
+
+Texture "ts_framr_bottom_right", 64, 64
+{
+  Patch  ts_framr, 0, 0
+  {
+    FlipX
+    FlipY
+  }
+  Offset 64, 64
+}
+
+// Graphical crosshair pieces //////////////////////////////////////////////////
 
 Texture "tscp_graph_scaled", 878, 514
 {
