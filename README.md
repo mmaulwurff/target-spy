@@ -4,6 +4,13 @@
 
 This mods provides configurable health bar for targets.
 
+<a href="https://github.com/mmaulwurff/target-spy/releases" alt="Downloads">
+  <img src="https://img.shields.io/github/downloads/mmaulwurff/target-spy/total" />
+</a>
+<a href="https://github.com/mmaulwurff/target-spy" alt="Stars">
+  <img src="https://img.shields.io/github/stars/mmaulwurff/target-spy" />
+</a>
+
 ## Features
 
 * ASCII target health bar, name, and more;
