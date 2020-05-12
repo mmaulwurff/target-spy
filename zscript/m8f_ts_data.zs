@@ -359,6 +359,8 @@ class m8f_ts_Data
     blackList.push( "SpaceCowFloating"        );
     blackList.push( "CowboyCow"               );
     blackList.push( "MummyCow"                );
+    blackList.push( "ShieldDefense"           );
+    blackList.push( "ShieldDefense2"          );
   }
 
 } // class m8f_ts_Data
