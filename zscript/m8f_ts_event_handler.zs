@@ -476,7 +476,7 @@ class m8f_ts_EventHandler : EventHandler
       drawTextCenter(targetName, nameColor, textScale, x, y, font, 0.0, opacity);
       y += newline;
 
-      if (settings.showNameAndTag() && target.GetClassName() != target.GetTag())
+      if (settings.showNameAndTag() && target.GetClassName() != targetName)
       {
         drawTextCenter(target.GetClassName(), nameColor, textScale, x, y, font, 0.0, opacity);
         y += newline;

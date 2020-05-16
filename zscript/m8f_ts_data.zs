@@ -248,7 +248,8 @@ class m8f_ts_Data
     specialNames.push( "ShotgunGuy_free"         , "Shotgun Zombie"          );
     specialNames.push( "SpiderMastermind_free"   , "Large Technospider"      );
     specialNames.push( "WolfensteinSS_free"      , "Sailor"                  );
-    specialNames.push( "ZombieMan_free"          , "Zombie"                  );
+    specialNames.push( "Zombieman_free"          , "Zombie"                  );
+    specialNames.push( "HellKnight_free"         , "Pain Bringer"            );
     specialNames.push( "Cacodemon_rekkr"         , "Sorrow"                  );
     specialNames.push( "Demon_rekkr"             , "Husk"                    );
     specialNames.push( "Spectre_rekkr"           , "Mean Husk"               );
