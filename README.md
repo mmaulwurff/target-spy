@@ -11,6 +11,8 @@ This mods provides configurable health bar for targets.
   <img src="https://img.shields.io/github/stars/mmaulwurff/target-spy" />
 </a>
 
+This mod is a part of [m8f's toolbox](https://mmaulwurff.github.io/pages/toolbox).
+
 ## Features
 
 * ASCII target health bar, name, and more;
