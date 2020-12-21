@@ -18,8 +18,6 @@
 class ts_ActorInfo
 {
 
-// public: /////////////////////////////////////////////////////////////////////
-
   static ui
   string GetTargetFlags(Actor target)
   {
@@ -48,6 +46,11 @@ class ts_ActorInfo
   {
     if (a == null)     { return 0; }
     if (!a.bSHOOTABLE) { return 0; }
+
+    bool isMaxFromService;
+    int maxFromService;
+    [isMaxFromService, maxFromService] = getMaxFromService(a.GetClassName());
+    if (isMaxFromService) { return maxFromService; }
 
     if (a.player && a.player.mo) { return a.player.mo.GetMaxHealth(); }
 
@@ -83,12 +86,34 @@ class ts_ActorInfo
     return customColor;
   }
 
+// private /////////////////////////////////////////////////////////////////////////////////////////
+
+  static ui
+  bool, int getMaxFromService(string className)
+  {
+    ServiceIterator i = ServiceIterator.Find("MaxHealthService");
+
+    Service s;
+    if (s = i.Next())
+    {
+      String maxHealth = s.UiGetData(className);
+      if (maxHealth == "none")
+      {
+        return false, 0;
+      }
+      else
+      {
+        return true, maxHealth.ToInt();
+      }
+    }
+
+    return false, 0;
+  }
+
 } // class ts_ActorInfo
 
 class ts_ActorInfoHelper
 {
-
-// public: /////////////////////////////////////////////////////////////////////
 
   play
   int getDrpgMaxHealth(Actor a) const
