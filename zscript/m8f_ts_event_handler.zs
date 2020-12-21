@@ -404,7 +404,7 @@ class m8f_ts_EventHandler : EventHandler
       return;
     }
 
-    int  targetMaxHealth = m8f_ts_ActorInfo.GetActorMaxHealth(target);
+    int  targetMaxHealth = ts_ActorInfo.GetActorMaxHealth(target);
     bool showHealth      = (targetMaxHealth != 0);
 
     if (targetMaxHealth < settings.minHealth() && targetMaxHealth != 0)
@@ -423,7 +423,7 @@ class m8f_ts_EventHandler : EventHandler
     int tagColor;
     if (targetMaxHealth < 100) { tagColor = settings.weakCol(); }
     else                       { tagColor = settings.nameCol(); }
-    int customColor = m8f_ts_ActorInfo.CustomTargetColor(target);
+    int customColor = ts_ActorInfo.CustomTargetColor(target);
     if (customColor)           { tagColor = customColor; }
 
     int percent = 10;
@@ -485,7 +485,7 @@ class m8f_ts_EventHandler : EventHandler
 
     if (settings.showInfo())
     {
-      string targetFlags = m8f_ts_ActorInfo.GetTargetFlags(target);
+      string targetFlags = ts_ActorInfo.GetTargetFlags(target);
       if (targetFlags.Length() > 0)
       {
         drawTextCenter(targetFlags, nameColor, textScale, x, y, font, 0.0, opacity);
@@ -701,7 +701,7 @@ class m8f_ts_EventHandler : EventHandler
       if (!settings.showHidden()  && targetIsHidden)   { return NULL; }
       if (!settings.showFriends() && target.bFRIENDLY) { return NULL; }
       if (!settings.showDormant() && target.bDORMANT)  { return NULL; }
-      if (!settings.showIdle()    && m8f_ts_ActorInfo.IsIdle(target)) { return NULL; }
+      if (!settings.showIdle()    && ts_ActorInfo.IsIdle(target)) { return NULL; }
     }
     else // not monsters
     {

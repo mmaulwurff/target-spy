@@ -15,7 +15,7 @@
  * Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class m8f_ts_ActorInfo
+class ts_ActorInfo
 {
 
 // public: /////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ class m8f_ts_ActorInfo
     return customColor;
   }
 
-} // class m8f_ts_ActorInfo
+} // class ts_ActorInfo
 
 class ts_ActorInfoHelper
 {
