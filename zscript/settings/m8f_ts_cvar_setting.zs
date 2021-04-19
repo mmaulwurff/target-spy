@@ -1,4 +1,4 @@
-/* Copyright Alexander 'm8f' Kromm (mmaulwurff@gmail.com) 2019-2020
+/* Copyright Alexander 'm8f' Kromm (mmaulwurff@gmail.com) 2019-2021
  *
  * This file is a part of Target Spy.
  *
@@ -19,7 +19,7 @@
 /**
  * This class represents a single setting.
  */
-class m8f_ts_CvarSetting : m8f_ts_SettingsBase
+class m8f_ts_CvarSetting
 {
 
   // public: ///////////////////////////////////////////////////////////////////
@@ -32,8 +32,7 @@ class m8f_ts_CvarSetting : m8f_ts_SettingsBase
 
   // public: ///////////////////////////////////////////////////////////////////
 
-  override
-  void resetCvarsToDefaults()
+  void resetToDefault()
   {
     _cvar.ResetToDefault();
   }

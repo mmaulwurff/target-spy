@@ -1,4 +1,4 @@
-/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2019-2020
+/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2019-2021
  *
  * This file is part of Target Spy.
  *
@@ -11,11 +11,11 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class m8f_ts_Settings : m8f_ts_SettingsBase
+class m8f_ts_Settings
 {
 
   enum FrameStyles
@@ -42,13 +42,12 @@ class m8f_ts_Settings : m8f_ts_SettingsBase
     _player = player;
   }
 
-  override
   void resetCvarsToDefaults()
   {
     int nSettings = _settings.size();
     for (int i = 0; i < nSettings; ++i)
     {
-      _settings[i].resetCvarsToDefaults();
+      _settings[i].resetToDefault();
     }
   }
 

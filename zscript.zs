@@ -23,7 +23,6 @@ version 4.5
 #include "zscript/settings/m8f_ts_cvar_setting.zs"
 #include "zscript/settings/m8f_ts_double_setting.zs"
 #include "zscript/settings/m8f_ts_int_setting.zs"
-#include "zscript/settings/m8f_ts_settings_base.zs"
 #include "zscript/settings/m8f_ts_string_setting.zs"
 
 // libeye by KeksDose //////////////////////////////////////////////////////////
