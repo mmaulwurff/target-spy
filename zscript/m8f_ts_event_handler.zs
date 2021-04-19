@@ -1,4 +1,4 @@
-/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2019-2020
+/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2019-2021
  *
  * This file is part of Target Spy.
  *
@@ -90,12 +90,11 @@ class m8f_ts_EventHandler : EventHandler
     if (!_isInitialized || !_isPrepared) { return; }
     if (automapActive) { return; }
 
-    int        playerNumber = event.camera.PlayerNumber();
-    PlayerInfo player       = players[playerNumber];
+    PlayerInfo player       = players[consolePlayer];
     Actor      playerActor  = player.mo;
     if (!playerActor) { return; }
 
-    drawEverything(playerNumber, event);
+    drawEverything(consolePlayer, event);
   }
 
   // Helper functions section //////////////////////////////////////////////////
