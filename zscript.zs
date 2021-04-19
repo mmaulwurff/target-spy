@@ -6,7 +6,6 @@ version 4.5
 #include "zscript/ts_settings.zs"
 
 #include "zscript/m8f_ts_last_target_info.zs"
-#include "zscript/m8f_ts_multi_last_target_info.zs"
 #include "zscript/m8f_ts_tag_cache.zs"
 #include "zscript/m8f_ts_play_to_ui_translator.zs"
 

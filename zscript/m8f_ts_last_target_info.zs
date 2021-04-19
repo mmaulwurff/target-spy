@@ -25,6 +25,14 @@ class m8f_ts_LastTargetInfo
   int    hurtTime;
   String killName;
 
+  static
+  m8f_ts_LastTargetInfo from()
+  {
+    let result = new("m8f_ts_LastTargetInfo");
+    result.init();
+    return result;
+  }
+
   m8f_ts_LastTargetInfo init()
   {
     a        = null;

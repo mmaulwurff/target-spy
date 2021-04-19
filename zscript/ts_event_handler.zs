@@ -24,7 +24,7 @@ class ts_EventHandler : EventHandler
     if (event.playerNumber != consolePlayer) return;
 
     _settings = ts_Settings.from();
-    multiLastTargetInfo = new("m8f_ts_MultiLastTargetInfo").init();
+    _lastTargetInfo = m8f_ts_LastTargetInfo.from();
     translator          = new("m8f_ts_PlayToUiTranslator");
   }
 
@@ -53,14 +53,10 @@ class ts_EventHandler : EventHandler
     Actor died = event.thing;
     if (died == NULL) { return; }
 
-    for (int i = 0; i < MAXPLAYERS; ++i)
+    if (_lastTargetInfo.a == died)
     {
-      let lastTargetInfo = multiLastTargetInfo.get(i);
-      if (lastTargetInfo.a == died)
-      {
-        lastTargetInfo.killTime = level.time;
-        lastTargetInfo.killName = lastTargetInfo.name;
-      }
+      _lastTargetInfo.killTime = level.time;
+      _lastTargetInfo.killName = _lastTargetInfo.name;
     }
   }
 
@@ -73,13 +69,9 @@ class ts_EventHandler : EventHandler
     if (damagedThing == NULL) { return; }
 
 
-    for (int i = 0; i < MAXPLAYERS; ++i)
+    if (_lastTargetInfo.a == damagedThing)
     {
-      let lastTargetInfo = multiLastTargetInfo.get(i);
-      if (lastTargetInfo.a == damagedThing)
-      {
-        lastTargetInfo.hurtTime = level.time;
-      }
+      _lastTargetInfo.hurtTime = level.time;
     }
   }
 
@@ -268,10 +260,9 @@ class ts_EventHandler : EventHandler
   private ui
   void SetLastTarget(Actor newLastTarget)
   {
-    let lastTarget  = multiLastTargetInfo.get(consolePlayer);
-    lastTarget.a    = newLastTarget;
-    lastTarget.name = GetTargetName(newLastTarget, dehackedGameType, consolePlayer);
-    lastTarget.name = enableExtendedColorCode(lastTarget.name);
+    _lastTargetInfo.a    = newLastTarget;
+    _lastTargetInfo.name = GetTargetName(newLastTarget, dehackedGameType, consolePlayer);
+    _lastTargetInfo.name = enableExtendedColorCode(_lastTargetInfo.name);
   }
 
   private play
@@ -304,9 +295,8 @@ class ts_EventHandler : EventHandler
 
     if (_settings.hitConfirmation())
     {
-      let lastTargetInfo = multiLastTargetInfo.get(consolePlayer);
-      if (lastTargetInfo.hurtTime != -1
-          && (level.time < lastTargetInfo.hurtTime + 10))
+      if (_lastTargetInfo.hurtTime != -1
+          && (level.time < _lastTargetInfo.hurtTime + 10))
       {
         crosshairColor = _settings.hitColor();
       }
@@ -558,17 +548,15 @@ class ts_EventHandler : EventHandler
   {
     if (!_settings.showKillConfirmation()) { return y; }
 
-    let lastTargetInfo = multiLastTargetInfo.get(consolePlayer);
+    if (_lastTargetInfo.killTime == -1) { return y; }
 
-    if (lastTargetInfo.killTime == -1) { return y; }
-
-    if (level.time < lastTargetInfo.killTime + 35 * 1)
+    if (level.time < _lastTargetInfo.killTime + 35 * 1)
     {
       double scale     = _settings.getTextScale();
       double opacity   = _settings.opacity();
       int    nameColor = _settings.nameCol();
       string text = (_settings.namedConfirmation())
-        ? lastTargetInfo.killName .. " killed"
+        ? _lastTargetInfo.killName .. " killed"
         : "Kill Confirmed";
 
       drawTextCenter(text, nameColor, scale, x, y, font, 0.0, opacity);
@@ -879,7 +867,7 @@ class ts_EventHandler : EventHandler
   // private: //////////////////////////////////////////////////////////////////
 
   private ts_Settings _settings;
-  private m8f_ts_MultiLastTargetInfo multiLastTargetInfo;
+  private m8f_ts_LastTargetInfo _lastTargetInfo;
 
   private m8f_ts_Data     data;
   private bool            isTitlemap;
