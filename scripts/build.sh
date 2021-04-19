@@ -2,9 +2,9 @@
 
 set -e
 
-name=target-spy
+mkdir -p build
 
-rm -f $name.pk3
+name=build/target-spy-$(git describe --abbrev=0 --tags).pk3
 
 git log --date=short --pretty=format:"-%d %ad %s%n" | \
     grep -v "^$" | \
@@ -15,7 +15,8 @@ git log --date=short --pretty=format:"-%d %ad %s%n" | \
     sed "s/- (tag: \(v\?[0-9.]*\))/\n\1\n-/" \
     > changelog.txt
 
-zip -R $name.pk3 \
+rm  -f "$name"
+zip -R "$name" \
     "*.lmp" \
     "*.png" \
     "*.txt" \
@@ -23,6 +24,4 @@ zip -R $name.pk3 \
     "*.md"  \
     "*.fon2"
 
-cp $name.pk3 $name-$(git describe --abbrev=0 --tags).pk3
-
-gzdoom -file $name.pk3 +notarget +summon doomimp "$@"
+gzdoom -file "$name" "$@"
