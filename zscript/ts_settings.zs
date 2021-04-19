@@ -45,17 +45,6 @@ class ts_Settings
     return result;
   }
 
-  void resetCvarsToDefaults()
-  {
-    int nSettings = _settings.size();
-    for (int i = 0; i < nSettings; ++i)
-    {
-      _settings[i].resetToDefault();
-    }
-  }
-
-  // public: ///////////////////////////////////////////////////////////////////
-
   // n must be from [0, 11]
   int    colors         (int n) { checkInit(); return _colors[n].value(); }
 
@@ -118,99 +107,92 @@ class ts_Settings
   double getTextScale()     { return 0.5 / textScale(); }
   double getNewlineHeight() { return 0.03 * stepMult(); }
 
-  // private: //////////////////////////////////////////////////////////////////
+// private: ////////////////////////////////////////////////////////////////////////////////////////
 
-  double textScale() { checkInit(); return _textScale.value() ? _textScale.value() : 1; }
-  double stepMult () { checkInit(); return _stepMult.value(); }
+  private double textScale() { checkInit(); return _textScale.value() ? _textScale.value() : 1; }
+  private double stepMult () { checkInit(); return _stepMult.value(); }
 
   private
   void checkInit()
   {
     if (_isInitialized) { return; }
-    clear();
     _isInitialized = true;
 
-    push(_showKillConfirmation = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_confirm"  , _player));
-    push(_namedConfirmation    = new("m8f_ts_BoolSetting"  ).init("m8f_ts_named_confirm" , _player));
-    push(_isEnabled            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_enabled"       , _player));
+    _showKillConfirmation = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_confirm"  , _player);
+    _namedConfirmation    = new("m8f_ts_BoolSetting"  ).init("m8f_ts_named_confirm" , _player);
+    _isEnabled            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_enabled"       , _player);
 
-    push(_minHealth            = new("m8f_ts_IntSetting"   ).init("m8f_ts_min_health"    , _player));
-    push(_yStart               = new("m8f_ts_DoubleSetting").init("m8f_ts_y"             , _player));
-    push(_yOffset              = new("m8f_ts_DoubleSetting").init("m8f_ts_y_offset"      , _player));
-    push(_logScale             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_bar_log_scale" , _player));
-    push(_showBar              = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_bar"      , _player));
-    push(_showName             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_name"     , _player));
-    push(_showNameAndTag       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_name_tag" , _player));
-    push(_showNums             = new("m8f_ts_IntSetting"   ).init("m8f_ts_show_numbers"  , _player));
-    push(_showInfo             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_info"     , _player));
-    push(_showCorps            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_corpses"  , _player));
-    push(_showNoBlockmap       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_noblockm" , _player));
-    push(_crossOn              = new("m8f_ts_BoolSetting"  ).init("m8f_ts_crosshair_on"  , _player));
-    push(_crossCol             = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_crs" , _player));
-    push(_nameCol              = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_tag" , _player));
-    push(_weakCol              = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_cl_tag_wk" , _player));
-    push(_altHpCols            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_alt_hp_color"  , _player));
-    push(_crAlmDead            = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_alm_dead"   , _player));
-    push(_stepMult             = new("m8f_ts_DoubleSetting").init("m8f_ts_step_mult"     , _player));
-    push(_almDeadCr            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_alm_dead_cr"   , _player));
-    push(_crossOff             = new("m8f_ts_DoubleSetting").init("m8f_ts_cross_offset"  , _player));
-    push(_topOff               = new("m8f_ts_DoubleSetting").init("m8f_ts_top_offset"    , _player));
-    push(_botOff               = new("m8f_ts_DoubleSetting").init("m8f_ts_bot_offset"    , _player));
-    push(_greenCr              = new("m8f_ts_IntSetting"   ).init("m8f_ts_green_color"   , _player));
-    push(_redCr                = new("m8f_ts_IntSetting"   ).init("m8f_ts_red_color"     , _player));
-    push(_showChampion         = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_champion" , _player));
-    push(_showObjects          = new("m8f_ts_IntSetting"   ).init("m8f_ts_show_objects"  , _player));
-    push(_showInternalNames    = new("m8f_ts_IntSetting"   ).init("m8f_class_as_tag"     , _player));
-    push(_showHidden           = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_hidden"   , _player));
-    push(_showFriends          = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_friends"  , _player));
-    push(_showDormant          = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_dormant"  , _player));
-    push(_crossScale           = new("m8f_ts_DoubleSetting").init("m8f_ts_cross_scale"   , _player));
-    push(_hitConfirmation      = new("m8f_ts_BoolSetting"  ).init("m8f_ts_hit_confirm"   , _player));
-    push(_hitColor             = new("m8f_ts_IntSetting"   ).init("m8f_ts_hit_color"     , _player));
-    push(_textScale            = new("m8f_ts_DoubleSetting").init("m8f_ts_text_scale"    , _player));
-    push(_xAdjustment          = new("m8f_ts_DoubleSetting").init("m8f_ts_x_adjustment"  , _player));
-    push(_noCrossOnSlot1       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_no_cross_on_1" , _player));
-    push(_frameStyle           = new("m8f_ts_IntSetting"   ).init("m8f_ts_frame_style"   , _player));
-    push(_frameScale           = new("m8f_ts_DoubleSetting").init("m8f_ts_frame_scale"   , _player));
-    push(_frameSize            = new("m8f_ts_DoubleSetting").init("m8f_ts_frame_size"    , _player));
-    push(_showIdle             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_idle"     , _player));
-    push(_hideInDarkness       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_hide_in_dark"  , _player));
-    push(_minimalLightLevel    = new("m8f_ts_IntSetting"   ).init("m8f_ts_light_level"   , _player));
-    push(_crossOpacity         = new("m8f_ts_DoubleSetting").init("m8f_ts_cr_opacity"    , _player));
-    push(_opacity              = new("m8f_ts_DoubleSetting").init("m8f_ts_opacity"       , _player));
-    push(_lengthMultiplier     = new("m8f_ts_DoubleSetting").init("m8f_ts_length_mult"   , _player));
-    push(_barsOnTarget         = new("m8f_ts_IntSetting"   ).init("m8f_ts_on_target"     , _player));
+    _minHealth            = new("m8f_ts_IntSetting"   ).init("m8f_ts_min_health"    , _player);
+    _yStart               = new("m8f_ts_DoubleSetting").init("m8f_ts_y"             , _player);
+    _yOffset              = new("m8f_ts_DoubleSetting").init("m8f_ts_y_offset"      , _player);
+    _logScale             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_bar_log_scale" , _player);
+    _showBar              = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_bar"      , _player);
+    _showName             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_name"     , _player);
+    _showNameAndTag       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_name_tag" , _player);
+    _showNums             = new("m8f_ts_IntSetting"   ).init("m8f_ts_show_numbers"  , _player);
+    _showInfo             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_info"     , _player);
+    _showCorps            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_corpses"  , _player);
+    _showNoBlockmap       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_noblockm" , _player);
+    _crossOn              = new("m8f_ts_BoolSetting"  ).init("m8f_ts_crosshair_on"  , _player);
+    _crossCol             = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_crs" , _player);
+    _nameCol              = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_tag" , _player);
+    _weakCol              = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_cl_tag_wk" , _player);
+    _altHpCols            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_alt_hp_color"  , _player);
+    _crAlmDead            = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_alm_dead"   , _player);
+    _stepMult             = new("m8f_ts_DoubleSetting").init("m8f_ts_step_mult"     , _player);
+    _almDeadCr            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_alm_dead_cr"   , _player);
+    _crossOff             = new("m8f_ts_DoubleSetting").init("m8f_ts_cross_offset"  , _player);
+    _topOff               = new("m8f_ts_DoubleSetting").init("m8f_ts_top_offset"    , _player);
+    _botOff               = new("m8f_ts_DoubleSetting").init("m8f_ts_bot_offset"    , _player);
+    _greenCr              = new("m8f_ts_IntSetting"   ).init("m8f_ts_green_color"   , _player);
+    _redCr                = new("m8f_ts_IntSetting"   ).init("m8f_ts_red_color"     , _player);
+    _showChampion         = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_champion" , _player);
+    _showObjects          = new("m8f_ts_IntSetting"   ).init("m8f_ts_show_objects"  , _player);
+    _showInternalNames    = new("m8f_ts_IntSetting"   ).init("m8f_class_as_tag"     , _player);
+    _showHidden           = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_hidden"   , _player);
+    _showFriends          = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_friends"  , _player);
+    _showDormant          = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_dormant"  , _player);
+    _crossScale           = new("m8f_ts_DoubleSetting").init("m8f_ts_cross_scale"   , _player);
+    _hitConfirmation      = new("m8f_ts_BoolSetting"  ).init("m8f_ts_hit_confirm"   , _player);
+    _hitColor             = new("m8f_ts_IntSetting"   ).init("m8f_ts_hit_color"     , _player);
+    _textScale            = new("m8f_ts_DoubleSetting").init("m8f_ts_text_scale"    , _player);
+    _xAdjustment          = new("m8f_ts_DoubleSetting").init("m8f_ts_x_adjustment"  , _player);
+    _noCrossOnSlot1       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_no_cross_on_1" , _player);
+    _frameStyle           = new("m8f_ts_IntSetting"   ).init("m8f_ts_frame_style"   , _player);
+    _frameScale           = new("m8f_ts_DoubleSetting").init("m8f_ts_frame_scale"   , _player);
+    _frameSize            = new("m8f_ts_DoubleSetting").init("m8f_ts_frame_size"    , _player);
+    _showIdle             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_idle"     , _player);
+    _hideInDarkness       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_hide_in_dark"  , _player);
+    _minimalLightLevel    = new("m8f_ts_IntSetting"   ).init("m8f_ts_light_level"   , _player);
+    _crossOpacity         = new("m8f_ts_DoubleSetting").init("m8f_ts_cr_opacity"    , _player);
+    _opacity              = new("m8f_ts_DoubleSetting").init("m8f_ts_opacity"       , _player);
+    _lengthMultiplier     = new("m8f_ts_DoubleSetting").init("m8f_ts_length_mult"   , _player);
+    _barsOnTarget         = new("m8f_ts_IntSetting"   ).init("m8f_ts_on_target"     , _player);
 
-    push(_pip                  = new("m8f_ts_StringSetting").init("m8f_ts_pip"           , _player));
-    push(_emptyPip             = new("m8f_ts_StringSetting").init("m8f_ts_empty_pip"     , _player));
-    push(_fontName             = new("m8f_ts_StringSetting").init("m8f_ts_font"          , _player));
-    push(_crosshair            = new("m8f_ts_StringSetting").init("m8f_ts_crosshair"     , _player));
-    push(_crossTop             = new("m8f_ts_StringSetting").init("m8f_ts_cross_top"     , _player));
-    push(_crossBot             = new("m8f_ts_StringSetting").init("m8f_ts_cross_bottom"  , _player));
-    push(_crossFontName        = new("m8f_ts_StringSetting").init("m8f_ts_cr_font"       , _player));
+    _pip                  = new("m8f_ts_StringSetting").init("m8f_ts_pip"           , _player);
+    _emptyPip             = new("m8f_ts_StringSetting").init("m8f_ts_empty_pip"     , _player);
+    _fontName             = new("m8f_ts_StringSetting").init("m8f_ts_font"          , _player);
+    _crosshair            = new("m8f_ts_StringSetting").init("m8f_ts_crosshair"     , _player);
+    _crossTop             = new("m8f_ts_StringSetting").init("m8f_ts_cross_top"     , _player);
+    _crossBot             = new("m8f_ts_StringSetting").init("m8f_ts_cross_bottom"  , _player);
+    _crossFontName        = new("m8f_ts_StringSetting").init("m8f_ts_cr_font"       , _player);
 
-    push(_colors[ 0]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_0"          , _player));
-    push(_colors[ 1]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_1"          , _player));
-    push(_colors[ 2]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_2"          , _player));
-    push(_colors[ 3]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_3"          , _player));
-    push(_colors[ 4]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_4"          , _player));
-    push(_colors[ 5]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_5"          , _player));
-    push(_colors[ 6]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_6"          , _player));
-    push(_colors[ 7]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_7"          , _player));
-    push(_colors[ 8]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_8"          , _player));
-    push(_colors[ 9]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_9"          , _player));
-    push(_colors[10]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_10"         , _player));
-    push(_colors[11]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_11"         , _player));
+    _colors[ 0]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_0"          , _player);
+    _colors[ 1]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_1"          , _player);
+    _colors[ 2]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_2"          , _player);
+    _colors[ 3]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_3"          , _player);
+    _colors[ 4]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_4"          , _player);
+    _colors[ 5]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_5"          , _player);
+    _colors[ 6]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_6"          , _player);
+    _colors[ 7]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_7"          , _player);
+    _colors[ 8]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_8"          , _player);
+    _colors[ 9]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_9"          , _player);
+    _colors[10]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_10"         , _player);
+    _colors[11]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_11"         , _player);
   }
-
-// private: ////////////////////////////////////////////////////////////////////////////////////////
-  private void push(m8f_ts_CvarSetting setting) { _settings.push(setting); }
-  private void clear()                          { _settings.clear();       }
 
   private PlayerInfo     _player;
   private transient bool _isInitialized;
-
-  private Array<m8f_ts_CvarSetting> _settings;
 
   private m8f_ts_BoolSetting   _showKillConfirmation;
   private m8f_ts_BoolSetting   _namedConfirmation;

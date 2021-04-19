@@ -17,6 +17,7 @@ version 4.5
 
 // Settings ////////////////////////////////////////////////////////////////////
 
+#include "zscript/settings/ts_cvar.zs"
 #include "zscript/settings/m8f_ts_bool_setting.zs"
 #include "zscript/settings/m8f_ts_cvar_setting.zs"
 #include "zscript/settings/m8f_ts_double_setting.zs"
