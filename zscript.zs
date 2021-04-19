@@ -1,6 +1,6 @@
 version 4.5
 
-#include "zscript/m8f_ts_event_handler.zs"
+#include "zscript/ts_event_handler.zs"
 
 #include "zscript/m8f_ts_data.zs"
 #include "zscript/ts_settings.zs"

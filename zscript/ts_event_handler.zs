@@ -15,12 +15,14 @@
  * Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class m8f_ts_EventHandler : EventHandler
+class ts_EventHandler : EventHandler
 {
 
   override
-  void OnRegister()
+  void PlayerEntered(PlayerEvent event)
   {
+    if (event.playerNumber != consolePlayer) return;
+
     _settings = ts_Settings.from();
     multiLastTargetInfo = new("m8f_ts_MultiLastTargetInfo").init();
     translator          = new("m8f_ts_PlayToUiTranslator");
@@ -115,9 +117,9 @@ class m8f_ts_EventHandler : EventHandler
     if (!_isEnabled.GetInt()) { return; }
 
     int   gameType = m8f_ts_Game.GetDehackedGameType();
-    Actor target   = GetTarget(consolePlayer, gameType);
+    Actor target   = GetTarget(gameType);
 
-    draw(target, consolePlayer, event);
+    draw(target, event);
 
     bool hasTarget = (target != NULL);
     _hasTarget.SetInt(hasTarget);
@@ -125,7 +127,7 @@ class m8f_ts_EventHandler : EventHandler
 
     if (hasTarget)
     {
-      SetLastTarget(target, consolePlayer);
+      SetLastTarget(target);
     }
   }
 
@@ -148,8 +150,9 @@ class m8f_ts_EventHandler : EventHandler
   }
 
   private ui
-  void drawFrame(RenderEvent event, int playerNumber, Actor target, int color)
+  void drawFrame(RenderEvent event, Actor target, int color)
   {
+    int playerNumber = consolePlayer;
     PlayerInfo player = players[playerNumber];
 
     Vector2 centerPos = makeDrawPos(player, event, target, target.height / 2.0);
@@ -263,11 +266,11 @@ class m8f_ts_EventHandler : EventHandler
   // Wrapper to access lastTarget in scope play from ui scope.
   // not really const, but lastTarget doesn't affect gameplay.
   private ui
-  void SetLastTarget(Actor newLastTarget, int playerNumber)
+  void SetLastTarget(Actor newLastTarget)
   {
-    let lastTarget  = multiLastTargetInfo.get(playerNumber);
+    let lastTarget  = multiLastTargetInfo.get(consolePlayer);
     lastTarget.a    = newLastTarget;
-    lastTarget.name = GetTargetName(newLastTarget, dehackedGameType, playerNumber);
+    lastTarget.name = GetTargetName(newLastTarget, dehackedGameType, consolePlayer);
     lastTarget.name = enableExtendedColorCode(lastTarget.name);
   }
 
@@ -289,137 +292,127 @@ class m8f_ts_EventHandler : EventHandler
   void drawCrosshairs( Actor target
                      , int   crosshairColor
                      , Font  font
-                     , int   playerNumber
                      )
   {
-    let settings = _settings;
+    if (!_settings.crossOn()) { return; }
 
-    if (!settings.crossOn()) { return; }
-
-    if (settings.noCrossOnSlot1()
-        && isSlot1Weapon(playerNumber))
+    if (_settings.noCrossOnSlot1()
+        && isSlot1Weapon(consolePlayer))
     {
       return;
     }
 
-    if (settings.hitConfirmation())
+    if (_settings.hitConfirmation())
     {
-      let lastTargetInfo = multiLastTargetInfo.get(playerNumber);
+      let lastTargetInfo = multiLastTargetInfo.get(consolePlayer);
       if (lastTargetInfo.hurtTime != -1
           && (level.time < lastTargetInfo.hurtTime + 10))
       {
-        crosshairColor = settings.hitColor();
+        crosshairColor = _settings.hitColor();
       }
     }
 
-    PlayerInfo player = players[playerNumber];
+    PlayerInfo player = players[consolePlayer];
 
-    double scale           = 0.5 / settings.crossScale();
+    double scale           = 0.5 / _settings.crossScale();
     double baseCenterY     = readY(player, font, scale);
     double topBottomShift  = 0.02;
 
-    double topY            = baseCenterY - topBottomShift + settings.topOff();
+    double topY            = baseCenterY - topBottomShift + _settings.topOff();
     double topX            = 0.5;
-    double centerY         = baseCenterY                  + settings.crossOff();
-    double bottomY         = baseCenterY + topBottomShift + settings.botOff();
-    double dx              = settings.xAdjustment();
-    double opacity         = settings.crossOpacity();
+    double centerY         = baseCenterY                  + _settings.crossOff();
+    double bottomY         = baseCenterY + topBottomShift + _settings.botOff();
+    double dx              = _settings.xAdjustment();
+    double opacity         = _settings.crossOpacity();
 
-    drawTextCenter(settings.crossTop(),  crosshairColor, scale, topX, topY   , font, dx, opacity);
-    drawTextCenter(settings.crosshair(), crosshairColor, scale, topX, centerY, font, dx, opacity);
-    drawTextCenter(settings.crossBot(),  crosshairColor, scale, topX, bottomY, font, dx, opacity);
+    drawTextCenter(_settings.crossTop(),  crosshairColor, scale, topX, topY   , font, dx, opacity);
+    drawTextCenter(_settings.crosshair(), crosshairColor, scale, topX, centerY, font, dx, opacity);
+    drawTextCenter(_settings.crossBot(),  crosshairColor, scale, topX, bottomY, font, dx, opacity);
   }
 
   private ui
-  Vector2 getDefaultRelativeXY(ts_Settings settings)
+  Vector2 getDefaultRelativeXY()
   {
     Vector2 result;
     result.x = 0.5;
-    result.y = settings.yStart() + settings.yOffset();
+    result.y = _settings.yStart() + _settings.yOffset();
     return result;
   }
 
   private ui
-  vector2 getRelativeXY( Actor           target
-                       , PlayerInfo      player
-                       , RenderEvent     event
-                       , ts_Settings settings
-                       , bool            isAbove
+  Vector2 getRelativeXY( Actor       target
+                       , PlayerInfo  player
+                       , RenderEvent event
+                       , bool        isAbove
                        )
   {
-    if (target == NULL) { return getDefaultRelativeXY(settings); }
+    if (target == NULL || !_settings.barsOnTarget()) return getDefaultRelativeXY();
 
-    if (settings.barsOnTarget())
-    {
-      double y = isAbove
-               ? target.height * 1.2
-               : -5;
-      Vector2 centerPos = makeDrawPos(player, event, target, y);
-      Vector2 result;
-      result.x = centerPos.x / Screen.GetWidth();
-      result.y = clamp(centerPos.y / Screen.GetHeight(), 0.1, 0.9);
-      return result;
-    }
-
-    return getDefaultRelativeXY(settings);
+    double y = isAbove
+             ? target.height * 1.2
+             : -5;
+    Vector2 centerPos = makeDrawPos(player, event, target, y);
+    Vector2 result    = ( centerPos.x / Screen.GetWidth()
+                        , clamp(centerPos.y / Screen.GetHeight(), 0.1, 0.9)
+                        );
+    return result;
   }
 
   private ui
-  void draw(Actor target, int playerNumber, RenderEvent event)
+  void draw(Actor target, RenderEvent event)
   {
-    let        settings = _settings;
-    PlayerInfo player   = players[playerNumber];
+    PlayerInfo player = players[consolePlayer];
 
-    bool    isAbove = (settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE);
-    vector2 xy = getRelativeXY(target, player, event, settings, isAbove);
+    bool    isAbove = (_settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE);
+    Vector2 xy = getRelativeXY(target, player, event, isAbove);
     double  x  = xy.x;
     double  y  = xy.y;
 
-    double newline = settings.getNewlineHeight();
-    if ((y >= 0.80 && settings.barsOnTarget() != ts_Settings.ON_TARGET_BELOW)
-        || settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE) { newline = -newline; }
+    double newline = _settings.getNewlineHeight();
+    if ((y >= 0.80 && _settings.barsOnTarget() != ts_Settings.ON_TARGET_BELOW)
+        || _settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE) { newline = -newline; }
 
-    Font font      = Font.GetFont(settings.fontName());
-    Font crossfont = Font.GetFont(settings.crossFontName());
+    Font font      = Font.GetFont(_settings.fontName());
+    Font crossfont = Font.GetFont(_settings.crossFontName());
 
-    if (settings.barsOnTarget() == ts_Settings.ON_TARGET_DISABLED)
+    if (_settings.barsOnTarget() == ts_Settings.ON_TARGET_DISABLED)
     {
-      y = drawKillConfirmed(x, y, newline, font, playerNumber);
+      y = drawKillConfirmed(x, y, newline, font);
     }
     else
     {
-      vector2 defaultXy = getDefaultRelativeXY(settings);
-      drawKillConfirmed(defaultXy.x, defaultXy.y, newline, font, playerNumber);
+      Vector2 defaultXy = getDefaultRelativeXY();
+      drawKillConfirmed(defaultXy.x, defaultXy.y, newline, font);
     }
 
     bool hasTarget = (target != NULL);
-    int  crossCol  = settings.crossCol();
+    int  crossCol  = _settings.crossCol();
 
     if (!hasTarget)
     {
-      drawCrosshairs(target, crossCol, crossFont, playerNumber);
+      drawCrosshairs(target, crossCol, crossFont);
       return;
     }
 
     int  targetMaxHealth = m8f_ts_ActorInfo.GetActorMaxHealth(target);
     bool showHealth      = (targetMaxHealth != 0);
 
-    if (targetMaxHealth < settings.minHealth() && targetMaxHealth != 0)
+    if (targetMaxHealth < _settings.minHealth() && targetMaxHealth != 0)
     {
-      drawCrosshairs(target, crossCol, crossFont, playerNumber);
+      drawCrosshairs(target, crossCol, crossFont);
       return; // not worth showing
     }
 
     int targetHealth = target.health;
-    if (targetHealth < 1 && !settings.showCorps()) // target is dead
+    if (targetHealth < 1 && !_settings.showCorps()) // target is dead
     {
-      drawCrosshairs(target, crossCol, crossFont, playerNumber);
+      drawCrosshairs(target, crossCol, crossFont);
       return;
     }
 
     int tagColor;
-    if (targetMaxHealth < 100) { tagColor = settings.weakCol(); }
-    else                       { tagColor = settings.nameCol(); }
+    if (targetMaxHealth < 100) { tagColor = _settings.weakCol(); }
+    else                       { tagColor = _settings.nameCol(); }
     int customColor = m8f_ts_ActorInfo.CustomTargetColor(target);
     if (customColor)           { tagColor = customColor; }
 
@@ -431,26 +424,26 @@ class m8f_ts_EventHandler : EventHandler
     }
 
     if (percent < 0) { percent = 0; }
-    int targetColor = settings.colors(percent);
-    if (targetHealth < 35 && settings.almDeadCr()) targetColor = settings.crAlmDead();
-    if (targetHealth < 1)                        targetColor = settings.crAlmDead();
+    int targetColor = _settings.colors(percent);
+    if (targetHealth < 35 && _settings.almDeadCr()) targetColor = _settings.crAlmDead();
+    if (targetHealth < 1)                           targetColor = _settings.crAlmDead();
 
-    drawCrosshairs(target, targetColor, crossFont, playerNumber);
+    drawCrosshairs(target, targetColor, crossFont);
 
-    double textScale = settings.getTextScale();
-    double opacity   = settings.opacity();
+    double textScale = _settings.getTextScale();
+    double opacity   = _settings.opacity();
 
-    if (settings.showBar() && showHealth)
+    if (_settings.showBar() && showHealth)
     {
       string hpBar = m8f_ts_String.MakeHpBar( targetHealth
                                             , targetMaxHealth
-                                            , settings.logScale()
-                                            , settings.altHpCols()
-                                            , settings.greenCr()
-                                            , settings.redCr()
-                                            , settings.lengthMultiplier()
-                                            , settings.pip()
-                                            , settings.emptyPip()
+                                            , _settings.logScale()
+                                            , _settings.altHpCols()
+                                            , _settings.greenCr()
+                                            , _settings.redCr()
+                                            , _settings.lengthMultiplier()
+                                            , _settings.pip()
+                                            , _settings.emptyPip()
                                             );
       drawTextCenter(hpBar, targetColor, textScale, x, y, font, 0.0, opacity);
       y += newline;
@@ -459,9 +452,9 @@ class m8f_ts_EventHandler : EventHandler
     int nameColor = tagColor;
     if (targetHealth < 1) { nameColor = targetColor; }
 
-    if (settings.showName())
+    if (_settings.showName())
     {
-      string targetName = GetTargetName(target, dehackedGameType, playerNumber);
+      string targetName = GetTargetName(target, dehackedGameType, consolePlayer);
       targetName = enableExtendedColorCode(targetName);
 
       if (targetHealth < 1)
@@ -473,14 +466,14 @@ class m8f_ts_EventHandler : EventHandler
       drawTextCenter(targetName, nameColor, textScale, x, y, font, 0.0, opacity);
       y += newline;
 
-      if (settings.showNameAndTag() && target.GetClassName() != targetName)
+      if (_settings.showNameAndTag() && target.GetClassName() != targetName)
       {
         drawTextCenter(target.GetClassName(), nameColor, textScale, x, y, font, 0.0, opacity);
         y += newline;
       }
     }
 
-    if (settings.showInfo())
+    if (_settings.showInfo())
     {
       string targetFlags = m8f_ts_ActorInfo.GetTargetFlags(target);
       if (targetFlags.Length() > 0)
@@ -490,9 +483,9 @@ class m8f_ts_EventHandler : EventHandler
       }
     }
 
-    if (showHealth && (settings.showNums() != 0))
+    if (showHealth && (_settings.showNums() != 0))
     {
-      string healthString = makeHealthString(settings, targetHealth, targetMaxHealth);
+      string healthString = makeHealthString(targetHealth, targetMaxHealth);
       int    armor        = target.CountInv("BasicArmor");
 
       if (armor)
@@ -500,19 +493,19 @@ class m8f_ts_EventHandler : EventHandler
         healthString.AppendFormat(" Armor: %d", armor);
       }
 
-      y += drawTargetHealth(x, y, healthString, settings, targetColor, font);
+      y += drawTargetHealth(x, y, healthString, targetColor, font);
     }
 
-    if (settings.frameStyle() != settings.FRAME_DISABLED)
+    if (_settings.frameStyle() != ts_Settings.FRAME_DISABLED)
     {
-      drawFrame(event, playerNumber, target, targetColor);
+      drawFrame(event, target, targetColor);
     }
   }
 
   private ui
-  string makeHealthString(ts_Settings settings, int targetHealth, int targetMaxHealth)
+  string makeHealthString(int targetHealth, int targetMaxHealth)
   {
-    switch (settings.showNums())
+    switch (_settings.showNums())
     {
     case 1: return String.Format("%d/%d", targetHealth, targetMaxHealth);
     case 2: return String.Format("%d", targetHealth);
@@ -542,17 +535,16 @@ class m8f_ts_EventHandler : EventHandler
   double drawTargetHealth( double x
                          , double y
                          , string healthString
-                         , ts_Settings settings
                          , int targetColor
                          , Font font
                          )
   {
-    double textScale = settings.getTextScale();
-    double opacity   = settings.opacity();
+    double textScale = _settings.getTextScale();
+    double opacity   = _settings.opacity();
 
     drawTextCenter(healthString, targetColor, textScale, x, y, font, 0.0, opacity);
 
-    double newlineHeight = settings.getNewlineHeight();
+    double newlineHeight = _settings.getNewlineHeight();
 
     return y + newlineHeight;
   }
@@ -562,23 +554,20 @@ class m8f_ts_EventHandler : EventHandler
                           , double y
                           , double newline
                           , Font   font
-                          , int    playerNumber
                           )
   {
-    let settings = _settings;
+    if (!_settings.showKillConfirmation()) { return y; }
 
-    if (!settings.showKillConfirmation()) { return y; }
-
-    let lastTargetInfo = multiLastTargetInfo.get(playerNumber);
+    let lastTargetInfo = multiLastTargetInfo.get(consolePlayer);
 
     if (lastTargetInfo.killTime == -1) { return y; }
 
     if (level.time < lastTargetInfo.killTime + 35 * 1)
     {
-      double scale     = settings.getTextScale();
-      double opacity   = settings.opacity();
-      int    nameColor = settings.nameCol();
-      string text = (settings.namedConfirmation())
+      double scale     = _settings.getTextScale();
+      double opacity   = _settings.opacity();
+      int    nameColor = _settings.nameCol();
+      string text = (_settings.namedConfirmation())
         ? lastTargetInfo.killName .. " killed"
         : "Kill Confirmed";
 
@@ -620,9 +609,9 @@ class m8f_ts_EventHandler : EventHandler
   }
 
   private ui
-  Actor GetTarget(int playerNumber, int gameType)
+  Actor GetTarget(int gameType)
   {
-    PlayerInfo player = players[playerNumber];
+    PlayerInfo player = players[consolePlayer];
     if (!player) { return NULL; }
     Actor playerActor = player.mo;
     if (!playerActor) { return NULL; }
@@ -913,4 +902,4 @@ class m8f_ts_EventHandler : EventHandler
   private transient ui CVar _hasTarget;
   private transient ui CVar _isFriendlyTarget;
 
-} // class m8f_ts_EventHandler
+} // class ts_EventHandler
