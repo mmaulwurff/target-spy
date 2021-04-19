@@ -15,7 +15,7 @@
  * Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class m8f_ts_Settings
+class ts_Settings
 {
 
   enum FrameStyles
@@ -38,9 +38,9 @@ class m8f_ts_Settings
   }
 
   static
-  m8f_ts_Settings from()
+  ts_Settings from()
   {
-    let result = new("m8f_ts_Settings");
+    let result = new("ts_Settings");
     result._player = players[consolePlayer];
     return result;
   }
@@ -273,4 +273,4 @@ class m8f_ts_Settings
 
   private m8f_ts_IntSetting    _colors[12];
 
-} // class m8f_ts_Settings
+} // class ts_Settings

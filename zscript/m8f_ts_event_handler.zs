@@ -18,12 +18,10 @@
 class m8f_ts_EventHandler : EventHandler
 {
 
-  // EventHandler overrides section ////////////////////////////////////////////
-
   override
   void OnRegister()
   {
-    _settings = m8f_ts_Settings.from();
+    _settings = ts_Settings.from();
     multiLastTargetInfo = new("m8f_ts_MultiLastTargetInfo").init();
     translator          = new("m8f_ts_PlayToUiTranslator");
   }
@@ -333,7 +331,7 @@ class m8f_ts_EventHandler : EventHandler
   }
 
   private ui
-  Vector2 getDefaultRelativeXY(m8f_ts_Settings settings)
+  Vector2 getDefaultRelativeXY(ts_Settings settings)
   {
     Vector2 result;
     result.x = 0.5;
@@ -345,7 +343,7 @@ class m8f_ts_EventHandler : EventHandler
   vector2 getRelativeXY( Actor           target
                        , PlayerInfo      player
                        , RenderEvent     event
-                       , m8f_ts_Settings settings
+                       , ts_Settings settings
                        , bool            isAbove
                        )
   {
@@ -372,19 +370,19 @@ class m8f_ts_EventHandler : EventHandler
     let        settings = _settings;
     PlayerInfo player   = players[playerNumber];
 
-    bool    isAbove = (settings.barsOnTarget() == m8f_ts_Settings.ON_TARGET_ABOVE);
+    bool    isAbove = (settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE);
     vector2 xy = getRelativeXY(target, player, event, settings, isAbove);
     double  x  = xy.x;
     double  y  = xy.y;
 
     double newline = settings.getNewlineHeight();
-    if ((y >= 0.80 && settings.barsOnTarget() != m8f_ts_Settings.ON_TARGET_BELOW)
-        || settings.barsOnTarget() == m8f_ts_Settings.ON_TARGET_ABOVE) { newline = -newline; }
+    if ((y >= 0.80 && settings.barsOnTarget() != ts_Settings.ON_TARGET_BELOW)
+        || settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE) { newline = -newline; }
 
     Font font      = Font.GetFont(settings.fontName());
     Font crossfont = Font.GetFont(settings.crossFontName());
 
-    if (settings.barsOnTarget() == m8f_ts_Settings.ON_TARGET_DISABLED)
+    if (settings.barsOnTarget() == ts_Settings.ON_TARGET_DISABLED)
     {
       y = drawKillConfirmed(x, y, newline, font, playerNumber);
     }
@@ -512,7 +510,7 @@ class m8f_ts_EventHandler : EventHandler
   }
 
   private ui
-  string makeHealthString(m8f_ts_Settings settings, int targetHealth, int targetMaxHealth)
+  string makeHealthString(ts_Settings settings, int targetHealth, int targetMaxHealth)
   {
     switch (settings.showNums())
     {
@@ -544,7 +542,7 @@ class m8f_ts_EventHandler : EventHandler
   double drawTargetHealth( double x
                          , double y
                          , string healthString
-                         , m8f_ts_Settings settings
+                         , ts_Settings settings
                          , int targetColor
                          , Font font
                          )
@@ -891,7 +889,7 @@ class m8f_ts_EventHandler : EventHandler
 
   // private: //////////////////////////////////////////////////////////////////
 
-  private m8f_ts_Settings _settings;
+  private ts_Settings _settings;
   private m8f_ts_MultiLastTargetInfo multiLastTargetInfo;
 
   private m8f_ts_Data     data;
