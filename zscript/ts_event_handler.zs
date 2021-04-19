@@ -144,8 +144,7 @@ class ts_EventHandler : EventHandler
   private ui
   void drawFrame(RenderEvent event, Actor target, int color)
   {
-    int playerNumber = consolePlayer;
-    PlayerInfo player = players[playerNumber];
+    PlayerInfo player = players[consolePlayer];
 
     Vector2 centerPos = makeDrawPos(player, event, target, target.height / 2.0);
 
@@ -261,14 +260,14 @@ class ts_EventHandler : EventHandler
   void SetLastTarget(Actor newLastTarget)
   {
     _lastTargetInfo.a    = newLastTarget;
-    _lastTargetInfo.name = GetTargetName(newLastTarget, dehackedGameType, consolePlayer);
+    _lastTargetInfo.name = GetTargetName(newLastTarget, dehackedGameType);
     _lastTargetInfo.name = enableExtendedColorCode(_lastTargetInfo.name);
   }
 
   private play
-  bool isSlot1Weapon(int playerNumber) const
+  bool isSlot1Weapon() const
   {
-    PlayerInfo player = players[playerNumber];
+    PlayerInfo player = players[consolePlayer];
     Weapon w = player.readyWeapon;
     if (w == NULL) { return true; }
 
@@ -285,13 +284,8 @@ class ts_EventHandler : EventHandler
                      , Font  font
                      )
   {
-    if (!_settings.crossOn()) { return; }
-
-    if (_settings.noCrossOnSlot1()
-        && isSlot1Weapon(consolePlayer))
-    {
-      return;
-    }
+    if (!_settings.crossOn()) return;
+    if (_settings.noCrossOnSlot1() && isSlot1Weapon()) return;
 
     if (_settings.hitConfirmation())
     {
@@ -444,7 +438,7 @@ class ts_EventHandler : EventHandler
 
     if (_settings.showName())
     {
-      string targetName = GetTargetName(target, dehackedGameType, consolePlayer);
+      string targetName = GetTargetName(target, dehackedGameType);
       targetName = enableExtendedColorCode(targetName);
 
       if (targetHealth < 1)
@@ -699,7 +693,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  string GetTargetName(Actor target, int gameType, int playerNumber)
+  string GetTargetName(Actor target, int gameType)
   {
     if (target.player) { return target.player.GetUserName(); }
 
@@ -723,13 +717,13 @@ class ts_EventHandler : EventHandler
     if (targetName != targetClass && !(gameType != 0))
     {
       cache.SetCache(targetClass, targetName);
-      return AddAdditionalInfo(target, targetName, playerNumber);
+      return AddAdditionalInfo(target, targetName);
     }
 
     // if target name was found before, just return it
     if (cache.cachedClass == targetClass)
     {
-      return AddAdditionalInfo(target, cache.cachedTag, playerNumber);
+      return AddAdditionalInfo(target, cache.cachedTag);
     }
 
     string specialName = data.specialNames.get(targetClass);
@@ -737,18 +731,18 @@ class ts_EventHandler : EventHandler
     {
       targetName = specialName;
       cache.SetCache(targetClass, targetName);
-      return AddAdditionalInfo(target, targetName, playerNumber);
+      return AddAdditionalInfo(target, targetName);
     }
 
     // if target name is not found, compose tag from class name
     targetName = m8f_ts_String.Beautify(targetName);
 
     cache.SetCache(targetClass, targetName);
-    return AddAdditionalInfo(target, targetName, playerNumber);
+    return AddAdditionalInfo(target, targetName);
   }
 
   private ui
-  string AddAdditionalInfo(Actor target, string name, int playerNumber)
+  string AddAdditionalInfo(Actor target, string name)
   {
     Inventory inv = Inventory(target);
     if (inv)
@@ -764,12 +758,12 @@ class ts_EventHandler : EventHandler
     }
     else
     {
-      return PrependChampionColor(target, name, playerNumber);
+      return PrependChampionColor(target, name);
     }
   }
 
   private ui
-  string PrependChampionColor(Actor target, string name, int playerNumber)
+  string PrependChampionColor(Actor target, string name)
   {
     if (!_settings.showChampion()) { return name; }
 
