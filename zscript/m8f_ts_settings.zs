@@ -15,10 +15,8 @@
  * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class m8f_ts_Settings : m8f_ts_SettingsPack
+class m8f_ts_Settings : m8f_ts_SettingsBase
 {
-
-  // public: ///////////////////////////////////////////////////////////////////
 
   enum FrameStyles
   {
@@ -37,6 +35,21 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
     ON_TARGET_DISABLED,
     ON_TARGET_ABOVE,
     ON_TARGET_BELOW,
+  }
+
+  void init(PlayerInfo player)
+  {
+    _player = player;
+  }
+
+  override
+  void resetCvarsToDefaults()
+  {
+    int nSettings = _settings.size();
+    for (int i = 0; i < nSettings; ++i)
+    {
+      _settings[i].resetCvarsToDefaults();
+    }
   }
 
   // public: ///////////////////////////////////////////////////////////////////
@@ -188,7 +201,14 @@ class m8f_ts_Settings : m8f_ts_SettingsPack
     push(_colors[11]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_11"         , _player));
   }
 
-  // private: //////////////////////////////////////////////////////////////////
+// private: ////////////////////////////////////////////////////////////////////////////////////////
+  private void push(m8f_ts_CvarSetting setting) { _settings.push(setting); }
+  private void clear()                          { _settings.clear();       }
+
+  private PlayerInfo     _player;
+  private transient bool _isInitialized;
+
+  private Array<m8f_ts_CvarSetting> _settings;
 
   private m8f_ts_BoolSetting   _showKillConfirmation;
   private m8f_ts_BoolSetting   _namedConfirmation;

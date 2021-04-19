@@ -1,4 +1,4 @@
-version "3.2.0"
+version 4.5
 
 #include "zscript/m8f_ts_event_handler.zs"
 
@@ -24,7 +24,6 @@ version "3.2.0"
 #include "zscript/settings/m8f_ts_double_setting.zs"
 #include "zscript/settings/m8f_ts_int_setting.zs"
 #include "zscript/settings/m8f_ts_settings_base.zs"
-#include "zscript/settings/m8f_ts_settings_pack.zs"
 #include "zscript/settings/m8f_ts_string_setting.zs"
 
 // libeye by KeksDose //////////////////////////////////////////////////////////
