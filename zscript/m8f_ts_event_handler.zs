@@ -23,7 +23,7 @@ class m8f_ts_EventHandler : EventHandler
   override
   void OnRegister()
   {
-    multiSettings       = new("m8f_ts_MultiSettings").init();
+    _settings = m8f_ts_Settings.from();
     multiLastTargetInfo = new("m8f_ts_MultiLastTargetInfo").init();
     translator          = new("m8f_ts_PlayToUiTranslator");
   }
@@ -94,7 +94,7 @@ class m8f_ts_EventHandler : EventHandler
     Actor      playerActor  = player.mo;
     if (!playerActor) { return; }
 
-    drawEverything(consolePlayer, event);
+    drawEverything(event);
   }
 
   // Helper functions section //////////////////////////////////////////////////
@@ -110,16 +110,16 @@ class m8f_ts_EventHandler : EventHandler
   }
 
   private ui
-  void drawEverything(int playerNumber, RenderEvent event)
+  void drawEverything(RenderEvent event)
   {
-    PlayerInfo player = players[playerNumber];
+    PlayerInfo player = players[consolePlayer];
     initCvars(player);
     if (!_isEnabled.GetInt()) { return; }
 
     int   gameType = m8f_ts_Game.GetDehackedGameType();
-    Actor target   = GetTarget(playerNumber, gameType);
+    Actor target   = GetTarget(consolePlayer, gameType);
 
-    draw(target, playerNumber, event);
+    draw(target, consolePlayer, event);
 
     bool hasTarget = (target != NULL);
     _hasTarget.SetInt(hasTarget);
@@ -127,7 +127,7 @@ class m8f_ts_EventHandler : EventHandler
 
     if (hasTarget)
     {
-      SetLastTarget(target, playerNumber);
+      SetLastTarget(target, consolePlayer);
     }
   }
 
@@ -165,7 +165,7 @@ class m8f_ts_EventHandler : EventHandler
     double  visibleRadius = radius * 2000.0 / distance / zoomFactor;
     double  visibleHeight = height * 1000.0 / distance / zoomFactor;
 
-    let  settings         = multiSettings.get(playerNumber);
+    let  settings         = _settings;
     let  f                = Font.GetFont(settings.fontName());
 
     double  size       = settings.frameSize();
@@ -294,7 +294,7 @@ class m8f_ts_EventHandler : EventHandler
                      , int   playerNumber
                      )
   {
-    let settings = multiSettings.get(playerNumber);
+    let settings = _settings;
 
     if (!settings.crossOn()) { return; }
 
@@ -369,7 +369,7 @@ class m8f_ts_EventHandler : EventHandler
   private ui
   void draw(Actor target, int playerNumber, RenderEvent event)
   {
-    let        settings = multiSettings.get(playerNumber);
+    let        settings = _settings;
     PlayerInfo player   = players[playerNumber];
 
     bool    isAbove = (settings.barsOnTarget() == m8f_ts_Settings.ON_TARGET_ABOVE);
@@ -567,7 +567,7 @@ class m8f_ts_EventHandler : EventHandler
                           , int    playerNumber
                           )
   {
-    let settings = multiSettings.get(playerNumber);
+    let settings = _settings;
 
     if (!settings.showKillConfirmation()) { return y; }
 
@@ -631,7 +631,7 @@ class m8f_ts_EventHandler : EventHandler
 
     // try an easy way to get a target (also works with autoaim)
     Actor target   = translator.AimTargetWrapper(player.mo);
-    let   settings = multiSettings.get(playerNumber);
+    let   settings = _settings;
 
     // if target is not found by easy way, try the difficult way
     if (target == NULL)
@@ -730,7 +730,7 @@ class m8f_ts_EventHandler : EventHandler
 
     string targetClass = target.GetClassName();
 
-    switch (multiSettings.get(playerNumber).showInternalNames())
+    switch (_settings.showInternalNames())
     {
       case 0: break;
       case 1: return targetClass;
@@ -796,7 +796,7 @@ class m8f_ts_EventHandler : EventHandler
   private ui
   string PrependChampionColor(Actor target, string name, int playerNumber)
   {
-    if (!multiSettings.get(playerNumber).showChampion()) { return name; }
+    if (!_settings.showChampion()) { return name; }
 
     string tokenClass = "champion_Token";
     Inventory token = target.FindInventory(tokenClass, true);
@@ -891,7 +891,7 @@ class m8f_ts_EventHandler : EventHandler
 
   // private: //////////////////////////////////////////////////////////////////
 
-  private m8f_ts_MultiSettings       multiSettings;
+  private m8f_ts_Settings _settings;
   private m8f_ts_MultiLastTargetInfo multiLastTargetInfo;
 
   private m8f_ts_Data     data;

@@ -37,9 +37,12 @@ class m8f_ts_Settings
     ON_TARGET_BELOW,
   }
 
-  void init(PlayerInfo player)
+  static
+  m8f_ts_Settings from()
   {
-    _player = player;
+    let result = new("m8f_ts_Settings");
+    result._player = players[consolePlayer];
+    return result;
   }
 
   void resetCvarsToDefaults()
