@@ -15,14 +15,7 @@ version 4.5
 
 #include "zscript/ts_noblockmap_detection.zs"
 
-// Settings ////////////////////////////////////////////////////////////////////
-
-#include "zscript/settings/ts_cvar.zs"
-#include "zscript/settings/m8f_ts_bool_setting.zs"
-#include "zscript/settings/m8f_ts_cvar_setting.zs"
-#include "zscript/settings/m8f_ts_double_setting.zs"
-#include "zscript/settings/m8f_ts_int_setting.zs"
-#include "zscript/settings/m8f_ts_string_setting.zs"
+#include "zscript/ts_cvar.zs"
 
 // libeye by KeksDose //////////////////////////////////////////////////////////
 // https://forum.zdoom.org/viewtopic.php?f=105&t=64566#p1102157

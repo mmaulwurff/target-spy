@@ -41,218 +41,233 @@ class ts_Settings
   ts_Settings from()
   {
     let result = new("ts_Settings");
-    result._player = players[consolePlayer];
+    result.initialize();
     return result;
   }
 
-  // n must be from [0, 11]
-  int    colors         (int n) { checkInit(); return _colors[n].value(); }
+  /// i must be from [0, 11]
+  int    colors         (int i) { return _colors[i].getInt(); }
 
-  bool   showKillConfirmation() { checkInit(); return _showKillConfirmation.value(); }
-  bool   namedConfirmation   () { checkInit(); return _namedConfirmation   .value(); }
-  bool   isEnabled           () { checkInit(); return _isEnabled           .value(); }
+  bool   showKillConfirmation() { return _showKillConfirmation.getBool(); }
+  bool   namedConfirmation   () { return _namedConfirmation   .getBool(); }
+  bool   isEnabled           () { return _isEnabled           .getBool(); }
 
-  int    minHealth           () { checkInit(); return _minHealth           .value(); }
-  double yStart              () { checkInit(); return _yStart              .value(); }
-  double yOffset             () { checkInit(); return _yOffset             .value(); }
-  bool   logScale            () { checkInit(); return _logScale            .value(); }
-  bool   showBar             () { checkInit(); return _showBar             .value(); }
-  bool   showName            () { checkInit(); return _showName            .value(); }
-  bool   showNameAndTag      () { checkInit(); return _showNameAndTag      .value(); }
-  int    showNums            () { checkInit(); return _showNums            .value(); }
-  bool   showInfo            () { checkInit(); return _showInfo            .value(); }
-  bool   showCorps           () { checkInit(); return _showCorps           .value(); }
-  bool   crossOn             () { checkInit(); return _crossOn             .value(); }
-  int    crossCol            () { checkInit(); return _crossCol            .value(); }
-  int    nameCol             () { checkInit(); return _nameCol             .value(); }
-  int    weakCol             () { checkInit(); return _weakCol             .value(); }
-  bool   altHpCols           () { checkInit(); return _altHpCols           .value(); }
-  bool   almDeadCr           () { checkInit(); return _almDeadCr           .value(); }
-  int    crAlmDead           () { checkInit(); return _crAlmDead           .value(); }
-  double crossOff            () { checkInit(); return _crossOff            .value(); }
-  double topOff              () { checkInit(); return _topOff              .value(); }
-  double botOff              () { checkInit(); return _botOff              .value(); }
-  int    greenCr             () { checkInit(); return _greenCr             .value(); }
-  int    redCr               () { checkInit(); return _redCr               .value(); }
-  bool   showChampion        () { checkInit(); return _showChampion        .value(); }
-  int    showObjects         () { checkInit(); return _showObjects         .value(); }
-  int    showInternalNames   () { checkInit(); return _showInternalNames   .value(); }
-  bool   showHidden          () { checkInit(); return _showHidden          .value(); }
-  bool   showFriends         () { checkInit(); return _showFriends         .value(); }
-  bool   showDormant         () { checkInit(); return _showDormant         .value(); }
-  double crossScale          () { checkInit(); return _crossScale.value() ? _crossScale.value() : 1; }
-  bool   hitConfirmation     () { checkInit(); return _hitConfirmation     .value(); }
-  int    hitColor            () { checkInit(); return _hitColor            .value(); }
-  double xAdjustment         () { checkInit(); return _xAdjustment         .value(); }
-  bool   noCrossOnSlot1      () { checkInit(); return _noCrossOnSlot1      .value(); }
-  int    frameStyle          () { checkInit(); return _frameStyle          .value(); }
-  double frameScale          () { checkInit(); return _frameScale.value() ? _frameScale.value() : 1; }
-  double frameSize           () { checkInit(); return _frameSize           .value(); }
-  bool   showIdle            () { checkInit(); return _showIdle            .value(); }
-  bool   hideInDarkness      () { checkInit(); return _hideInDarkness      .value(); }
-  int    minimalLightLevel   () { checkInit(); return _minimalLightLevel   .value(); }
-  double crossOpacity        () { checkInit(); return _crossOpacity        .value(); }
-  double opacity             () { checkInit(); return _opacity             .value(); }
-  double lengthMultiplier    () { checkInit(); return _lengthMultiplier    .value(); }
-  int    barsOnTarget        () { checkInit(); return _barsOnTarget        .value(); }
+  int    minHealth           () { return _minHealth           .getInt(); }
+  double yStart              () { return _yStart              .getDouble(); }
+  double yOffset             () { return _yOffset             .getDouble(); }
+  bool   logScale            () { return _logScale            .getBool(); }
+  bool   showBar             () { return _showBar             .getBool(); }
+  bool   showName            () { return _showName            .getBool(); }
+  bool   showNameAndTag      () { return _showNameAndTag      .getBool(); }
+  int    showNums            () { return _showNums            .getInt(); }
+  bool   showInfo            () { return _showInfo            .getBool(); }
+  bool   showCorps           () { return _showCorps           .getBool(); }
+  bool   crossOn             () { return _crossOn             .getBool(); }
+  int    crossCol            () { return _crossCol            .getInt(); }
+  int    nameCol             () { return _nameCol             .getInt(); }
+  int    weakCol             () { return _weakCol             .getInt(); }
+  bool   altHpCols           () { return _altHpCols           .getBool(); }
+  bool   almDeadCr           () { return _almDeadCr           .getBool(); }
+  int    crAlmDead           () { return _crAlmDead           .getInt(); }
 
-  string pip                 () { checkInit(); return _pip                 .value(); }
-  string emptyPip            () { checkInit(); return _emptyPip            .value(); }
-  string fontName            () { checkInit(); return _fontName            .value(); }
-  string crosshair           () { checkInit(); return _crosshair           .value(); }
-  string crossTop            () { checkInit(); return _crossTop            .value(); }
-  string crossBot            () { checkInit(); return _crossBot            .value(); }
-  string crossFontName       () { checkInit(); return _crossFontName       .value(); }
+  double crossOff            () { return _crossOff            .getDouble(); }
+  double topOff              () { return _topOff              .getDouble(); }
+  double botOff              () { return _botOff              .getDouble(); }
 
-  double getTextScale()     { return 0.5 / textScale(); }
-  double getNewlineHeight() { return 0.03 * stepMult(); }
+  int    greenCr             () { return _greenCr             .getInt(); }
+  int    redCr               () { return _redCr               .getInt(); }
+
+  bool   showChampion        () { return _showChampion        .getBool(); }
+  int    showObjects         () { return _showObjects         .getInt(); }
+  int    showInternalNames   () { return _showInternalNames   .getInt(); }
+  bool   showHidden          () { return _showHidden          .getBool(); }
+  bool   showFriends         () { return _showFriends         .getBool(); }
+  bool   showDormant         () { return _showDormant         .getBool(); }
+  bool   showIdle            () { return _showIdle            .getBool(); }
+  bool   hideInDarkness      () { return _hideInDarkness      .getBool(); }
+  int    minimalLightLevel   () { return _minimalLightLevel   .getInt(); }
+
+  double crossScale          () { return protectedFromZero(_crossScale.getDouble()); }
+  double crossOpacity        () { return _crossOpacity        .getDouble(); }
+
+  bool   hitConfirmation     () { return _hitConfirmation     .getBool(); }
+  int    hitColor            () { return _hitColor            .getInt(); }
+
+  double xAdjustment         () { return _xAdjustment         .getDouble(); }
+  bool   noCrossOnSlot1      () { return _noCrossOnSlot1      .getBool(); }
+
+  int    frameStyle          () { return _frameStyle          .getInt(); }
+  double frameScale          () { return protectedFromZero(_frameScale.getDouble()); }
+  double frameSize           () { return _frameSize           .getDouble(); }
+
+  double opacity             () { return _opacity             .getDouble(); }
+  double lengthMultiplier    () { return _lengthMultiplier    .getDouble(); }
+  int    barsOnTarget        () { return _barsOnTarget        .getInt(); }
+
+  string pip                 () { return _pip                 .getString(); }
+  string emptyPip            () { return _emptyPip            .getString(); }
+  string fontName            () { return _fontName            .getString(); }
+  string crosshair           () { return _crosshair           .getString(); }
+  string crossTop            () { return _crossTop            .getString(); }
+  string crossBot            () { return _crossBot            .getString(); }
+  string crossFontName       () { return _crossFontName       .getString(); }
+
+  double getTextScale()     { return 0.5 / protectedFromZero(_textScale.getDouble()); }
+  double getNewlineHeight() { return 0.03 * _stepMult.getDouble(); }
 
 // private: ////////////////////////////////////////////////////////////////////////////////////////
 
-  private double textScale() { checkInit(); return _textScale.value() ? _textScale.value() : 1; }
-  private double stepMult () { checkInit(); return _stepMult.value(); }
-
-  private
-  void checkInit()
+  private static
+  double protectedFromZero(double value)
   {
-    if (_isInitialized) { return; }
-    _isInitialized = true;
-
-    _showKillConfirmation = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_confirm"  , _player);
-    _namedConfirmation    = new("m8f_ts_BoolSetting"  ).init("m8f_ts_named_confirm" , _player);
-    _isEnabled            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_enabled"       , _player);
-
-    _minHealth            = new("m8f_ts_IntSetting"   ).init("m8f_ts_min_health"    , _player);
-    _yStart               = new("m8f_ts_DoubleSetting").init("m8f_ts_y"             , _player);
-    _yOffset              = new("m8f_ts_DoubleSetting").init("m8f_ts_y_offset"      , _player);
-    _logScale             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_bar_log_scale" , _player);
-    _showBar              = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_bar"      , _player);
-    _showName             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_name"     , _player);
-    _showNameAndTag       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_name_tag" , _player);
-    _showNums             = new("m8f_ts_IntSetting"   ).init("m8f_ts_show_numbers"  , _player);
-    _showInfo             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_info"     , _player);
-    _showCorps            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_corpses"  , _player);
-    _showNoBlockmap       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_noblockm" , _player);
-    _crossOn              = new("m8f_ts_BoolSetting"  ).init("m8f_ts_crosshair_on"  , _player);
-    _crossCol             = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_crs" , _player);
-    _nameCol              = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_color_tag" , _player);
-    _weakCol              = new("m8f_ts_IntSetting"   ).init("m8f_ts_def_cl_tag_wk" , _player);
-    _altHpCols            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_alt_hp_color"  , _player);
-    _crAlmDead            = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_alm_dead"   , _player);
-    _stepMult             = new("m8f_ts_DoubleSetting").init("m8f_ts_step_mult"     , _player);
-    _almDeadCr            = new("m8f_ts_BoolSetting"  ).init("m8f_ts_alm_dead_cr"   , _player);
-    _crossOff             = new("m8f_ts_DoubleSetting").init("m8f_ts_cross_offset"  , _player);
-    _topOff               = new("m8f_ts_DoubleSetting").init("m8f_ts_top_offset"    , _player);
-    _botOff               = new("m8f_ts_DoubleSetting").init("m8f_ts_bot_offset"    , _player);
-    _greenCr              = new("m8f_ts_IntSetting"   ).init("m8f_ts_green_color"   , _player);
-    _redCr                = new("m8f_ts_IntSetting"   ).init("m8f_ts_red_color"     , _player);
-    _showChampion         = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_champion" , _player);
-    _showObjects          = new("m8f_ts_IntSetting"   ).init("m8f_ts_show_objects"  , _player);
-    _showInternalNames    = new("m8f_ts_IntSetting"   ).init("m8f_class_as_tag"     , _player);
-    _showHidden           = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_hidden"   , _player);
-    _showFriends          = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_friends"  , _player);
-    _showDormant          = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_dormant"  , _player);
-    _crossScale           = new("m8f_ts_DoubleSetting").init("m8f_ts_cross_scale"   , _player);
-    _hitConfirmation      = new("m8f_ts_BoolSetting"  ).init("m8f_ts_hit_confirm"   , _player);
-    _hitColor             = new("m8f_ts_IntSetting"   ).init("m8f_ts_hit_color"     , _player);
-    _textScale            = new("m8f_ts_DoubleSetting").init("m8f_ts_text_scale"    , _player);
-    _xAdjustment          = new("m8f_ts_DoubleSetting").init("m8f_ts_x_adjustment"  , _player);
-    _noCrossOnSlot1       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_no_cross_on_1" , _player);
-    _frameStyle           = new("m8f_ts_IntSetting"   ).init("m8f_ts_frame_style"   , _player);
-    _frameScale           = new("m8f_ts_DoubleSetting").init("m8f_ts_frame_scale"   , _player);
-    _frameSize            = new("m8f_ts_DoubleSetting").init("m8f_ts_frame_size"    , _player);
-    _showIdle             = new("m8f_ts_BoolSetting"  ).init("m8f_ts_show_idle"     , _player);
-    _hideInDarkness       = new("m8f_ts_BoolSetting"  ).init("m8f_ts_hide_in_dark"  , _player);
-    _minimalLightLevel    = new("m8f_ts_IntSetting"   ).init("m8f_ts_light_level"   , _player);
-    _crossOpacity         = new("m8f_ts_DoubleSetting").init("m8f_ts_cr_opacity"    , _player);
-    _opacity              = new("m8f_ts_DoubleSetting").init("m8f_ts_opacity"       , _player);
-    _lengthMultiplier     = new("m8f_ts_DoubleSetting").init("m8f_ts_length_mult"   , _player);
-    _barsOnTarget         = new("m8f_ts_IntSetting"   ).init("m8f_ts_on_target"     , _player);
-
-    _pip                  = new("m8f_ts_StringSetting").init("m8f_ts_pip"           , _player);
-    _emptyPip             = new("m8f_ts_StringSetting").init("m8f_ts_empty_pip"     , _player);
-    _fontName             = new("m8f_ts_StringSetting").init("m8f_ts_font"          , _player);
-    _crosshair            = new("m8f_ts_StringSetting").init("m8f_ts_crosshair"     , _player);
-    _crossTop             = new("m8f_ts_StringSetting").init("m8f_ts_cross_top"     , _player);
-    _crossBot             = new("m8f_ts_StringSetting").init("m8f_ts_cross_bottom"  , _player);
-    _crossFontName        = new("m8f_ts_StringSetting").init("m8f_ts_cr_font"       , _player);
-
-    _colors[ 0]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_0"          , _player);
-    _colors[ 1]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_1"          , _player);
-    _colors[ 2]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_2"          , _player);
-    _colors[ 3]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_3"          , _player);
-    _colors[ 4]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_4"          , _player);
-    _colors[ 5]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_5"          , _player);
-    _colors[ 6]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_6"          , _player);
-    _colors[ 7]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_7"          , _player);
-    _colors[ 8]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_8"          , _player);
-    _colors[ 9]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_9"          , _player);
-    _colors[10]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_10"         , _player);
-    _colors[11]           = new("m8f_ts_IntSetting"   ).init("m8f_ts_cr_11"         , _player);
+    return value ? value : 1;
   }
 
-  private PlayerInfo     _player;
-  private transient bool _isInitialized;
+  private void initialize()
+  {
+    _showKillConfirmation = makeCvar("m8f_ts_show_confirm");
+    _namedConfirmation    = makeCvar("m8f_ts_named_confirm");
+    _isEnabled            = makeCvar("m8f_ts_enabled");
 
-  private m8f_ts_BoolSetting   _showKillConfirmation;
-  private m8f_ts_BoolSetting   _namedConfirmation;
-  private m8f_ts_BoolSetting   _isEnabled;
+    _minHealth            = makeCvar("m8f_ts_min_health");
+    _yStart               = makeCvar("m8f_ts_y");
+    _yOffset              = makeCvar("m8f_ts_y_offset");
+    _logScale             = makeCvar("m8f_ts_bar_log_scale");
+    _showBar              = makeCvar("m8f_ts_show_bar");
+    _showName             = makeCvar("m8f_ts_show_name");
+    _showNameAndTag       = makeCvar("m8f_ts_show_name_tag");
+    _showNums             = makeCvar("m8f_ts_show_numbers");
+    _showInfo             = makeCvar("m8f_ts_show_info");
+    _showCorps            = makeCvar("m8f_ts_show_corpses");
+    _crossOn              = makeCvar("m8f_ts_crosshair_on");
+    _crossCol             = makeCvar("m8f_ts_def_color_crs");
+    _nameCol              = makeCvar("m8f_ts_def_color_tag");
+    _weakCol              = makeCvar("m8f_ts_def_cl_tag_wk");
+    _altHpCols            = makeCvar("m8f_ts_alt_hp_color");
+    _stepMult             = makeCvar("m8f_ts_step_mult");
 
-  private m8f_ts_IntSetting    _minHealth;
-  private m8f_ts_DoubleSetting _yStart;
-  private m8f_ts_DoubleSetting _yOffset;
-  private m8f_ts_BoolSetting   _logScale;
-  private m8f_ts_BoolSetting   _showBar;
-  private m8f_ts_BoolSetting   _showName;
-  private m8f_ts_BoolSetting   _showNameAndTag;
-  private m8f_ts_IntSetting    _showNums;
-  private m8f_ts_BoolSetting   _showInfo;
-  private m8f_ts_BoolSetting   _showCorps;
-  private m8f_ts_BoolSetting   _showNoBlockmap;
-  private m8f_ts_BoolSetting   _crossOn;
-  private m8f_ts_IntSetting    _crossCol;
-  private m8f_ts_IntSetting    _nameCol;
-  private m8f_ts_IntSetting    _weakCol;
-  private m8f_ts_BoolSetting   _altHpCols;
-  private m8f_ts_DoubleSetting _stepMult;
-  private m8f_ts_BoolSetting   _almDeadCr;
-  private m8f_ts_IntSetting    _crAlmDead;
-  private m8f_ts_DoubleSetting _crossOff;
-  private m8f_ts_DoubleSetting _topOff;
-  private m8f_ts_DoubleSetting _botOff;
-  private m8f_ts_IntSetting    _greenCr;
-  private m8f_ts_IntSetting    _redCr;
-  private m8f_ts_BoolSetting   _showChampion;
-  private m8f_ts_IntSetting    _showObjects;
-  private m8f_ts_IntSetting    _showInternalNames;
-  private m8f_ts_BoolSetting   _showHidden;
-  private m8f_ts_BoolSetting   _showFriends;
-  private m8f_ts_BoolSetting   _showDormant;
-  private m8f_ts_DoubleSetting _crossScale;
-  private m8f_ts_BoolSetting   _hitConfirmation;
-  private m8f_ts_IntSetting    _hitColor;
-  private m8f_ts_DoubleSetting _textScale;
-  private m8f_ts_DoubleSetting _xAdjustment;
-  private m8f_ts_BoolSetting   _noCrossOnSlot1;
-  private m8f_ts_IntSetting    _frameStyle;
-  private m8f_ts_DoubleSetting _frameScale;
-  private m8f_ts_DoubleSetting _frameSize;
-  private m8f_ts_BoolSetting   _showIdle;
-  private m8f_ts_BoolSetting   _hideInDarkness;
-  private m8f_ts_IntSetting    _minimalLightLevel;
-  private m8f_ts_DoubleSetting _crossOpacity;
-  private m8f_ts_DoubleSetting _opacity;
-  private m8f_ts_DoubleSetting _lengthMultiplier;
-  private m8f_ts_IntSetting    _barsOnTarget;
+    _crAlmDead            = makeCvar("m8f_ts_cr_alm_dead");
+    _almDeadCr            = makeCvar("m8f_ts_alm_dead_cr");
 
-  private m8f_ts_StringSetting _pip;
-  private m8f_ts_StringSetting _emptyPip;
-  private m8f_ts_StringSetting _fontName;
-  private m8f_ts_StringSetting _crosshair;
-  private m8f_ts_StringSetting _crossTop;
-  private m8f_ts_StringSetting _crossBot;
-  private m8f_ts_StringSetting _crossFontName;
+    _crossOff             = makeCvar("m8f_ts_cross_offset");
+    _topOff               = makeCvar("m8f_ts_top_offset");
+    _botOff               = makeCvar("m8f_ts_bot_offset");
 
-  private m8f_ts_IntSetting    _colors[12];
+    _greenCr              = makeCvar("m8f_ts_green_color");
+    _redCr                = makeCvar("m8f_ts_red_color");
+
+    _showChampion         = makeCvar("m8f_ts_show_champion");
+    _showObjects          = makeCvar("m8f_ts_show_objects");
+    _showInternalNames    = makeCvar("m8f_class_as_tag");
+    _showHidden           = makeCvar("m8f_ts_show_hidden");
+    _showFriends          = makeCvar("m8f_ts_show_friends");
+    _showDormant          = makeCvar("m8f_ts_show_dormant");
+    _showIdle             = makeCvar("m8f_ts_show_idle");
+    _hideInDarkness       = makeCvar("m8f_ts_hide_in_dark");
+    _minimalLightLevel    = makeCvar("m8f_ts_light_level");
+
+    _crossScale           = makeCvar("m8f_ts_cross_scale");
+    _crossOpacity         = makeCvar("m8f_ts_cr_opacity");
+
+    _hitConfirmation      = makeCvar("m8f_ts_hit_confirm");
+    _hitColor             = makeCvar("m8f_ts_hit_color");
+
+    _textScale            = makeCvar("m8f_ts_text_scale");
+    _xAdjustment          = makeCvar("m8f_ts_x_adjustment");
+    _noCrossOnSlot1       = makeCvar("m8f_ts_no_cross_on_1");
+
+    _frameStyle           = makeCvar("m8f_ts_frame_style");
+    _frameScale           = makeCvar("m8f_ts_frame_scale");
+    _frameSize            = makeCvar("m8f_ts_frame_size");
+
+    _opacity              = makeCvar("m8f_ts_opacity");
+    _lengthMultiplier     = makeCvar("m8f_ts_length_mult");
+    _barsOnTarget         = makeCvar("m8f_ts_on_target");
+
+    _pip                  = makeCvar("m8f_ts_pip");
+    _emptyPip             = makeCvar("m8f_ts_empty_pip");
+    _fontName             = makeCvar("m8f_ts_font");
+    _crosshair            = makeCvar("m8f_ts_crosshair");
+    _crossTop             = makeCvar("m8f_ts_cross_top");
+    _crossBot             = makeCvar("m8f_ts_cross_bottom");
+    _crossFontName        = makeCvar("m8f_ts_cr_font");
+
+    for (int i = 0; i < 12; ++i)
+    {
+      _colors[i] = makeCvar(string.format("m8f_ts_cr_%d", i));
+    }
+  }
+
+  private static
+  ts_Cvar makeCvar(string cvarName)
+  {
+    return ts_Cvar.from(cvarName);
+  }
+
+  private ts_Cvar _showKillConfirmation;
+  private ts_Cvar _namedConfirmation;
+  private ts_Cvar _isEnabled;
+
+  private ts_Cvar _minHealth;
+  private ts_Cvar _yStart;
+  private ts_Cvar _yOffset;
+  private ts_Cvar _logScale;
+  private ts_Cvar _showBar;
+  private ts_Cvar _showName;
+  private ts_Cvar _showNameAndTag;
+  private ts_Cvar _showNums;
+  private ts_Cvar _showInfo;
+  private ts_Cvar _showCorps;
+  private ts_Cvar _crossOn;
+  private ts_Cvar _crossCol;
+  private ts_Cvar _nameCol;
+  private ts_Cvar _weakCol;
+  private ts_Cvar _altHpCols;
+  private ts_Cvar _stepMult;
+  private ts_Cvar _almDeadCr;
+  private ts_Cvar _crAlmDead;
+  private ts_Cvar _crossOff;
+  private ts_Cvar _topOff;
+  private ts_Cvar _botOff;
+  private ts_Cvar _greenCr;
+  private ts_Cvar _redCr;
+
+  private ts_Cvar _showChampion;
+  private ts_Cvar _showObjects;
+  private ts_Cvar _showInternalNames;
+  private ts_Cvar _showHidden;
+  private ts_Cvar _showFriends;
+  private ts_Cvar _showDormant;
+  private ts_Cvar _showIdle;
+  private ts_Cvar _hideInDarkness;
+  private ts_Cvar _minimalLightLevel;
+
+  private ts_Cvar _crossScale;
+  private ts_Cvar _crossOpacity;
+
+  private ts_Cvar _hitConfirmation;
+  private ts_Cvar _hitColor;
+
+  private ts_Cvar _textScale;
+  private ts_Cvar _xAdjustment;
+  private ts_Cvar _noCrossOnSlot1;
+
+  private ts_Cvar _frameStyle;
+  private ts_Cvar _frameScale;
+  private ts_Cvar _frameSize;
+
+  private ts_Cvar _opacity;
+  private ts_Cvar _lengthMultiplier;
+  private ts_Cvar _barsOnTarget;
+
+  private ts_Cvar _pip;
+  private ts_Cvar _emptyPip;
+  private ts_Cvar _fontName;
+  private ts_Cvar _crosshair;
+  private ts_Cvar _crossTop;
+  private ts_Cvar _crossBot;
+  private ts_Cvar _crossFontName;
+
+  private ts_Cvar _colors[12];
 
 } // class ts_Settings
