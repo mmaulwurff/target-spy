@@ -38,11 +38,15 @@ class ts_EventHandler : EventHandler
   override
   void WorldLoaded(WorldEvent e)
   {
-    data               = new("m8f_ts_Data").init();
-    isTitlemap         = m8f_ts_Game.CheckTitlemap();
-    dehackedGameType   = m8f_ts_Game.GetDehackedGameType();
+    if (m8f_ts_Game.CheckTitlemap())
+    {
+      destroy();
+      return;
+    }
 
-    cache              = new("m8f_ts_TagCache").init();
+    data             = new("m8f_ts_Data").init();
+    dehackedGameType = m8f_ts_Game.GetDehackedGameType();
+    cache            = new("m8f_ts_TagCache").init();
   }
 
   override
@@ -78,7 +82,6 @@ class ts_EventHandler : EventHandler
   override
   void RenderOverlay(RenderEvent event)
   {
-    if (isTitlemap) { return; }
     if (!_isInitialized || !_isPrepared) { return; }
     if (automapActive) { return; }
 
@@ -864,7 +867,6 @@ class ts_EventHandler : EventHandler
   private m8f_ts_LastTargetInfo _lastTargetInfo;
 
   private m8f_ts_Data     data;
-  private bool            isTitlemap;
   private int             dehackedGameType;
 
   private m8f_ts_TagCache cache;
