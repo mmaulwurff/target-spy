@@ -1,4 +1,4 @@
-/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2019-2020
+/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2019-2021
  *
  * This file is part of Target Spy.
  *
@@ -15,55 +15,11 @@
  * Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class m8f_ts_String
+class ts_String
 {
 
-  ui static string Beautify(string s)
-  {
-    string result = SeparateCamelCase(s);
-    result.Replace("_", " ");
-    return result;
-  }
-
-  ui static string SeparateCamelCase(string source)
-  {
-    int sourceLength = source.Length();
-    string result = "";
-    string letter1 = source.CharAt(0);
-    string letter2;
-
-    for (int i = 1; i < sourceLength; ++i)
-      {
-        letter2 = source.CharAt(i);
-        if (IsSmallLetter(letter1) && IsBigLetter(letter2))
-          {
-            result.AppendFormat("%s ", letter1);
-          }
-        else
-          {
-            result.AppendFormat(letter1);
-          }
-        letter1 = letter2;
-      }
-    result.AppendFormat(letter2);
-
-    return result;
-  }
-
-  ui static bool IsSmallLetter(string letter)
-  {
-    int code = letter.CharCodeAt(0);
-    return (97 <= code && code <= 122);
-  }
-
-  ui static bool IsBigLetter(string letter)
-  {
-    int code = letter.CharCodeAt(0);
-    return (65 <= code && code <= 90);
-  }
-
   ui static
-  string MakeHpBar( int    health
+  string makeHpBar( int    health
                   , int    maxHealth
                   , bool   logScale
                   , bool   greenRedTheme
@@ -115,22 +71,25 @@ class m8f_ts_String
 
   }
 
-  static string MakeRepeating(string s, int n)
-  {
-    if (n == 0) { return ""; }
-    string format = String.Format("%%%ds", n);
-    string result = String.Format(format, " ");
-    result.replace(" ", s);
-    return result;
-  }
-
   static
   string appendWithSpace(string head, string tail)
   {
     string result = head;
-    if (result.Length() > 0) { result.AppendFormat(" "); }
-    result.AppendFormat(tail);
+    if (result.Length() > 0) { result.appendFormat(" "); }
+    result.appendFormat(tail);
     return result;
   }
 
-} // class m8f_ts_String
+// private: ////////////////////////////////////////////////////////////////////////////////////////
+
+  private static
+  string makeRepeating(string s, int n)
+  {
+    if (n == 0) { return ""; }
+    string format = string.format("%%%ds", n);
+    string result = string.format(format, " ");
+    result.replace(" ", s);
+    return result;
+  }
+
+} // class ts_String

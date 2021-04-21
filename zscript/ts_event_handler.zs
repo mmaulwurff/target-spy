@@ -416,16 +416,16 @@ class ts_EventHandler : EventHandler
 
     if (_settings.showBar() && showHealth)
     {
-      string hpBar = m8f_ts_String.MakeHpBar( targetHealth
-                                            , targetMaxHealth
-                                            , _settings.logScale()
-                                            , _settings.altHpCols()
-                                            , _settings.greenCr()
-                                            , _settings.redCr()
-                                            , _settings.lengthMultiplier()
-                                            , _settings.pip()
-                                            , _settings.emptyPip()
-                                            );
+      string hpBar = ts_String.makeHpBar( targetHealth
+                                        , targetMaxHealth
+                                        , _settings.logScale()
+                                        , _settings.altHpCols()
+                                        , _settings.greenCr()
+                                        , _settings.redCr()
+                                        , _settings.lengthMultiplier()
+                                        , _settings.pip()
+                                        , _settings.emptyPip()
+                                        );
       drawTextCenter(hpBar, targetColor, textScale, x, y, font, 0.0, opacity);
       y += newline;
     }
@@ -696,12 +696,7 @@ class ts_EventHandler : EventHandler
 
     string targetClass = target.GetClassName();
 
-    switch (_settings.showInternalNames())
-    {
-      case 0: break;
-      case 1: return targetClass;
-      case 2: return m8f_ts_String.Beautify(targetClass);
-    }
+    if (_settings.showInternalNames()) return targetClass;
 
     switch (gameType)
     {
@@ -730,9 +725,6 @@ class ts_EventHandler : EventHandler
       cache.SetCache(targetClass, targetName);
       return AddAdditionalInfo(target, targetName);
     }
-
-    // if target name is not found, compose tag from class name
-    targetName = m8f_ts_String.Beautify(targetName);
 
     cache.SetCache(targetClass, targetName);
     return AddAdditionalInfo(target, targetName);

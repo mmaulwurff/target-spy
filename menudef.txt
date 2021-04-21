@@ -61,7 +61,6 @@ OptionValue "m8f_ts_class_as_tag_values"
 {
   0, "Tags"
   1, "Class Names"
-  2, "Beautified Class Names"
 }
 
 OptionValue "m8f_ts_frame_style_values"

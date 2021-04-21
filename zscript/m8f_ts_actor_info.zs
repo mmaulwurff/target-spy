@@ -32,13 +32,13 @@ class m8f_ts_ActorInfo
       result = String.Format("LVL %d", helper.getDrpgLevel(target));
     }
 
-    if (target.bFRIENDLY && !target.player) { result = m8f_ts_String.appendWithSpace(result, "Friendly"    ); }
-    if (target.bINVULNERABLE              ) { result = m8f_ts_String.appendWithSpace(result, "Invulnerable"); }
-    if (target.bBOSS                      ) { result = m8f_ts_String.appendWithSpace(result, "Boss"        ); }
-    if (target.bDORMANT                   ) { result = m8f_ts_String.appendWithSpace(result, "Dormant"     ); }
-    if (target.bBUDDHA                    ) { result = m8f_ts_String.appendWithSpace(result, "Buddha"      ); }
-    if (target.bNODAMAGE                  ) { result = m8f_ts_String.appendWithSpace(result, "Undamageable"); }
-    if (target.bNoBlockmap                ) { result = m8f_ts_String.appendWithSpace(result, "NoBlockmap"  ); }
+    if (target.bFRIENDLY && !target.player) { result = ts_String.appendWithSpace(result, "Friendly"    ); }
+    if (target.bINVULNERABLE              ) { result = ts_String.appendWithSpace(result, "Invulnerable"); }
+    if (target.bBOSS                      ) { result = ts_String.appendWithSpace(result, "Boss"        ); }
+    if (target.bDORMANT                   ) { result = ts_String.appendWithSpace(result, "Dormant"     ); }
+    if (target.bBUDDHA                    ) { result = ts_String.appendWithSpace(result, "Buddha"      ); }
+    if (target.bNODAMAGE                  ) { result = ts_String.appendWithSpace(result, "Undamageable"); }
+    if (target.bNoBlockmap                ) { result = ts_String.appendWithSpace(result, "NoBlockmap"  ); }
 
     return result;
   }
