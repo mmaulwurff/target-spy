@@ -1,4 +1,4 @@
-/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2019-2020
+/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2019-2021
  *
  * This file is part of Target Spy.
  *
@@ -19,7 +19,7 @@
 /**
  * Hack. The purpose of this class is to access play functions from UI scope.
  */
-class m8f_ts_PlayToUiTranslator
+class ts_PlayToUiTranslator
 {
 
   play Actor AimTargetWrapper(Actor a) const
@@ -47,4 +47,4 @@ class m8f_ts_PlayToUiTranslator
     return ts_NoblockmapDetection.LineAttackNoBlockmap(a, offsetz);
   }
 
-} // class m8f_ts_PlayToUiTranslator
+} // class ts_PlayToUiTranslator

@@ -2,15 +2,15 @@ version 4.5
 
 #include "zscript/ts_event_handler.zs"
 
-#include "zscript/m8f_ts_data.zs"
+#include "zscript/ts_data.zs"
 #include "zscript/ts_settings.zs"
 
-#include "zscript/m8f_ts_last_target_info.zs"
+#include "zscript/ts_last_target_info.zs"
 #include "zscript/m8f_ts_tag_cache.zs"
-#include "zscript/m8f_ts_play_to_ui_translator.zs"
+#include "zscript/ts_play_to_ui_translator.zs"
 
 #include "zscript/m8f_ts_string.zs"
-#include "zscript/m8f_ts_game.zs"
+#include "zscript/ts_game.zs"
 #include "zscript/m8f_ts_actor_info.zs"
 
 #include "zscript/ts_noblockmap_detection.zs"

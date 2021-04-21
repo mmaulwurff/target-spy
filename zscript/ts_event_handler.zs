@@ -19,13 +19,22 @@ class ts_EventHandler : EventHandler
 {
 
   override
-  void PlayerEntered(PlayerEvent event)
+  void playerEntered(PlayerEvent event)
   {
+    if (ts_Game.isTitlemap())
+    {
+      destroy();
+      return;
+    }
+
     if (event.playerNumber != consolePlayer) return;
 
-    _settings = ts_Settings.from();
-    _lastTargetInfo = m8f_ts_LastTargetInfo.from();
-    translator          = new("m8f_ts_PlayToUiTranslator");
+    _settings         = ts_Settings.from();
+    _lastTargetInfo   = ts_LastTargetInfo.from();
+    _translator       = NULL;
+    _data             = ts_Data.from();
+    _dehackedGameType = ts_Game.GetDehackedGameType();
+    cache             = new("m8f_ts_TagCache").init();
   }
 
   override
@@ -33,20 +42,6 @@ class ts_EventHandler : EventHandler
   {
     if (!_isInitialized) { initialize(); }
     prepareProjection();
-  }
-
-  override
-  void WorldLoaded(WorldEvent e)
-  {
-    if (m8f_ts_Game.CheckTitlemap())
-    {
-      destroy();
-      return;
-    }
-
-    data             = new("m8f_ts_Data").init();
-    dehackedGameType = m8f_ts_Game.GetDehackedGameType();
-    cache            = new("m8f_ts_TagCache").init();
   }
 
   override
@@ -111,8 +106,7 @@ class ts_EventHandler : EventHandler
     initCvars(player);
     if (!_isEnabled.GetInt()) { return; }
 
-    int   gameType = m8f_ts_Game.GetDehackedGameType();
-    Actor target   = GetTarget(gameType);
+    Actor target = GetTarget(_dehackedGameType);
 
     draw(target, event);
 
@@ -263,7 +257,7 @@ class ts_EventHandler : EventHandler
   void SetLastTarget(Actor newLastTarget)
   {
     _lastTargetInfo.a    = newLastTarget;
-    _lastTargetInfo.name = GetTargetName(newLastTarget, dehackedGameType);
+    _lastTargetInfo.name = GetTargetName(newLastTarget, _dehackedGameType);
     _lastTargetInfo.name = enableExtendedColorCode(_lastTargetInfo.name);
   }
 
@@ -441,7 +435,7 @@ class ts_EventHandler : EventHandler
 
     if (_settings.showName())
     {
-      string targetName = GetTargetName(target, dehackedGameType);
+      string targetName = GetTargetName(target, _dehackedGameType);
       targetName = enableExtendedColorCode(targetName);
 
       if (targetHealth < 1)
@@ -602,23 +596,23 @@ class ts_EventHandler : EventHandler
     if (!playerActor) { return NULL; }
 
     // try an easy way to get a target (also works with autoaim)
-    Actor target   = translator.AimTargetWrapper(player.mo);
+    Actor target   = _translator.AimTargetWrapper(player.mo);
     let   settings = _settings;
 
     // if target is not found by easy way, try the difficult way
     if (target == NULL)
     {
-      target = translator.LineAttackTargetWrapper(player.mo, player.viewheight);
+      target = _translator.LineAttackTargetWrapper(player.mo, player.viewheight);
     }
 
     if (target == NULL && settings.showObjects() > 1)
     {
-      target = translator.AimLineAttackWrapper(player.mo);
+      target = _translator.AimLineAttackWrapper(player.mo);
     }
 
     if (target == NULL && settings.showObjects() > 3)
     {
-      target = translator.LineAttackNoBlockmapWrapper(player.mo, player.viewheight);
+      target = _translator.LineAttackNoBlockmapWrapper(player.mo, player.viewheight);
     }
 
     // give up
@@ -643,14 +637,14 @@ class ts_EventHandler : EventHandler
     }
 
     string targetClass   = target.GetClassName();
-    bool   targetIsSlave = data.slaveActors.contains(targetClass);
+    bool   targetIsSlave = _data.slaveActorsContain(targetClass);
     if (targetIsSlave)
     {
       target      = target.Master;
       targetClass = target.GetClassName();
     }
 
-    bool isInBlackList = data.blackList.contains(targetClass);
+    bool isInBlackList = _data.blackListContains(targetClass);
     if (isInBlackList) { return NULL; }
 
     switch (gameType)
@@ -662,7 +656,7 @@ class ts_EventHandler : EventHandler
     // everything without name in REKKR is "blacklisted"
     if (targetClass.IndexOf("_rekkr") != -1)
     {
-      string specialName = data.specialNames.get(targetClass);
+      string specialName = _data.specialNames.at(targetClass);
       if (specialName.length() == 0) { return NULL; }
     }
 
@@ -729,7 +723,7 @@ class ts_EventHandler : EventHandler
       return AddAdditionalInfo(target, cache.cachedTag);
     }
 
-    string specialName = data.specialNames.get(targetClass);
+    string specialName = _data.specialNames.at(targetClass);
     if (specialName.Length() != 0)
     {
       targetName = specialName;
@@ -775,7 +769,7 @@ class ts_EventHandler : EventHandler
     if (!token) { return name; }
 
     string tokenClassName = token.GetClassName();
-    string championTag    = data.championTokens.get(tokenClassName);
+    string championTag    = _data.championTokens.at(tokenClassName);
     if (championTag.Length() == 0) { championTag = "Champion"; }
 
     championTag.AppendFormat(" %s", name);
@@ -863,14 +857,14 @@ class ts_EventHandler : EventHandler
 
   // private: //////////////////////////////////////////////////////////////////
 
-  private ts_Settings _settings;
-  private m8f_ts_LastTargetInfo _lastTargetInfo;
+  private ts_Settings       _settings;
+  private ts_LastTargetInfo _lastTargetInfo;
 
-  private m8f_ts_Data     data;
-  private int             dehackedGameType;
+  private ts_Data _data;
+  private int     _dehackedGameType;
 
   private m8f_ts_TagCache cache;
-  private m8f_ts_PlayToUiTranslator translator;
+  private ts_PlayToUiTranslator _translator;
 
   private transient Cvar _preciseY;
 
