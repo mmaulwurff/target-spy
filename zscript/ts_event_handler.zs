@@ -29,11 +29,10 @@ class ts_EventHandler : EventHandler
 
     if (event.playerNumber != consolePlayer) return;
 
-    _settings         = ts_Settings.from();
-    _lastTargetInfo   = ts_LastTargetInfo.from();
-    _translator       = NULL;
-    _data             = ts_Data.from();
-    cache             = new("m8f_ts_TagCache").init();
+    _settings       = ts_Settings.from();
+    _lastTargetInfo = ts_LastTargetInfo.from();
+    _translator     = NULL;
+    _data           = ts_Data.from();
   }
 
   override
@@ -688,17 +687,9 @@ class ts_EventHandler : EventHandler
     string targetName = target.GetTag();
     if (targetName != targetClass)
     {
-      cache.SetCache(targetClass, targetName);
       return AddAdditionalInfo(target, targetName);
     }
 
-    // if target name was found before, just return it
-    if (cache.cachedClass == targetClass)
-    {
-      return AddAdditionalInfo(target, cache.cachedTag);
-    }
-
-    cache.SetCache(targetClass, targetName);
     return AddAdditionalInfo(target, targetName);
   }
 
@@ -826,7 +817,6 @@ class ts_EventHandler : EventHandler
 
   private ts_Data _data;
 
-  private m8f_ts_TagCache cache;
   private ts_PlayToUiTranslator _translator;
 
   private transient Cvar _preciseY;
