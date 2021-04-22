@@ -10,7 +10,7 @@ version 4.5
 
 #include "zscript/ts_string.zs"
 #include "zscript/ts_game.zs"
-#include "zscript/m8f_ts_actor_info.zs"
+#include "zscript/ts_actor_info.zs"
 
 #include "zscript/ts_noblockmap_detection.zs"
 
