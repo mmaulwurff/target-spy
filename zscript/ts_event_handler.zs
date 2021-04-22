@@ -33,7 +33,6 @@ class ts_EventHandler : EventHandler
     _lastTargetInfo   = ts_LastTargetInfo.from();
     _translator       = NULL;
     _data             = ts_Data.from();
-    _dehackedGameType = ts_Game.GetDehackedGameType();
     cache             = new("m8f_ts_TagCache").init();
   }
 
@@ -106,7 +105,7 @@ class ts_EventHandler : EventHandler
     initCvars(player);
     if (!_isEnabled.GetInt()) { return; }
 
-    Actor target = GetTarget(_dehackedGameType);
+    Actor target = GetTarget();
 
     draw(target, event);
 
@@ -257,7 +256,7 @@ class ts_EventHandler : EventHandler
   void SetLastTarget(Actor newLastTarget)
   {
     _lastTargetInfo.a    = newLastTarget;
-    _lastTargetInfo.name = GetTargetName(newLastTarget, _dehackedGameType);
+    _lastTargetInfo.name = GetTargetName(newLastTarget);
     _lastTargetInfo.name = enableExtendedColorCode(_lastTargetInfo.name);
   }
 
@@ -435,7 +434,7 @@ class ts_EventHandler : EventHandler
 
     if (_settings.showName())
     {
-      string targetName = GetTargetName(target, _dehackedGameType);
+      string targetName = GetTargetName(target);
       targetName = enableExtendedColorCode(targetName);
 
       if (targetHealth < 1)
@@ -588,7 +587,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  Actor GetTarget(int gameType)
+  Actor GetTarget()
   {
     PlayerInfo player = players[consolePlayer];
     if (!player) { return NULL; }
@@ -647,19 +646,6 @@ class ts_EventHandler : EventHandler
     bool isInBlackList = _data.blackListContains(targetClass);
     if (isInBlackList) { return NULL; }
 
-    switch (gameType)
-    {
-      case 1: targetClass.AppendFormat("_free" ); break; // Freedoom
-      case 2: targetClass.AppendFormat("_rekkr"); break; // Rekkr
-    }
-
-    // everything without name in REKKR is "blacklisted"
-    if (targetClass.IndexOf("_rekkr") != -1)
-    {
-      string specialName = _data.specialNames.at(targetClass);
-      if (specialName.length() == 0) { return NULL; }
-    }
-
     if (target.bISMONSTER)
     {
       bool targetIsHidden = (target.bSHADOW || target.bSTEALTH);
@@ -690,7 +676,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  string GetTargetName(Actor target, int gameType)
+  string getTargetName(Actor target)
   {
     if (target.player) { return target.player.GetUserName(); }
 
@@ -698,15 +684,9 @@ class ts_EventHandler : EventHandler
 
     if (_settings.showInternalNames()) return targetClass;
 
-    switch (gameType)
-    {
-      case 1: targetClass.AppendFormat("_free" ); break; // Freedoom
-      case 2: targetClass.AppendFormat("_rekkr"); break; // Rekkr
-    }
-
     // if target name is set via actor tag, return it
     string targetName = target.GetTag();
-    if (targetName != targetClass && !(gameType != 0))
+    if (targetName != targetClass)
     {
       cache.SetCache(targetClass, targetName);
       return AddAdditionalInfo(target, targetName);
@@ -716,14 +696,6 @@ class ts_EventHandler : EventHandler
     if (cache.cachedClass == targetClass)
     {
       return AddAdditionalInfo(target, cache.cachedTag);
-    }
-
-    string specialName = _data.specialNames.at(targetClass);
-    if (specialName.Length() != 0)
-    {
-      targetName = specialName;
-      cache.SetCache(targetClass, targetName);
-      return AddAdditionalInfo(target, targetName);
     }
 
     cache.SetCache(targetClass, targetName);
@@ -853,7 +825,6 @@ class ts_EventHandler : EventHandler
   private ts_LastTargetInfo _lastTargetInfo;
 
   private ts_Data _data;
-  private int     _dehackedGameType;
 
   private m8f_ts_TagCache cache;
   private ts_PlayToUiTranslator _translator;

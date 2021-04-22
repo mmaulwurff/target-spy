@@ -18,21 +18,11 @@
 class ts_Game
 {
 
-  static bool isTitlemap()
+  static
+  bool isTitlemap()
   {
     bool isTitlemap = (level.mapname == "TITLEMAP");
     return isTitlemap;
-  }
-
-  static int getDehackedGameType()
-  {
-    bool isRekkr = (Wads.FindLump("REKCREDS") != -1);
-    if (isRekkr) { return 2; }
-
-    bool isFreedoom = (Wads.FindLump("FREEDOOM") != -1);
-    if (isFreedoom) { return 1; }
-
-    return 0;
   }
 
 } // class ts_Game
