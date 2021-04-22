@@ -36,14 +36,14 @@ class ts_EventHandler : EventHandler
   }
 
   override
-  void WorldTick()
+  void worldTick()
   {
     if (!_isInitialized) { initialize(); }
     prepareProjection();
   }
 
   override
-  void WorldThingDied(WorldEvent event)
+  void worldThingDied(WorldEvent event)
   {
     if (event == NULL) { return; }
 
@@ -58,7 +58,7 @@ class ts_EventHandler : EventHandler
   }
 
   override
-  void WorldThingDamaged(WorldEvent event)
+  void worldThingDamaged(WorldEvent event)
   {
     if (event == NULL) { return; }
 
@@ -73,7 +73,7 @@ class ts_EventHandler : EventHandler
   }
 
   override
-  void RenderOverlay(RenderEvent event)
+  void renderOverlay(RenderEvent event)
   {
     if (!_isInitialized || !_isPrepared) { return; }
     if (automapActive) { return; }
@@ -85,7 +85,7 @@ class ts_EventHandler : EventHandler
     drawEverything(event);
   }
 
-  // Helper functions section //////////////////////////////////////////////////
+// private: ////////////////////////////////////////////////////////////////////////////////////////
 
   private ui
   void initCvars(PlayerInfo player)
@@ -252,7 +252,7 @@ class ts_EventHandler : EventHandler
   // Wrapper to access lastTarget in scope play from ui scope.
   // not really const, but lastTarget doesn't affect gameplay.
   private ui
-  void SetLastTarget(Actor newLastTarget)
+  void setLastTarget(Actor newLastTarget)
   {
     _lastTargetInfo.a    = newLastTarget;
     _lastTargetInfo.name = GetTargetName(newLastTarget);
@@ -586,7 +586,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  Actor GetTarget()
+  Actor getTarget()
   {
     PlayerInfo player = players[consolePlayer];
     if (!player) { return NULL; }
@@ -694,7 +694,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  string AddAdditionalInfo(Actor target, string name)
+  string addAdditionalInfo(Actor target, string name)
   {
     Inventory inv = Inventory(target);
     if (inv)
@@ -715,7 +715,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  string PrependChampionColor(Actor target, string name)
+  string prependChampionColor(Actor target, string name)
   {
     if (!_settings.showChampion()) { return name; }
 
