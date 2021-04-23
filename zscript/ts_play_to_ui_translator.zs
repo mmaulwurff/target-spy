@@ -22,29 +22,32 @@
 class ts_PlayToUiTranslator
 {
 
-  play Actor AimTargetWrapper(Actor a) const
+  play
+  Actor aimTargetWrapper(Actor a) const
   {
-    return a.AimTarget();
+    return a.aimTarget();
   }
 
-  play Actor LineAttackTargetWrapper(Actor a, double offsetz) const
+  play
+  Actor lineAttackTargetWrapper(Actor a, double offsetz) const
   {
     FLineTraceData lineTraceData;
-    a.LineTrace(a.angle, 4000.0, a.pitch, 0, offsetz, 0.0, 0.0, lineTraceData);
-    return lineTraceData.HitActor;
+    a.lineTrace(a.angle, 4000.0, a.pitch, 0, offsetz, 0.0, 0.0, lineTraceData);
+    return lineTraceData.hitActor;
   }
 
-  play Actor AimLineAttackWrapper(Actor a) const
+  play
+  Actor aimLineAttackWrapper(Actor a) const
   {
-    FTranslatedLineTarget ftlt;
-    a.AimLineAttack(a.angle, 2048.0, ftlt, 0,
-                    ALF_CHECKNONSHOOTABLE | ALF_FORCENOSMART);
-    return ftlt.linetarget;
+    FTranslatedLineTarget lineTarget;
+    a.aimLineAttack(a.angle, 2048.0, lineTarget, 0, ALF_CheckNonShootable | ALF_ForceNoSmart);
+    return lineTarget.lineTarget;
   }
 
-  play Actor LineAttackNoBlockmapWrapper(Actor a, double offsetz) const
+  play
+  Actor lineAttackNoBlockmapWrapper(Actor a, double offsetz) const
   {
-    return ts_NoblockmapDetection.LineAttackNoBlockmap(a, offsetz);
+    return ts_NoblockmapDetection.lineAttackNoBlockmap(a, offsetz);
   }
 
 } // class ts_PlayToUiTranslator

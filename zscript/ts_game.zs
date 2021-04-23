@@ -21,7 +21,7 @@ class ts_Game
   static
   bool isTitlemap()
   {
-    bool isTitlemap = (level.mapname == "TITLEMAP");
+    bool isTitlemap = (level.mapName == "TITLEMAP");
     return isTitlemap;
   }
 

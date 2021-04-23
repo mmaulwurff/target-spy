@@ -63,7 +63,7 @@ class ts_ActorInfo
     string legendaryToken = "LDLegendaryMonsterToken";
     if (a.CountInv(legendaryToken) > 0)
     {
-      maxHealth = maxHealth * Cvar.GetCvar("LD_legendaryhealth").GetInt() / 100;
+      maxHealth = maxHealth * Cvar.GetCvar("LD_legendaryHealth").GetInt() / 100;
     }
 
     return maxHealth;

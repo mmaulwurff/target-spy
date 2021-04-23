@@ -341,7 +341,7 @@ class ts_EventHandler : EventHandler
         || _settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE) { newline = -newline; }
 
     Font font      = Font.getFont(_settings.fontName());
-    Font crossfont = Font.getFont(_settings.crossFontName());
+    Font crossFont = Font.getFont(_settings.crossFontName());
 
     if (_settings.barsOnTarget() == ts_Settings.ON_TARGET_DISABLED)
     {
@@ -618,7 +618,7 @@ class ts_EventHandler : EventHandler
       if (noLightAmplifier)
       {
         Sector targetSector = target.curSector;
-        int    lightlevel   = targetSector.lightlevel;
+        int    lightLevel   = targetSector.lightLevel;
         if (lightLevel < settings.minimalLightLevel()) { return NULL; }
       }
     }

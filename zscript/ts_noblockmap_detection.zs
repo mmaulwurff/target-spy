@@ -16,7 +16,7 @@
  * along with Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class ts_NoblockmapDetection
+class ts_NoBlockmapDetection
 {
 
   static play
@@ -127,4 +127,4 @@ class ts_NoblockmapDetection
     return closestNbmActor;
   }
 
-} // class ts_NoblockmapDetection
+} // class ts_NoBlockmapDetection

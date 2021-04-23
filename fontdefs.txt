@@ -1,4 +1,4 @@
-CYBERFNT
+CyberFnt
 {
   Template CYBFT%03d
 }

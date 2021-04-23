@@ -113,7 +113,7 @@ class ts_Settings
   string crossFontName       () { return _crossFontName       .getString(); }
 
   double getTextScale()     { return 0.5 / protectedFromZero(_textScale.getDouble()); }
-  double getNewlineHeight() { return 0.03 * _stepMult.getDouble(); }
+  double getNewlineHeight() { return 0.03 * _stepMultiplier.getDouble(); }
 
 // private: ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -144,7 +144,7 @@ class ts_Settings
     _nameCol              = makeCvar("m8f_ts_def_color_tag");
     _weakCol              = makeCvar("m8f_ts_def_cl_tag_wk");
     _altHpCols            = makeCvar("m8f_ts_alt_hp_color");
-    _stepMult             = makeCvar("m8f_ts_step_mult");
+    _stepMultiplier       = makeCvar("m8f_ts_step_mult");
 
     _crAlmDead            = makeCvar("m8f_ts_cr_alm_dead");
     _almDeadCr            = makeCvar("m8f_ts_alm_dead_cr");
@@ -223,7 +223,7 @@ class ts_Settings
   private ts_Cvar _nameCol;
   private ts_Cvar _weakCol;
   private ts_Cvar _altHpCols;
-  private ts_Cvar _stepMult;
+  private ts_Cvar _stepMultiplier;
   private ts_Cvar _almDeadCr;
   private ts_Cvar _crAlmDead;
   private ts_Cvar _crossOff;
