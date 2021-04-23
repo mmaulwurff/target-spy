@@ -18,8 +18,8 @@
 /**
  * This class provides access to a user or server Cvar.
  *
- * Accessing Cvars through this class is faster because calling Cvar.GetCvar()
- * is costly. This class caches the result of Cvar.GetCvar() and handles
+ * Accessing Cvars through this class is faster because calling Cvar.getCvar()
+ * is costly. This class caches the result of Cvar.getCvar() and handles
  * loading a savegame.
  */
 class ts_Cvar

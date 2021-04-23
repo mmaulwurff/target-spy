@@ -21,15 +21,15 @@ class ts_ActorInfo
 // public: /////////////////////////////////////////////////////////////////////
 
   static ui
-  string GetTargetFlags(Actor target)
+  string getTargetFlags(Actor target)
   {
     string result = "";
 
     string drpgToken = "DRPGMonsterStatsHandler";
-    if (target.CountInv(drpgToken) > 0)
+    if (target.countInv(drpgToken) > 0)
     {
       ts_ActorInfoHelper helper;
-      result = String.Format("LVL %d", helper.getDrpgLevel(target));
+      result = string.format("LVL %d", helper.getDrpgLevel(target));
     }
 
     if (target.bFRIENDLY && !target.player) { result = ts_String.appendWithSpace(result, "Friendly"    ); }
@@ -44,42 +44,42 @@ class ts_ActorInfo
   }
 
   static ui
-  int GetActorMaxHealth(Actor a)
+  int getActorMaxHealth(Actor a)
   {
     if (a == null)     { return 0; }
     if (!a.bSHOOTABLE) { return 0; }
 
-    if (a.player && a.player.mo) { return a.player.mo.GetMaxHealth(); }
+    if (a.player && a.player.mo) { return a.player.mo.getMaxHealth(); }
 
-    int maxHealth = a.SpawnHealth();
+    int maxHealth = a.spawnHealth();
 
     string drpgToken = "DRPGMonsterStatsHandler";
-    if (a.CountInv(drpgToken) > 0)
+    if (a.countInv(drpgToken) > 0)
     {
       ts_ActorInfoHelper helper;
       maxHealth = helper.getDrpgMaxHealth(a);
     }
 
     string legendaryToken = "LDLegendaryMonsterToken";
-    if (a.CountInv(legendaryToken) > 0)
+    if (a.countInv(legendaryToken) > 0)
     {
-      maxHealth = maxHealth * Cvar.GetCvar("LD_legendaryHealth").GetInt() / 100;
+      maxHealth = maxHealth * Cvar.getCvar("LD_legendaryHealth").getInt() / 100;
     }
 
     return maxHealth;
   }
 
   static ui
-  bool IsIdle(Actor a)
+  bool isIdle(Actor a)
   {
     return a.target == null;
   }
 
   static ui
-  int CustomTargetColor(Actor target)
+  int customTargetColor(Actor target)
   {
     string customColorTokenClass = "tr_color_token";
-    int customColor = target.CountInv(customColorTokenClass);
+    int customColor = target.countInv(customColorTokenClass);
     return customColor;
   }
 

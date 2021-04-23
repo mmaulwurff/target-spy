@@ -46,10 +46,10 @@ class ts_EventHandler : EventHandler
   override
   void worldThingDied(WorldEvent event)
   {
-    if (event == NULL) { return; }
+    if (event == NULL) return;
 
     Actor died = event.thing;
-    if (died == NULL) { return; }
+    if (died == NULL) return;
 
     if (_lastTargetInfo.a == died)
     {
@@ -61,10 +61,10 @@ class ts_EventHandler : EventHandler
   override
   void worldThingDamaged(WorldEvent event)
   {
-    if (event == NULL) { return; }
+    if (event == NULL) return;
 
     Actor damagedThing = event.thing;
-    if (damagedThing == NULL) { return; }
+    if (damagedThing == NULL) return;
 
 
     if (_lastTargetInfo.a == damagedThing)
@@ -76,12 +76,14 @@ class ts_EventHandler : EventHandler
   override
   void renderOverlay(RenderEvent event)
   {
-    if (!_isInitialized || !_isPrepared) { return; }
-    if (automapActive) { return; }
-
-    PlayerInfo player       = players[consolePlayer];
-    Actor      playerActor  = player.mo;
-    if (!playerActor) { return; }
+    if (  !_isInitialized
+       || !_isPrepared
+       || automapActive
+       || players[consolePlayer].mo == NULL
+       )
+    {
+      return;
+    }
 
     drawEverything(event);
   }
@@ -91,7 +93,7 @@ class ts_EventHandler : EventHandler
   private ui
   void drawEverything(RenderEvent event)
   {
-    if (!_settings.isEnabled()) { return; }
+    if (!_settings.isEnabled()) return;
 
     Actor target = getTarget();
 
@@ -108,19 +110,21 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  Vector2 makeDrawPos(PlayerInfo player, RenderEvent event, Actor target, double offset)
+  Vector2 makeDrawPos(RenderEvent event, Actor target, double offset)
   {
-    _projection.CacheResolution();
-    _projection.CacheFov(player.fov);
-    _projection.OrientForRenderOverlay(event);
-    _projection.BeginProjection();
+    PlayerInfo player = players[consolePlayer];
 
-    _projection.ProjectWorldPos(target.pos + (0, 0, offset));
+    _projection.cacheResolution();
+    _projection.cacheFov(player.fov);
+    _projection.orientForRenderOverlay(event);
+    _projection.beginProjection();
+
+    _projection.projectWorldPos(target.pos + (0, 0, offset));
 
     ts_Le_Viewport viewport;
-    viewport.FromHud();
+    viewport.fromHud();
 
-    Vector2 drawPos = viewport.SceneToWindow(_projection.ProjectToNormal());
+    Vector2 drawPos = viewport.sceneToWindow(_projection.projectToNormal());
 
     return drawPos;
   }
@@ -129,20 +133,18 @@ class ts_EventHandler : EventHandler
   void drawFrame(RenderEvent event, Actor target, int color)
   {
     PlayerInfo player = players[consolePlayer];
-
-    Vector2 centerPos = makeDrawPos(player, event, target, target.height / 2.0);
-
-    double  distance      = player.mo.Distance3D(target);
-    if (distance == 0) { return; }
+    Vector2 centerPos = makeDrawPos(event, target, target.height / 2.0);
+    double   distance = player.mo.distance3D(target);
+    if (distance == 0) return;
 
     double  height        = target.height;
     double  radius        = target.radius;
-    double  zoomFactor    = abs(sin(player.FOV));
+    double  zoomFactor    = abs(sin(player.fov));
     double  visibleRadius = radius * 2000.0 / distance / zoomFactor;
     double  visibleHeight = height * 1000.0 / distance / zoomFactor;
 
     let  settings         = _settings;
-    let  f                = Font.GetFont(settings.fontName());
+    let  f                = Font.getFont(settings.fontName());
 
     double  size       = settings.frameSize();
     double  halfWidth  = visibleRadius / 2.0 * size;
@@ -253,7 +255,7 @@ class ts_EventHandler : EventHandler
   {
     PlayerInfo player = players[consolePlayer];
     Weapon w = player.readyWeapon;
-    if (w == NULL) { return true; }
+    if (w == NULL) return true;
 
     int located;
     int slot;
@@ -280,10 +282,8 @@ class ts_EventHandler : EventHandler
       }
     }
 
-    PlayerInfo player = players[consolePlayer];
-
     double scale           = 0.5 / _settings.crossScale();
-    double baseCenterY     = readY(player, font, scale);
+    double baseCenterY     = readY(font, scale);
     double topBottomShift  = 0.02;
 
     double topY            = baseCenterY - topBottomShift + _settings.topOff();
@@ -308,18 +308,14 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  Vector2 getRelativeXY( Actor       target
-                       , PlayerInfo  player
-                       , RenderEvent event
-                       , bool        isAbove
-                       )
+  Vector2 getRelativeXY(Actor target, RenderEvent event, bool isAbove)
   {
     if (target == NULL || !_settings.barsOnTarget()) return getDefaultRelativeXY();
 
     double y = isAbove
              ? target.height * 1.2
              : -5;
-    Vector2 centerPos = makeDrawPos(player, event, target, y);
+    Vector2 centerPos = makeDrawPos(event, target, y);
     Vector2 result    = ( centerPos.x / Screen.getWidth()
                         , clamp(centerPos.y / Screen.getHeight(), 0.1, 0.9)
                         );
@@ -329,10 +325,8 @@ class ts_EventHandler : EventHandler
   private ui
   void draw(Actor target, RenderEvent event)
   {
-    PlayerInfo player = players[consolePlayer];
-
     bool    isAbove = (_settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE);
-    Vector2 xy = getRelativeXY(target, player, event, isAbove);
+    Vector2 xy = getRelativeXY(target, event, isAbove);
     double  x  = xy.x;
     double  y  = xy.y;
 
@@ -362,7 +356,7 @@ class ts_EventHandler : EventHandler
       return;
     }
 
-    int  targetMaxHealth = ts_ActorInfo.GetActorMaxHealth(target);
+    int  targetMaxHealth = ts_ActorInfo.getActorMaxHealth(target);
     bool showHealth      = (targetMaxHealth != 0);
 
     if (targetMaxHealth < _settings.minHealth() && targetMaxHealth != 0)
@@ -381,7 +375,7 @@ class ts_EventHandler : EventHandler
     int tagColor;
     if (targetMaxHealth < 100) { tagColor = _settings.weakCol(); }
     else                       { tagColor = _settings.nameCol(); }
-    int customColor = ts_ActorInfo.CustomTargetColor(target);
+    int customColor = ts_ActorInfo.customTargetColor(target);
     if (customColor)           { tagColor = customColor; }
 
     int percent = 10;
@@ -434,7 +428,7 @@ class ts_EventHandler : EventHandler
       drawTextCenter(targetName, nameColor, textScale, x, y, font, 0.0, opacity);
       y += newline;
 
-      if (_settings.showNameAndTag() && target.GetClassName() != targetName)
+      if (_settings.showNameAndTag() && target.getClassName() != targetName)
       {
         drawTextCenter(target.getClassName(), nameColor, textScale, x, y, font, 0.0, opacity);
         y += newline;
@@ -444,7 +438,7 @@ class ts_EventHandler : EventHandler
     if (_settings.showInfo())
     {
       string targetFlags = ts_ActorInfo.getTargetFlags(target);
-      if (targetFlags.Length() > 0)
+      if (targetFlags.length() > 0)
       {
         drawTextCenter(targetFlags, nameColor, textScale, x, y, font, 0.0, opacity);
         y += newline;
@@ -524,9 +518,9 @@ class ts_EventHandler : EventHandler
                           , Font   font
                           )
   {
-    if (!_settings.showKillConfirmation()) { return y; }
+    if (!_settings.showKillConfirmation()) return y;
 
-    if (_lastTargetInfo.killTime == -1) { return y; }
+    if (_lastTargetInfo.killTime == -1) return y;
 
     if (level.time < _lastTargetInfo.killTime + 35 * 1)
     {
@@ -562,7 +556,7 @@ class ts_EventHandler : EventHandler
     double x = position * relativeX + xAdjustment;
     double y = height   * relativeY;
 
-    Screen.DrawText( font
+    Screen.drawText( font
                    , color
                    , x
                    , y
@@ -578,9 +572,7 @@ class ts_EventHandler : EventHandler
   Actor getTarget()
   {
     PlayerInfo player = players[consolePlayer];
-    if (!player) { return NULL; }
-    Actor playerActor = player.mo;
-    if (!playerActor) { return NULL; }
+    if (player.mo == NULL) return NULL;
 
     // try an easy way to get a target (also works with autoaim)
     Actor target   = _translator.aimTargetWrapper(player.mo);
@@ -603,23 +595,20 @@ class ts_EventHandler : EventHandler
     }
 
     // give up
-    if (target == NULL)
-    {
-      return NULL;
-    }
+    if (target == NULL) return NULL;
 
     // target is found
 
     // check sector lighting
     if (settings.hideInDarkness())
     {
-      bool noLightAmplifier = (playerActor.findInventory("PowerLightAmp") == NULL)
-        && (playerActor.findInventory("PowerInvulnerable") == NULL);
+      bool noLightAmplifier = (player.mo.findInventory("PowerLightAmp") == NULL)
+        && (player.mo.findInventory("PowerInvulnerable") == NULL);
       if (noLightAmplifier)
       {
         Sector targetSector = target.curSector;
         int    lightLevel   = targetSector.lightLevel;
-        if (lightLevel < settings.minimalLightLevel()) { return NULL; }
+        if (lightLevel < settings.minimalLightLevel()) return NULL;
       }
     }
 
@@ -627,34 +616,34 @@ class ts_EventHandler : EventHandler
     bool   targetIsSlave = _data.slaveActorsContain(targetClass);
     if (targetIsSlave)
     {
-      target      = target.Master;
-      targetClass = target.GetClassName();
+      target      = target.master;
+      targetClass = target.getClassName();
     }
 
     bool isInBlackList = _data.blackListContains(targetClass);
-    if (isInBlackList) { return NULL; }
+    if (isInBlackList) return NULL;
 
     if (target.bIsMonster)
     {
       bool targetIsHidden = (target.bShadow || target.bStealth);
-      if (!settings.showHidden()  && targetIsHidden)   { return NULL; }
-      if (!settings.showFriends() && target.bFriendly) { return NULL; }
-      if (!settings.showDormant() && target.bDormant)  { return NULL; }
-      if (!settings.showIdle()    && ts_ActorInfo.isIdle(target)) { return NULL; }
+      if (!settings.showHidden()  && targetIsHidden)   return NULL;
+      if (!settings.showFriends() && target.bFriendly) return NULL;
+      if (!settings.showDormant() && target.bDormant)  return NULL;
+      if (!settings.showIdle()    && ts_ActorInfo.isIdle(target)) return NULL;
     }
     else // not monsters
     {
-      if (target.player) { return target; }
+      if (target.player) return target;
 
       switch (settings.showObjects())
       {
         case 0: return NULL;
         case 1:
-          if (target.bShootable) { return target; }
-          else                   { return NULL;   }
+          if (target.bShootable) return target;
+          else                   return NULL;
         case 2:
-          if (target.bShootable || target is "Inventory") { return target; }
-          else                                            { return NULL;   }
+          if (target.bShootable || target is "Inventory") return target;
+          else                                            return NULL;
         case 3:
           return target;
       }
@@ -666,20 +655,10 @@ class ts_EventHandler : EventHandler
   private ui
   string getTargetName(Actor target)
   {
-    if (target.player) { return target.player.GetUserName(); }
+    if (target.player) return target.player.getUserName();
+    if (_settings.showInternalNames()) return target.getClassName();
 
-    string targetClass = target.GetClassName();
-
-    if (_settings.showInternalNames()) return targetClass;
-
-    // if target name is set via actor tag, return it
-    string targetName = target.GetTag();
-    if (targetName != targetClass)
-    {
-      return addAdditionalInfo(target, targetName);
-    }
-
-    return addAdditionalInfo(target, targetName);
+    return addAdditionalInfo(target, target.getTag());
   }
 
   private ui
@@ -692,54 +671,52 @@ class ts_EventHandler : EventHandler
       if (amount == 1)
       {
         BasicArmorPickup armor = BasicArmorPickup(inv);
-        if (armor) { amount = armor.SaveAmount; }
+        if (armor) { amount = armor.saveAmount; }
       }
-      if (amount == 1) { return name; }
-      else             { return string.format("%s (%i)", name, amount); }
+      if (amount == 1) return name;
+      else             return string.format("%s (%i)", name, amount);
     }
-    else
-    {
-      return PrependChampionColor(target, name);
-    }
+
+    return prependChampionColor(target, name);
   }
 
   private ui
   string prependChampionColor(Actor target, string name)
   {
-    if (!_settings.showChampion()) { return name; }
+    if (!_settings.showChampion()) return name;
 
     string tokenClass = "champion_Token";
-    Inventory token = target.FindInventory(tokenClass, true);
-    if (!token) { return name; }
+    Inventory   token = target.findInventory(tokenClass, true);
+    if (!token) return name;
 
-    string tokenClassName = token.GetClassName();
+    string tokenClassName = token.getClassName();
     string championTag    = _data.championTokens.at(tokenClassName);
-    if (championTag.Length() == 0) { championTag = "Champion"; }
+    if (championTag.length() == 0) { championTag = "Champion"; }
 
     championTag.appendFormat(" %s", name);
     return championTag;
   }
 
   private play
-  bool isPreciseYAvailable(PlayerInfo player) const
+  bool isPreciseYAvailable() const
   {
-    if (_preciseY != NULL) { return true; }
+    if (_preciseY != NULL) return true;
 
-    _preciseY = Cvar.GetCVar("pc_y", player);
+    _preciseY = Cvar.getCVar("pc_y", players[consolePlayer]);
 
     return (_preciseY != NULL);
   }
 
   private play
-  double readY(PlayerInfo player, Font f, double scale) const
+  double readY(Font f, double scale) const
   {
     int    x, y, width, height;
-    [x, y, width, height]          = Screen.GetViewWindow();
-    int    screenHeight            = Screen.GetHeight();
+    [x, y, width, height]          = Screen.getViewWindow();
+    int    screenHeight            = Screen.getHeight();
     int    statusBarHeight         = screenHeight - height - x;
     double relativeStatusBarHeight = double(statusBarHeight) * scale / screenHeight;
-    double screenY = isPreciseYAvailable(player)
-      ? (_preciseY.GetFloat() - f.GetHeight() / 2) / (Screen.GetHeight() - relativeStatusBarHeight)
+    double screenY = isPreciseYAvailable()
+      ? (_preciseY.getFloat() - f.getHeight() / 2) / (Screen.getHeight() - relativeStatusBarHeight)
       : 0.51 - relativeStatusBarHeight;
 
     return screenY;
@@ -759,12 +736,12 @@ class ts_EventHandler : EventHandler
 
     _glProjection  = new("ts_Le_GlScreen");
     _swProjection  = new("ts_Le_SwScreen");
-    _cvarRenderer  = Cvar.GetCvar("vid_rendermode", player);
+    _cvarRenderer  = Cvar.getCvar("vid_rendermode", player);
 
     // for LZDoom
     if (_cvarRenderer == NULL)
     {
-      _cvarRenderer = Cvar.GetCvar("vid_renderer", player);
+      _cvarRenderer = Cvar.getCvar("vid_renderer", player);
     }
 
     _isInitialized = true;
@@ -778,7 +755,7 @@ class ts_EventHandler : EventHandler
     // If something breaks, look here.
     if(_cvarRenderer)
     {
-      switch (_cvarRenderer.GetInt())
+      switch (_cvarRenderer.getInt())
       {
       default:
         _projection = _glProjection;
