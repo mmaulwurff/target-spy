@@ -286,5 +286,5 @@ OptionMenu "m8f_ts_ColorSetup"
 
 AddOptionMenu OptionsMenu
 {
-  Submenu    "Target Spy Options", "m8f_ts_Options"
+  Submenu "$TS_OPTIONS_TITLE", m8f_ts_Options
 }

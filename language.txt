@@ -1,0 +1,3 @@
+[enu default]
+
+TS_OPTIONS_TITLE = "\cd⌖\c- Target Spy Options";
