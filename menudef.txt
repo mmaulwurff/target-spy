@@ -1,6 +1,6 @@
 // Option values ///////////////////////////////////////////////////////////////
 
-OptionValue "m8f_ts_y_values"
+OptionValue ts_y_values
 {
   0.02, "Top"
   0.10, "Below top"
@@ -9,7 +9,7 @@ OptionValue "m8f_ts_y_values"
   0.90, "Bottom"
 }
 
-OptionString "m8f_ts_font_values"
+OptionString ts_font_values
 {
   "SmallFont"       , "Small font"
   "BigFont"         , "Big font"
@@ -23,7 +23,7 @@ OptionString "m8f_ts_font_values"
   "NewSmallFont"    , "New small font"
 }
 
-OptionString "m8f_ts_crosshair_font_values"
+OptionString ts_crosshair_font_values
 {
   "SmallFont"       , "Small font"
   "BigFont"         , "Big font"
@@ -39,7 +39,7 @@ OptionString "m8f_ts_crosshair_font_values"
   "NewSmallFont"    , "New small font"
 }
 
-OptionValue "m8f_ts_health_numbers_values"
+OptionValue ts_health_numbers_values
 {
   0, "Off"
   1, "On: current/max"
@@ -48,7 +48,7 @@ OptionValue "m8f_ts_health_numbers_values"
   4, "On: 100.00%"
 }
 
-OptionValue "m8f_ts_show_objects_values"
+OptionValue ts_show_objects_values
 {
   0, "Off"
   1, "Shootable only"
@@ -57,13 +57,13 @@ OptionValue "m8f_ts_show_objects_values"
   4, "EVERYTHING"
 }
 
-OptionValue "m8f_ts_class_as_tag_values"
+OptionValue ts_class_as_tag_values
 {
   0, "Tags"
   1, "Class Names"
 }
 
-OptionValue "m8f_ts_frame_style_values"
+OptionValue ts_frame_style_values
 {
   0, "Disabled"
   1, "//"
@@ -75,7 +75,7 @@ OptionValue "m8f_ts_frame_style_values"
   7, "Red frame"
 }
 
-OptionValue "m8f_ts_on_target_values"
+OptionValue ts_on_target_values
 {
   0, "Disabled"
   1, "Above"
@@ -84,207 +84,200 @@ OptionValue "m8f_ts_on_target_values"
 
 // Option menus ////////////////////////////////////////////////////////////////
 
-OptionMenu   "m8f_ts_VisualOptions"
+OptionMenu ts_VisualOptions
 {
   Title      "Target Spy Visual Options"
 
   StaticText ""
-  Option     "Font"               , "m8f_ts_font"         , "m8f_ts_font_values"
-  Slider     "Newline step"       , "m8f_ts_step_mult"    , 0.1, 10.0, 0.1, 1
-  Slider     "Scale"              , "m8f_ts_text_scale"   , 0.5, 3.0, 0.05, 2
-  Option     "Names:"             , "m8f_class_as_tag"    , "m8f_ts_class_as_tag_values"
+  Option     "Font"               , m8f_ts_font         , ts_font_values
+  Slider     "Newline step"       , m8f_ts_step_mult    , 0.1, 10.0, 0.1, 1
+  Slider     "Scale"              , m8f_ts_text_scale   , 0.5, 3.0, 0.05, 2
+  Option     "Names:"             , m8f_class_as_tag    , ts_class_as_tag_values
 
   StaticText ""
   StaticText "Show:"               , 1
-  Option "Health bar"              , "m8f_ts_show_bar"     , OnOff
-  Option "Health numbers"          , "m8f_ts_show_numbers" , m8f_ts_health_numbers_values
-  Option "Name"                    , "m8f_ts_show_name"    , OnOff
-  Option "And class name, if different" , "m8f_ts_show_name_tag", OnOff
-  Option "Kill Confirmation"       , "m8f_ts_show_confirm" , OnOff
-  Option "Named Confirmation"      , "m8f_ts_named_confirm", OnOff
-  Option "Additional info"         , "m8f_ts_show_info"    , OnOff
+  Option "Health bar"              , m8f_ts_show_bar     , OnOff
+  Option "Health numbers"          , m8f_ts_show_numbers , ts_health_numbers_values
+  Option "Name"                    , m8f_ts_show_name    , OnOff
+  Option "And class name, if different" , m8f_ts_show_name_tag, OnOff
+  Option "Kill Confirmation"       , m8f_ts_show_confirm , OnOff
+  Option "Named Confirmation"      , m8f_ts_named_confirm, OnOff
+  Option "Additional info"         , m8f_ts_show_info    , OnOff
   StaticText "Includes: friendly, invulnerable, boss,"     , Black
   StaticText "dormant, buddha, nodamage, DoomRPG level."   , Black
 
   StaticText ""
   StaticText "Health bar"          , 1
-  TextField "Filled bar symbol"    , "m8f_ts_pip"
-  TextField "Empty bar symbol"     , "m8f_ts_empty_pip"
-  Option "Health bar log scale"    , "m8f_ts_bar_log_scale" , OnOff
-  Option "Vertical position"       , "m8f_ts_y"             , "m8f_ts_y_values"
-  Slider "Offset"                  , "m8f_ts_y_offset"      , -0.2, 0.2, 0.0025, 4
-  Slider "Opacity"                 , "m8f_ts_opacity"       , 0.0, 1.0, 0.05, 2
-  Slider "Length Multiplier"       , "m8f_ts_length_mult"   , 0.5, 10.0, 0.1
-  Option "Position on target"      , "m8f_ts_on_target"     , "m8f_ts_on_target_values"
+  TextField "Filled bar symbol"    , m8f_ts_pip
+  TextField "Empty bar symbol"     , m8f_ts_empty_pip
+  Option "Health bar log scale"    , m8f_ts_bar_log_scale , OnOff
+  Option "Vertical position"       , m8f_ts_y             , ts_y_values
+  Slider "Offset"                  , m8f_ts_y_offset      , -0.2, 0.2, 0.0025, 4
+  Slider "Opacity"                 , m8f_ts_opacity       , 0.0, 1.0, 0.05, 2
+  Slider "Length Multiplier"       , m8f_ts_length_mult   , 0.5, 10.0, 0.1
+  Option "Position on target"      , m8f_ts_on_target     , ts_on_target_values
 
   StaticText ""
   StaticText "Target Frame", 1
-  Option     "Style" , "m8f_ts_frame_style" , "m8f_ts_frame_style_values"
-  Slider     "Scale" , "m8f_ts_frame_scale" ,  0.5, 3.0, 0.05, 2
-  Slider     "Size"  , "m8f_ts_frame_size"  , 0.25, 4.0, 0.25, 2
+  Option     "Style" , m8f_ts_frame_style , ts_frame_style_values
+  Slider     "Scale" , m8f_ts_frame_scale , 0.5,  3.0, 0.05, 2
+  Slider     "Size"  , m8f_ts_frame_size  , 0.25, 4.0, 0.25, 2
 
   StaticText ""
 }
 
-OptionMenu   "m8f_ts_Filters"
+OptionMenu ts_Filters
 {
   Title "Target Filters"
 
   StaticText ""
-  Option "Stealth/shadow monsters" , "m8f_ts_show_hidden"  , OnOff
-  Option "Friendly targets"        , "m8f_ts_show_friends" , OnOff
-  Option "Dormant targets"         , "m8f_ts_show_dormant" , OnOff
-  Option "Objects"                 , "m8f_ts_show_objects" , "m8f_ts_show_objects_values"
-  Option "Corpses"                 , "m8f_ts_show_corpses" , OnOff
-  Option "Idle targets"            , "m8f_ts_show_idle"    , OnOff
+  Option "Stealth/shadow monsters" , m8f_ts_show_hidden  , OnOff
+  Option "Friendly targets"        , m8f_ts_show_friends , OnOff
+  Option "Dormant targets"         , m8f_ts_show_dormant , OnOff
+  Option "Objects"                 , m8f_ts_show_objects , ts_show_objects_values
+  Option "Corpses"                 , m8f_ts_show_corpses , OnOff
+  Option "Idle targets"            , m8f_ts_show_idle    , OnOff
   StaticText "Recommended: OFF if the game contains mimics.", Black
 
   StaticText ""
-  Option "Hide targets in darkness", "m8f_ts_hide_in_dark" , OnOff
-  Slider "Minimal light level"     , "m8f_ts_light_level"  , 0, 250, 10, 0
+  Option "Hide targets in darkness", m8f_ts_hide_in_dark , OnOff
+  Slider "Minimal light level"     , m8f_ts_light_level  , 0, 250, 10, 0
   StaticText "Targets are hidden if the light level is less than this.", Black
 }
 
-OptionMenu   "m8f_ts_BehaviorOptions"
+OptionMenu ts_BehaviorOptions
 {
   Title      "Target Spy Behavior Options"
 
   StaticText ""
-  TextField  "Minimal health"                   , "m8f_ts_min_health"
+  TextField  "Minimal health"                   , m8f_ts_min_health
   StaticText "Target spy will hide for targets" , Black
   StaticText "with max health less than this."  , Black
 }
 
-OptionMenu   "m8f_ts_CrossOptions"
+OptionMenu ts_CrossOptions
 {
   Title      "Target Spy Cross-mod Options"
 
   StaticText ""
-  Option     "Special names for Champions" , "m8f_ts_show_champion", OnOff
+  Option     "Special names for Champions" , m8f_ts_show_champion, OnOff
   StaticText "Champions is a monster mod by Mikk-.", Black
 }
 
-OptionMenu   "m8f_ts_Controls"
+OptionMenu ts_Controls
 {
   Title      "Target Spy Controls"
-  StaticTextSwitchable "$CNTRLMNU_SwitchText1", "$CNTRLMNU_SwitchText2", "ControlMessage"
+  StaticTextSwitchable "$CNTRLMNU_SwitchText1", "$CNTRLMNU_SwitchText2", ControlMessage
 
   StaticText ""
   Control    "Toggle"       , "m8f_ts_toggle"
   Control    "Hold to show" , "+m8f_ts_hold"
 }
 
-OptionMenu   "m8f_ts_Options"
+OptionMenu ts_Options
 {
   Title      "Target Spy Options"
 
   StaticText ""
-  Option     "Target Spy enabled" , "m8f_ts_enabled"       , OnOff
+  Option     "Target Spy enabled" , m8f_ts_enabled , OnOff
 
   StaticText ""
-  SubMenu    "Visuals"            , "m8f_ts_VisualOptions"
-
-  StaticText ""
-  SubMenu    "Target Filters"     , "m8f_ts_Filters"
-
-  StaticText ""
-  SubMenu    "Colors"             , "m8f_ts_ColorSetup"
-
-  StaticText ""
-  SubMenu    "Behavior"           , "m8f_ts_BehaviorOptions"
-
-  StaticText ""
-  SubMenu    "Crosshairs Setup"   , "m8f_ts_Crosshairs"
-
-  StaticText ""
-  SubMenu    "Controls"           , "m8f_ts_Controls"
-
-  StaticText ""
-  SubMenu    "Cross-mod options"  , "m8f_ts_CrossOptions"
+  SubMenu    "Visuals"            , ts_VisualOptions
+  SubMenu    "Target Filters"     , ts_Filters
+  SubMenu    "Colors"             , ts_ColorSetup
+  SubMenu    "Behavior"           , ts_BehaviorOptions
+  SubMenu    "Crosshairs Setup"   , ts_Crosshairs
+  SubMenu    "Controls"           , ts_Controls
+  SubMenu    "Cross-mod options"  , ts_CrossOptions
 }
 
-OptionMenu "m8f_ts_Crosshairs"
+OptionMenu ts_Crosshairs
 {
   Title "Target Spy Crosshairs Setup"
 
   StaticText ""
-  Option "Enabled"             , "m8f_ts_crosshair_on"  , OnOff
-  Option "Only on target"      , "m8f_ts_cross_only_tg" , OnOff
-  Option "Hide for Slot 1"     , "m8f_ts_no_cross_on_1" , OnOff
-  Option "Change color on hit" , "m8f_ts_hit_confirm"   , OnOff
-  Option "Hit color"           , "m8f_ts_hit_color"     , "TextColors"
+  Option "Enabled"             , m8f_ts_crosshair_on  , OnOff
+  Option "Only on target"      , m8f_ts_cross_only_tg , OnOff
+  Option "Hide for Slot 1"     , m8f_ts_no_cross_on_1 , OnOff
+  Option "Change color on hit" , m8f_ts_hit_confirm   , OnOff
+  Option "Hit color"           , m8f_ts_hit_color     , TextColors
 
-  Slider "Top part offset"     , "m8f_ts_top_offset"   , -0.1, 0.1, 0.005, 3
-  Slider "Middle part offset"  , "m8f_ts_cross_offset" , -0.1, 0.1, 0.005, 3
-  Slider "Bottom part offset"  , "m8f_ts_bot_offset"   , -0.1, 0.1, 0.005, 3
-  Slider "X Adjustment"        , "m8f_ts_x_adjustment" , -50, 50, 0.5, 1
-  Slider "Scale"               , "m8f_ts_cross_scale"  , 0.5, 3.0, 0.05, 2
-  Slider "Opacity"             , "m8f_ts_cr_opacity"   , 0.0, 1.0, 0.05, 2
-  Option "Font"                , "m8f_ts_cr_font"      , "m8f_ts_crosshair_font_values"
-  SubMenu "Crosshair Pieces Reference", "m8f_ts_cr_pieces_ref"
-
-  StaticText ""
-  StaticText ""
-  StaticText ""
-  StaticText ""
+  Slider "Top part offset"     , m8f_ts_top_offset   , -0.1, 0.1, 0.005, 3
+  Slider "Middle part offset"  , m8f_ts_cross_offset , -0.1, 0.1, 0.005, 3
+  Slider "Bottom part offset"  , m8f_ts_bot_offset   , -0.1, 0.1, 0.005, 3
+  Slider "X Adjustment"        , m8f_ts_x_adjustment , -50, 50, 0.5, 1
+  Slider "Scale"               , m8f_ts_cross_scale  , 0.5, 3.0, 0.05, 2
+  Slider "Opacity"             , m8f_ts_cr_opacity   , 0.0, 1.0, 0.05, 2
+  Option "Font"                , m8f_ts_cr_font      , ts_crosshair_font_values
+  SubMenu "Crosshair Pieces Reference", ts_cr_pieces_ref
 
   StaticText ""
-  TextField "Top"    , "m8f_ts_cross_top"
+  StaticText ""
+  StaticText ""
+  StaticText ""
+
+  StaticText ""
+  TextField "Top"    , m8f_ts_cross_top
   Command "Clear"    , "m8f_ts_cross_top \"\""
   StaticText ""
 
-  TextField "Center" , "m8f_ts_crosshair"
+  TextField "Center" , m8f_ts_crosshair
   Command "Clear"    , "m8f_ts_crosshair \"\""
   StaticText ""
 
-  TextField "Bottom" , "m8f_ts_cross_bottom"
+  TextField "Bottom" , m8f_ts_cross_bottom
   Command "Clear"    , "m8f_ts_cross_bottom \"\""
 }
 
-ListMenu "m8f_ts_cr_pieces_ref"
+ListMenu ts_cr_pieces_ref
 {
   StaticTextCentered  160,  0, "Crosshair Pieces Reference"
   StaticPatchCentered 160, 40, "tscp_graph_scaled"
 }
 
-OptionMenu "m8f_ts_ColorSetup"
+OptionMenu ts_ColorSetup
 {
   Title "Target Spy Color Setup"
 
   StaticText ""
-  Option "Default crosshair color" , "m8f_ts_def_color_crs" , "TextColors"
-  Option "Tag color"               , "m8f_ts_def_color_tag" , "TextColors"
-  Option "Weaker enemy tag color"  , "m8f_ts_def_cl_tag_wk" , "TextColors"
+  Option "Default crosshair color" , m8f_ts_def_color_crs , TextColors
+  Option "Tag color"               , m8f_ts_def_color_tag , TextColors
+  Option "Weaker enemy tag color"  , m8f_ts_def_cl_tag_wk , TextColors
 
   StaticText ""
-  Option "Show special color for almost dead" , "m8f_ts_alm_dead_cr", OnOff
-  Option "Dead/Almost dead color", "m8f_ts_cr_alm_dead", "TextColors"
+  Option "Show special color for almost dead" , m8f_ts_alm_dead_cr, OnOff
+  Option "Dead/Almost dead color", m8f_ts_cr_alm_dead, TextColors
 
   StaticText ""
   StaticText "Color for %", 1
-  Option "  0%"       , "m8f_ts_cr_0"  , "TextColors"
-  Option " 10%"       , "m8f_ts_cr_1"  , "TextColors"
-  Option " 20%"       , "m8f_ts_cr_2"  , "TextColors"
-  Option " 30%"       , "m8f_ts_cr_3"  , "TextColors"
-  Option " 40%"       , "m8f_ts_cr_4"  , "TextColors"
-  Option " 50%"       , "m8f_ts_cr_5"  , "TextColors"
-  Option " 60%"       , "m8f_ts_cr_6"  , "TextColors"
-  Option " 70%"       , "m8f_ts_cr_7"  , "TextColors"
-  Option " 80%"       , "m8f_ts_cr_8"  , "TextColors"
-  Option " 90%"       , "m8f_ts_cr_9"  , "TextColors"
-  Option "100%"       , "m8f_ts_cr_10" , "TextColors"
-  Option "Overhealed" , "m8f_ts_cr_11" , "TextColors"
+  Option "  0%"       , m8f_ts_cr_0  , TextColors
+  Option " 10%"       , m8f_ts_cr_1  , TextColors
+  Option " 20%"       , m8f_ts_cr_2  , TextColors
+  Option " 30%"       , m8f_ts_cr_3  , TextColors
+  Option " 40%"       , m8f_ts_cr_4  , TextColors
+  Option " 50%"       , m8f_ts_cr_5  , TextColors
+  Option " 60%"       , m8f_ts_cr_6  , TextColors
+  Option " 70%"       , m8f_ts_cr_7  , TextColors
+  Option " 80%"       , m8f_ts_cr_8  , TextColors
+  Option " 90%"       , m8f_ts_cr_9  , TextColors
+  Option "100%"       , m8f_ts_cr_10 , TextColors
+  Option "Overhealed" , m8f_ts_cr_11 , TextColors
 
   StaticText ""
   StaticText "Alternative two-color theme", 1
-  Option "Enabled"      , "m8f_ts_alt_hp_color" , OnOff
-  Option "Filled color" , "m8f_ts_green_color"  , "TextColors"
-  Option "Empty color"  , "m8f_ts_red_color"    , "TextColors"
+  Option "Enabled"      , m8f_ts_alt_hp_color , OnOff
+  Option "Filled color" , m8f_ts_green_color  , TextColors
+  Option "Empty color"  , m8f_ts_red_color    , TextColors
 }
 
 // Entry point /////////////////////////////////////////////////////////////////
 
 AddOptionMenu OptionsMenu
 {
-  Submenu "$TS_OPTIONS_TITLE", m8f_ts_Options
+  Submenu "$TS_OPTIONS_TITLE", ts_Options
+}
+
+AddOptionMenu OptionsMenuSimple
+{
+  Submenu "$TS_OPTIONS_TITLE", ts_Options
 }
