@@ -198,23 +198,23 @@ class ts_EventHandler : EventHandler
       case settings.FRAME_GRAPHIC_RED:
         {
           let  frameName      = (frameStyle == settings.FRAME_GRAPHIC) ? "ts_frame" : "ts_framr";
-          let  topLeftTex     = TexMan.CheckForTexture(frameName                  , TexMan.TryAny);
-          let  topRightTex    = TexMan.CheckForTexture(frameName.."_top_right"    , TexMan.TryAny);
-          let  bottomLeftTex  = TexMan.CheckForTexture(frameName.."_bottom_left"  , TexMan.TryAny);
-          let  bottomRightTex = TexMan.CheckForTexture(frameName.."_bottom_right" , TexMan.TryAny);
+          let  topLeftTex     = TexMan.checkForTexture(frameName                  , TexMan.TryAny);
+          let  topRightTex    = TexMan.checkForTexture(frameName.."_top_right"    , TexMan.TryAny);
+          let  bottomLeftTex  = TexMan.checkForTexture(frameName.."_bottom_left"  , TexMan.TryAny);
+          let  bottomRightTex = TexMan.checkForTexture(frameName.."_bottom_right" , TexMan.TryAny);
           bool animate        = false;
 
-          Screen.SetClipRect( int(topLeft.x)
+          Screen.setClipRect( int(topLeft.x)
                             , int(topLeft.y)
                             , int(round(bottomRight.x - topLeft.x + 1))
                             , int(round(bottomRight.y - topLeft.y + 1))
                             );
 
-          Screen.DrawTexture(topLeftTex,     animate, topLeft.x,     topLeft.y    );
-          Screen.DrawTexture(topRightTex,    animate, topRight.x,    topRight.y   );
-          Screen.DrawTexture(bottomLeftTex,  animate, bottomLeft.x,  bottomLeft.y );
-          Screen.DrawTexture(bottomRightTex, animate, bottomRight.x, bottomRight.y);
-          Screen.ClearClipRect();
+          Screen.drawTexture(topLeftTex,     animate, topLeft.x,     topLeft.y    );
+          Screen.drawTexture(topRightTex,    animate, topRight.x,    topRight.y   );
+          Screen.drawTexture(bottomLeftTex,  animate, bottomLeft.x,  bottomLeft.y );
+          Screen.drawTexture(bottomRightTex, animate, bottomRight.x, bottomRight.y);
+          Screen.clearClipRect();
         }
         break;
     }
@@ -223,8 +223,8 @@ class ts_EventHandler : EventHandler
   private static ui
   void drawCleanText(Vector2 pos, string str, Font f, int color, double scale)
   {
-    int width  = int(scale * Screen.GetWidth());
-    int height = int(scale * (Screen.GetHeight() - f.GetHeight()));
+    int width  = int(scale * Screen.getWidth());
+    int height = int(scale * (Screen.getHeight() - f.getHeight()));
 
     Screen.drawText( f
                    , color
@@ -244,7 +244,7 @@ class ts_EventHandler : EventHandler
   void setLastTarget(Actor newLastTarget)
   {
     _lastTargetInfo.a    = newLastTarget;
-    _lastTargetInfo.name = GetTargetName(newLastTarget);
+    _lastTargetInfo.name = getTargetName(newLastTarget);
     _lastTargetInfo.name = enableExtendedColorCode(_lastTargetInfo.name);
   }
 
@@ -258,7 +258,7 @@ class ts_EventHandler : EventHandler
     int located;
     int slot;
     int priority;
-    [located, slot, priority] = player.weapons.LocateWeapon(w.GetClassName());
+    [located, slot, priority] = player.weapons.locateWeapon(w.getClassName());
     return (slot == 1);
   }
 
@@ -320,8 +320,8 @@ class ts_EventHandler : EventHandler
              ? target.height * 1.2
              : -5;
     Vector2 centerPos = makeDrawPos(player, event, target, y);
-    Vector2 result    = ( centerPos.x / Screen.GetWidth()
-                        , clamp(centerPos.y / Screen.GetHeight(), 0.1, 0.9)
+    Vector2 result    = ( centerPos.x / Screen.getWidth()
+                        , clamp(centerPos.y / Screen.getHeight(), 0.1, 0.9)
                         );
     return result;
   }
@@ -340,8 +340,8 @@ class ts_EventHandler : EventHandler
     if ((y >= 0.80 && _settings.barsOnTarget() != ts_Settings.ON_TARGET_BELOW)
         || _settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE) { newline = -newline; }
 
-    Font font      = Font.GetFont(_settings.fontName());
-    Font crossfont = Font.GetFont(_settings.crossFontName());
+    Font font      = Font.getFont(_settings.fontName());
+    Font crossfont = Font.getFont(_settings.crossFontName());
 
     if (_settings.barsOnTarget() == ts_Settings.ON_TARGET_DISABLED)
     {
@@ -422,12 +422,12 @@ class ts_EventHandler : EventHandler
 
     if (_settings.showName())
     {
-      string targetName = GetTargetName(target);
+      string targetName = getTargetName(target);
       targetName = enableExtendedColorCode(targetName);
 
       if (targetHealth < 1)
       {
-        targetName = String.Format("Remains of %s", targetName);
+        targetName = string.format("Remains of %s", targetName);
         nameColor  = targetColor;
       }
 
@@ -436,14 +436,14 @@ class ts_EventHandler : EventHandler
 
       if (_settings.showNameAndTag() && target.GetClassName() != targetName)
       {
-        drawTextCenter(target.GetClassName(), nameColor, textScale, x, y, font, 0.0, opacity);
+        drawTextCenter(target.getClassName(), nameColor, textScale, x, y, font, 0.0, opacity);
         y += newline;
       }
     }
 
     if (_settings.showInfo())
     {
-      string targetFlags = ts_ActorInfo.GetTargetFlags(target);
+      string targetFlags = ts_ActorInfo.getTargetFlags(target);
       if (targetFlags.Length() > 0)
       {
         drawTextCenter(targetFlags, nameColor, textScale, x, y, font, 0.0, opacity);
@@ -454,11 +454,11 @@ class ts_EventHandler : EventHandler
     if (showHealth && (_settings.showNums() != 0))
     {
       string healthString = makeHealthString(targetHealth, targetMaxHealth);
-      int    armor        = target.CountInv("BasicArmor");
+      int    armor        = target.countInv("BasicArmor");
 
       if (armor)
       {
-        healthString.AppendFormat(" Armor: %d", armor);
+        healthString.appendFormat(" Armor: %d", armor);
       }
 
       y += drawTargetHealth(x, y, healthString, targetColor, font);
@@ -475,15 +475,15 @@ class ts_EventHandler : EventHandler
   {
     switch (_settings.showNums())
     {
-    case 1: return String.Format("%d/%d", targetHealth, targetMaxHealth);
-    case 2: return String.Format("%d", targetHealth);
+    case 1: return string.format("%d/%d", targetHealth, targetMaxHealth);
+    case 2: return string.format("%d", targetHealth);
 
     case 3:
     {
       int percent100 = (targetMaxHealth == 0)
         ? 100
         : int(round(targetHealth * 100.0 / targetMaxHealth));
-      return String.Format("%d%%", percent100);
+      return string.format("%d%%", percent100);
     }
 
     case 4:
@@ -491,11 +491,11 @@ class ts_EventHandler : EventHandler
       double percent100dot00 = (targetMaxHealth == 0)
         ? 100
         : targetHealth * 100.0 / targetMaxHealth;
-      return String.Format("%.2f%%", percent100dot00);
+      return string.format("%.2f%%", percent100dot00);
     }
     }
 
-    console.printf("Unknown settings.showNums() result!");
+    Console.printf("Unknown settings.showNums() result: %d", _settings.showNums());
     return "";
   }
 
@@ -555,9 +555,9 @@ class ts_EventHandler : EventHandler
                      , double opacity
                      )
   {
-    int width    = int(scale * Screen.GetWidth());
-    int height   = int(scale * (Screen.GetHeight() - font.GetHeight()));
-    int position = width - font.StringWidth(text);
+    int width    = int(scale * Screen.getWidth());
+    int height   = int(scale * (Screen.getHeight() - font.getHeight()));
+    int position = width - font.stringWidth(text);
 
     double x = position * relativeX + xAdjustment;
     double y = height   * relativeY;
@@ -583,23 +583,23 @@ class ts_EventHandler : EventHandler
     if (!playerActor) { return NULL; }
 
     // try an easy way to get a target (also works with autoaim)
-    Actor target   = _translator.AimTargetWrapper(player.mo);
+    Actor target   = _translator.aimTargetWrapper(player.mo);
     let   settings = _settings;
 
     // if target is not found by easy way, try the difficult way
     if (target == NULL)
     {
-      target = _translator.LineAttackTargetWrapper(player.mo, player.viewheight);
+      target = _translator.lineAttackTargetWrapper(player.mo, player.viewheight);
     }
 
     if (target == NULL && settings.showObjects() > 1)
     {
-      target = _translator.AimLineAttackWrapper(player.mo);
+      target = _translator.aimLineAttackWrapper(player.mo);
     }
 
     if (target == NULL && settings.showObjects() > 3)
     {
-      target = _translator.LineAttackNoBlockmapWrapper(player.mo, player.viewheight);
+      target = _translator.lineAttackNoBlockmapWrapper(player.mo, player.viewheight);
     }
 
     // give up
@@ -613,8 +613,8 @@ class ts_EventHandler : EventHandler
     // check sector lighting
     if (settings.hideInDarkness())
     {
-      bool noLightAmplifier = (playerActor.FindInventory("PowerLightAmp") == NULL)
-        && (playerActor.FindInventory("PowerInvulnerable") == NULL);
+      bool noLightAmplifier = (playerActor.findInventory("PowerLightAmp") == NULL)
+        && (playerActor.findInventory("PowerInvulnerable") == NULL);
       if (noLightAmplifier)
       {
         Sector targetSector = target.curSector;
@@ -623,7 +623,7 @@ class ts_EventHandler : EventHandler
       }
     }
 
-    string targetClass   = target.GetClassName();
+    string targetClass   = target.getClassName();
     bool   targetIsSlave = _data.slaveActorsContain(targetClass);
     if (targetIsSlave)
     {
@@ -634,13 +634,13 @@ class ts_EventHandler : EventHandler
     bool isInBlackList = _data.blackListContains(targetClass);
     if (isInBlackList) { return NULL; }
 
-    if (target.bISMONSTER)
+    if (target.bIsMonster)
     {
-      bool targetIsHidden = (target.bSHADOW || target.bSTEALTH);
+      bool targetIsHidden = (target.bShadow || target.bStealth);
       if (!settings.showHidden()  && targetIsHidden)   { return NULL; }
-      if (!settings.showFriends() && target.bFRIENDLY) { return NULL; }
-      if (!settings.showDormant() && target.bDORMANT)  { return NULL; }
-      if (!settings.showIdle()    && ts_ActorInfo.IsIdle(target)) { return NULL; }
+      if (!settings.showFriends() && target.bFriendly) { return NULL; }
+      if (!settings.showDormant() && target.bDormant)  { return NULL; }
+      if (!settings.showIdle()    && ts_ActorInfo.isIdle(target)) { return NULL; }
     }
     else // not monsters
     {
@@ -650,10 +650,10 @@ class ts_EventHandler : EventHandler
       {
         case 0: return NULL;
         case 1:
-          if (target.bSHOOTABLE) { return target; }
+          if (target.bShootable) { return target; }
           else                   { return NULL;   }
         case 2:
-          if (target.bSHOOTABLE || target is "Inventory") { return target; }
+          if (target.bShootable || target is "Inventory") { return target; }
           else                                            { return NULL;   }
         case 3:
           return target;
@@ -676,10 +676,10 @@ class ts_EventHandler : EventHandler
     string targetName = target.GetTag();
     if (targetName != targetClass)
     {
-      return AddAdditionalInfo(target, targetName);
+      return addAdditionalInfo(target, targetName);
     }
 
-    return AddAdditionalInfo(target, targetName);
+    return addAdditionalInfo(target, targetName);
   }
 
   private ui
@@ -695,7 +695,7 @@ class ts_EventHandler : EventHandler
         if (armor) { amount = armor.SaveAmount; }
       }
       if (amount == 1) { return name; }
-      else             { return String.Format("%s (%i)", name, amount); }
+      else             { return string.format("%s (%i)", name, amount); }
     }
     else
     {
@@ -716,7 +716,7 @@ class ts_EventHandler : EventHandler
     string championTag    = _data.championTokens.at(tokenClassName);
     if (championTag.Length() == 0) { championTag = "Champion"; }
 
-    championTag.AppendFormat(" %s", name);
+    championTag.appendFormat(" %s", name);
     return championTag;
   }
 
@@ -748,7 +748,7 @@ class ts_EventHandler : EventHandler
   private ui
   string enableExtendedColorCode(string str)
   {
-    str.replace('\c', String.Format("%c", 28));
+    str.replace('\c', string.format("%c", 28));
     return str;
   }
 
@@ -798,8 +798,6 @@ class ts_EventHandler : EventHandler
 
     _isPrepared = (_projection != NULL);
   }
-
-  // private: //////////////////////////////////////////////////////////////////
 
   private ts_Settings       _settings;
   private ts_Api            _api;
