@@ -30,6 +30,7 @@ class ts_EventHandler : EventHandler
     if (event.playerNumber != consolePlayer) return;
 
     _settings       = ts_Settings.from();
+    _api            = ts_Api.from();
     _lastTargetInfo = ts_LastTargetInfo.from();
     _translator     = NULL;
     _data           = ts_Data.from();
@@ -88,29 +89,17 @@ class ts_EventHandler : EventHandler
 // private: ////////////////////////////////////////////////////////////////////////////////////////
 
   private ui
-  void initCvars(PlayerInfo player)
-  {
-    if (_isEnabled != NULL) { return; }
-
-    _isEnabled = CVar.GetCVar("m8f_ts_enabled", player);
-    _hasTarget = CVar.GetCVar("m8f_ts_has_target", player);
-    _isFriendlyTarget = Cvar.GetCVar("m8f_ts_friendly_target", player);
-  }
-
-  private ui
   void drawEverything(RenderEvent event)
   {
-    PlayerInfo player = players[consolePlayer];
-    initCvars(player);
-    if (!_isEnabled.GetInt()) { return; }
+    if (!_settings.isEnabled()) { return; }
 
-    Actor target = GetTarget();
+    Actor target = getTarget();
 
     draw(target, event);
 
     bool hasTarget = (target != NULL);
-    _hasTarget.SetInt(hasTarget);
-    _isFriendlyTarget.SetInt(hasTarget && target.bFRIENDLY);
+    _api.setHasTarget(hasTarget);
+    _api.setIsFriendlyTarget(hasTarget && target.bFRIENDLY);
 
     if (hasTarget)
     {
@@ -813,6 +802,8 @@ class ts_EventHandler : EventHandler
   // private: //////////////////////////////////////////////////////////////////
 
   private ts_Settings       _settings;
+  private ts_Api            _api;
+
   private ts_LastTargetInfo _lastTargetInfo;
 
   private ts_Data _data;
@@ -828,9 +819,5 @@ class ts_EventHandler : EventHandler
   private ts_Le_ProjScreen _projection;
   private ts_Le_GlScreen   _glProjection;
   private ts_Le_SwScreen   _swProjection;
-
-  private transient ui CVar _isEnabled;
-  private transient ui CVar _hasTarget;
-  private transient ui CVar _isFriendlyTarget;
 
 } // class ts_EventHandler

@@ -39,6 +39,8 @@ class ts_Cvar
   int    getInt()    { if (!mCvar) load(); return mCvar.getInt();    }
   double getDouble() { if (!mCvar) load(); return mCvar.getFloat();  }
 
+  void setBool(bool value) { if (!mCvar) load(); mCvar.setInt(value); }
+
 // private: ////////////////////////////////////////////////////////////////////////////////////////
 
   private
