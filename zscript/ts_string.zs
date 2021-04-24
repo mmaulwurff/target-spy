@@ -45,7 +45,7 @@ class ts_String
     }
     else
     {
-      nPips = health * length / maxHealth;
+      nPips = int(round(double(health) * length / maxHealth));
       nPips = clamp(nPips, 1, length);
     }
 
