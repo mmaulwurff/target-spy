@@ -32,6 +32,7 @@ class ts_Data
     result.fillChampionTokens();
     result.fillSlaveActors();
     result.fillBlackList();
+    result.readExternalBlacklists();
 
     return result;
   }
@@ -111,6 +112,24 @@ class ts_Data
     _blackList.insert( "ShieldDefense"           , "1" );
     _blackList.insert( "ShieldDefense2"          , "1" );
   }
+
+  private
+  void readExternalBlacklists()
+  {
+    for (int i = Wads.findLump(BLACKLIST); i != -1; i = Wads.findLump(BLACKLIST, i + 1))
+    {
+      string contents = Wads.readLump(i);
+      Array<string> lines;
+      contents.split(lines, "\n");
+      uint nLines = lines.size();
+      for (uint l = 0; l < nLines; ++l)
+      {
+        _blacklist.insert(lines[l], "1");
+      }
+    }
+  }
+
+  const BLACKLIST = "ts_blacklist";
 
   private Dictionary _slaveActors;
   private Dictionary _blackList;

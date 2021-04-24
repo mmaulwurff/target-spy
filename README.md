@@ -21,9 +21,14 @@ This mod is a part of [m8f's toolbox](https://mmaulwurff.github.io/pages/toolbox
 * different colors for overhealed, injured, and almost dead targets;
 * "Kill Confirmed" message;
 * info on pickups and other objects can be shown too;
-* Weapon Menu integration;
-* Frame around target (off by default);
-* netplay support.
+* frame around target (off by default);
+* netplay support;
+* custom blacklists (see below).
+
+## Custom Blacklists
+
+If you don't want an actor to be displayed by Target Spy, create a lump nabed
+`ts_blacklist` and put actor names here, separated by newlines.
 
 ## Thanks
 
@@ -32,8 +37,8 @@ This mod is a part of [m8f's toolbox](https://mmaulwurff.github.io/pages/toolbox
 * Blue Shadow for examples of code.
 * Spaceman333, Rowsol, Churrupez, Cyanide, isaacpop23, TheRailgunner, Lud,
   Beed28, Ahpiox, ramon.dexter, Dutchygamer, Tesculpture, vapidscum,
-  CthulhuInACan, Someone64, Major Cooke, ProydohaRupert, bogus, and
-  MsrSgtShooterPerson for ideas, feature suggestions, and bug reports.
+  CthulhuInACan, Someone64, Major Cooke, ProydohaRupert, bogus,
+  MsrSgtShooterPerson and Lagi for ideas, feature suggestions, and bug reports.
 * Silentdarkness12 and Zhs2 for testing netplay.
 * Gutawer for [Gutamatics](https://gitlab.com/Gutawer/gzdoom-gutamatics). It was used in previous versions.
 
