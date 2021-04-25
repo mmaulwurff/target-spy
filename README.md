@@ -38,7 +38,8 @@ If you don't want an actor to be displayed by Target Spy, create a lump nabed
 * Spaceman333, Rowsol, Churrupez, Cyanide, isaacpop23, TheRailgunner, Lud,
   Beed28, Ahpiox, ramon.dexter, Dutchygamer, Tesculpture, vapidscum,
   CthulhuInACan, Someone64, Major Cooke, ProydohaRupert, bogus,
-  MsrSgtShooterPerson and Lagi for ideas, feature suggestions, and bug reports.
+  MsrSgtShooterPerson, Lagi and Teagan Watson for ideas, feature suggestions and
+  bug reports.
 * Silentdarkness12 and Zhs2 for testing netplay.
 * Gutawer for [Gutamatics](https://gitlab.com/Gutawer/gzdoom-gutamatics). It was used in previous versions.
 

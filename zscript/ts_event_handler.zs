@@ -34,6 +34,8 @@ class ts_EventHandler : EventHandler
     _lastTargetInfo = ts_LastTargetInfo.from();
     _translator     = NULL;
     _data           = ts_Data.from();
+
+    findExternalInfoProviders();
   }
 
   override
@@ -445,6 +447,15 @@ class ts_EventHandler : EventHandler
       }
     }
 
+    uint nExternalInfoProviders = _externalInfoProviders.size();
+    for (uint i = 0; i < nExternalInfoProviders; ++i)
+    {
+      string externalInfo = _externalInfoProviders[i].getInfo(target);
+      if (externalInfo.length() == 0) continue;
+      drawTextCenter(externalInfo, nameColor, textScale, x, y, font, 0.0, opacity);
+      y += newline;
+    }
+
     if (showHealth && (_settings.showNums() != 0))
     {
       string healthString = makeHealthString(targetHealth, targetMaxHealth);
@@ -776,6 +787,21 @@ class ts_EventHandler : EventHandler
     _isPrepared = (_projection != NULL);
   }
 
+  private
+  void findExternalInfoProviders()
+  {
+    uint nClasses = AllClasses.size();
+    for (uint i = 0; i < nClasses; ++i)
+    {
+      class aClass = AllClasses[i];
+      if (aClass is "ts_ExternalActorInfoProvider" && aClass != "ts_ExternalActorInfoProvider")
+      {
+        let provider = ts_ExternalActorInfoProvider(new(aClass));
+        _externalInfoProviders.push(provider);
+      }
+    }
+  }
+
   private ts_Settings       _settings;
   private ts_Api            _api;
 
@@ -794,5 +820,7 @@ class ts_EventHandler : EventHandler
   private ts_Le_ProjScreen _projection;
   private ts_Le_GlScreen   _glProjection;
   private ts_Le_SwScreen   _swProjection;
+
+  private Array<ts_ExternalActorInfoProvider> _externalInfoProviders;
 
 } // class ts_EventHandler
