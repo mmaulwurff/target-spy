@@ -24,4 +24,4 @@ zip -R "$name" \
     "*.md"  \
     "*.fon2" > /dev/null
 
-gzdoom "$name" "$@" > output 2>&1; cat output
+lzdoom "$name" "$@" > output 2>&1; cat output
