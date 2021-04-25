@@ -82,6 +82,24 @@ OptionValue ts_on_target_values
   2, "Below"
 }
 
+OptionString ts_extra_character_values
+{
+  "❤" , "❤"
+  "♡" , "♡"
+  "█" , "█"
+  "☻" , "☻"
+  "☹" , "☹"
+  "⛧" , "⛧"
+  "⛤" , "⛤"
+  "☣" , "☣"
+  "✚" , "✚"
+  "⛊" , "⛊"
+  "▬" , "▬"
+  "●" , "●"
+  "☰" , "☰"
+  "⚰" , "⚰"
+}
+
 // Option menus ////////////////////////////////////////////////////////////////
 
 OptionMenu ts_VisualOptions
@@ -110,12 +128,15 @@ OptionMenu ts_VisualOptions
   StaticText "Health bar"          , 1
   TextField "Filled bar symbol"    , m8f_ts_pip
   TextField "Empty bar symbol"     , m8f_ts_empty_pip
-  Option "Health bar log scale"    , m8f_ts_bar_log_scale , OnOff
-  Option "Vertical position"       , m8f_ts_y             , ts_y_values
-  Slider "Offset"                  , m8f_ts_y_offset      , -0.2, 0.2, 0.0025, 4
-  Slider "Opacity"                 , m8f_ts_opacity       , 0.0, 1.0, 0.05, 2
-  Slider "Length Multiplier"       , m8f_ts_length_mult   , 0.5, 10.0, 0.1
-  Option "Position on target"      , m8f_ts_on_target     , ts_on_target_values
+  Submenu   "Extra characters"     , ts_ExtraCharactersOptions
+
+  StaticText ""
+  Option     "Health bar log scale" , m8f_ts_bar_log_scale , OnOff
+  Option     "Vertical position"    , m8f_ts_y             , ts_y_values
+  Slider     "Offset"               , m8f_ts_y_offset      , -0.2, 0.2, 0.0025, 4
+  Slider     "Opacity"              , m8f_ts_opacity       , 0.0, 1.0, 0.05, 2
+  Slider     "Length Multiplier"    , m8f_ts_length_mult   , 0.5, 10.0, 0.1
+  Option     "Position on target"   , m8f_ts_on_target     , ts_on_target_values
 
   StaticText ""
   StaticText "Target Frame", 1
@@ -124,6 +145,19 @@ OptionMenu ts_VisualOptions
   Slider     "Size"  , m8f_ts_frame_size  , 0.25, 4.0, 0.25, 2
 
   StaticText ""
+}
+
+OptionMenu ts_ExtraCharactersOptions
+{
+  Title "Extra Characters"
+
+  StaticText "These characters work only for New Small Font"
+  Command    "Set New Small Font", ts_set_new_small_font
+
+  StaticText ""
+  Option     "Select character", ts_extra_character, ts_extra_character_values
+  Command    "Use selected character as filled bar symbol" , ts_set_selected_as_filled
+  Command    "Use selected character as empty bar symbol"  , ts_set_selected_as_empty
 }
 
 OptionMenu ts_Filters

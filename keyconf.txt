@@ -1,3 +1,5 @@
+// Aliases /////////////////////////////////////////////////////////////////////////////////////////
+
 alias m8f_ts_turn_off "m8f_ts_enabled 0"
 alias m8f_ts_turn_on  "m8f_ts_enabled 1"
 
@@ -5,6 +7,12 @@ alias m8f_ts_toggle   "test $m8f_ts_enabled m8f_ts_turn_off m8f_ts_turn_on"
 
 alias +m8f_ts_hold    "m8f_ts_turn_on"
 alias -m8f_ts_hold    "m8f_ts_turn_off"
+
+alias ts_set_selected_as_filled "m8f_ts_pip $ts_extra_character"
+alias ts_set_selected_as_empty  "m8f_ts_empty_pip $ts_extra_character"
+alias ts_set_new_small_font     "m8f_ts_font NewSmallFont"
+
+// Keys ////////////////////////////////////////////////////////////////////////////////////////////
 
 AddKeySection "Target Spy Controls" "m8f_ts_Controls"
 AddMenuKey    "Toggle"              "m8f_ts_toggle"
