@@ -310,8 +310,3 @@ AddOptionMenu OptionsMenu
 {
   Submenu "$TS_OPTIONS_TITLE", ts_Options
 }
-
-AddOptionMenu OptionsMenuSimple
-{
-  Submenu "$TS_OPTIONS_TITLE", ts_Options
-}

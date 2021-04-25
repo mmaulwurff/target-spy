@@ -27,7 +27,10 @@ class ts_ExternalActorInfoProvider abstract
   /**
    * If empty string is returned, the output is ignored.
    */
-  abstract string getInfo(Actor anActor);
+  string getInfo(Actor anActor)
+  {
+    return "";
+  }
 }
 
 // Example: this provider returns class tag repeated twice.

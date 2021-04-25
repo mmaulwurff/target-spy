@@ -24,4 +24,4 @@ zip -R "$name" \
     "*.md"  \
     "*.fon2"
 
-gzdoom -file "$name" "$@"
+lzdoom -file "$name" "$@"
