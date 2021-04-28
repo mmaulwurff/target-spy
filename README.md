@@ -27,7 +27,7 @@ This mod is a part of [m8f's toolbox](https://mmaulwurff.github.io/pages/toolbox
 
 ## Custom Blacklists
 
-If you don't want an actor to be displayed by Target Spy, create a lump nabed
+If you don't want an actor to be displayed by Target Spy, create a lump named
 `ts_blacklist` and put actor names here, separated by newlines.
 
 ## Thanks
