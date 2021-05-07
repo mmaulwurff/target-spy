@@ -31,7 +31,6 @@ class ts_Data
 
     result.fillChampionTokens();
     result.fillSlaveActors();
-    result.fillBlackList();
     result.readExternalBlacklists();
 
     return result;
@@ -91,26 +90,6 @@ class ts_Data
     _slaveActors.insert( "HeadshotTargetPainElemental" , "1" );
     _slaveActors.insert( "HeadshotTargetDemon"         , "1" );
     _slaveActors.insert( "HeadshotTargetCyberdemon"    , "1" );
-  }
-
-  private
-  void fillBlackList()
-  {
-    _blackList.insert( "m8f_aas_token"           , "1" );
-    _blackList.insert( "AutoautosaveToken"       , "1" );
-    _blackList.insert( "AutoautosaveAlertToken"  , "1" );
-    _blackList.insert( "AutoautosaveAlerter"     , "1" );
-    _blackList.insert( "AutoautosaveBossAlerter" , "1" );
-    _blackList.insert( "UGGib_Corpse_Shootable"  , "1" );
-    _blackList.insert( "VoidField"               , "1" );
-    _blackList.insert( "Cow"                     , "1" );
-    _blackList.insert( "WinterCow"               , "1" );
-    _blackList.insert( "SpaceCow"                , "1" );
-    _blackList.insert( "SpaceCowFloating"        , "1" );
-    _blackList.insert( "CowboyCow"               , "1" );
-    _blackList.insert( "MummyCow"                , "1" );
-    _blackList.insert( "ShieldDefense"           , "1" );
-    _blackList.insert( "ShieldDefense2"          , "1" );
   }
 
   private
