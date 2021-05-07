@@ -44,7 +44,7 @@ class ts_Data
 
   bool blackListContains(string className) const
   {
-    return _blackList.at(className).length() != 0;
+    return _blackList.at(className.makeLower()).length() != 0;
   }
 
 // private: ////////////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +124,7 @@ class ts_Data
       uint nLines = lines.size();
       for (uint l = 0; l < nLines; ++l)
       {
-        _blacklist.insert(lines[l], "1");
+        _blacklist.insert(lines[l].makeLower(), "1");
       }
     }
   }
