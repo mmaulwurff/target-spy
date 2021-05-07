@@ -119,8 +119,9 @@ class ts_Data
     for (int i = Wads.findLump(BLACKLIST); i != -1; i = Wads.findLump(BLACKLIST, i + 1))
     {
       string contents = Wads.readLump(i);
+      contents.replace("\r", "");
       Array<string> lines;
-      contents.split(lines, "\n");
+      contents.split(lines, "\n", TOK_SkipEmpty);
       uint nLines = lines.size();
       for (uint l = 0; l < nLines; ++l)
       {
