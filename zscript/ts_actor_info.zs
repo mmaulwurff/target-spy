@@ -49,6 +49,11 @@ class ts_ActorInfo
     if (a == null)     { return 0; }
     if (!a.bSHOOTABLE) { return 0; }
 
+    bool isMaxFromService;
+    int maxFromService;
+    [isMaxFromService, maxFromService] = getMaxFromService(a.GetClassName());
+    if (isMaxFromService) { return maxFromService; }
+
     if (a.player && a.player.mo) { return a.player.mo.getMaxHealth(); }
 
     int maxHealth = a.spawnHealth();
@@ -81,6 +86,30 @@ class ts_ActorInfo
     string customColorTokenClass = "tr_color_token";
     int customColor = target.countInv(customColorTokenClass);
     return customColor;
+  }
+
+// private /////////////////////////////////////////////////////////////////////////////////////////
+
+  static ui
+  bool, int getMaxFromService(string className)
+  {
+    ServiceIterator i = ServiceIterator.Find("MaxHealthService");
+
+    Service s;
+    if (s = i.Next())
+    {
+      String maxHealth = s.UiGetData(className);
+      if (maxHealth == "none")
+      {
+        return false, 0;
+      }
+      else
+      {
+        return true, maxHealth.ToInt();
+      }
+    }
+
+    return false, 0;
   }
 
 } // class ts_ActorInfo
