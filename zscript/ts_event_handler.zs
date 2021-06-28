@@ -53,7 +53,7 @@ class ts_EventHandler : EventHandler
     Actor died = event.thing;
     if (died == NULL) return;
 
-    if (_lastTargetInfo.a == died)
+    if (isLastTargetExisting() && _lastTargetInfo.a == died)
     {
       _lastTargetInfo.killTime = level.time;
       _lastTargetInfo.killName = _lastTargetInfo.name;
@@ -68,8 +68,7 @@ class ts_EventHandler : EventHandler
     Actor damagedThing = event.thing;
     if (damagedThing == NULL) return;
 
-
-    if (_lastTargetInfo.a == damagedThing)
+    if (isLastTargetExisting() && _lastTargetInfo.a == damagedThing)
     {
       _lastTargetInfo.hurtTime = level.time;
     }
@@ -107,7 +106,7 @@ class ts_EventHandler : EventHandler
 
     if (hasTarget)
     {
-      SetLastTarget(target);
+      setLastTarget(target);
     }
   }
 
@@ -242,11 +241,11 @@ class ts_EventHandler : EventHandler
                    );
   }
 
-  // Wrapper to access lastTarget in scope play from ui scope.
-  // not really const, but lastTarget doesn't affect gameplay.
   private ui
   void setLastTarget(Actor newLastTarget)
   {
+    if (!isLastTargetExisting()) return;
+
     _lastTargetInfo.a    = newLastTarget;
     _lastTargetInfo.name = getTargetName(newLastTarget);
     _lastTargetInfo.name = enableExtendedColorCode(_lastTargetInfo.name);
@@ -266,6 +265,12 @@ class ts_EventHandler : EventHandler
     return (slot == 1);
   }
 
+  private play
+  bool isLastTargetExisting() const
+  {
+    return _lastTargetInfo != NULL;
+  }
+
   private ui
   void drawCrosshairs( Actor target
                      , int   crosshairColor
@@ -277,7 +282,8 @@ class ts_EventHandler : EventHandler
 
     if (_settings.hitConfirmation())
     {
-      if (_lastTargetInfo.hurtTime != -1
+      if (isLastTargetExisting()
+          && _lastTargetInfo.hurtTime != -1
           && (level.time < _lastTargetInfo.hurtTime + 10))
       {
         crosshairColor = _settings.hitColor();
@@ -531,7 +537,7 @@ class ts_EventHandler : EventHandler
   {
     if (!_settings.showKillConfirmation()) return y;
 
-    if (_lastTargetInfo.killTime == -1) return y;
+    if (!isLastTargetExisting() || _lastTargetInfo.killTime == -1) return y;
 
     if (level.time < _lastTargetInfo.killTime + 35 * 1)
     {

@@ -22,6 +22,6 @@ zip -R "$name" \
     "*.txt" \
     "*.zs"  \
     "*.md"  \
-    "*.fon2"
+    "*.fon2" > /dev/null
 
-gzdoom -file "$name" "$@"
+gzdoom "$name" "$@" > output 2>&1; cat output
