@@ -35,7 +35,7 @@ If you don't want an actor to be displayed by Target Spy, create a lump named
 * GZDoom development team and Graf Zahl personally for making and maintaining
   GZDoom;
 * Blue Shadow for examples of code.
-* Spaceman333, Rowsol, Churrupez, Cyanide, isaacpop23, TheRailgunner, Lud,
+* Spaceman333, Rowsol, Churrupez, Cyanide, isaacpop23, TheRailgunner, Accensus,
   Beed28, Ahpiox, ramon.dexter, Dutchygamer, Tesculpture, vapidscum,
   CthulhuInACan, Someone64, Major Cooke, ProydohaRupert, bogus,
   MsrSgtShooterPerson, Lagi and Teagan Watson for ideas, feature suggestions and
