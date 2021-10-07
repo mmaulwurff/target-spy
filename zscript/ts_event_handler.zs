@@ -141,6 +141,8 @@ class ts_EventHandler : EventHandler
     double  height        = target.height;
     double  radius        = target.radius;
     double  zoomFactor    = abs(sin(player.fov));
+    if (zoomFactor == 0) return;
+
     double  visibleRadius = radius * 2000.0 / distance / zoomFactor;
     double  visibleHeight = height * 1000.0 / distance / zoomFactor;
 
