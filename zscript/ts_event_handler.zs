@@ -464,7 +464,7 @@ class ts_EventHandler : EventHandler
       y += newline;
     }
 
-    if (showHealth && (_settings.showNums() != 0))
+    if (showHealth && (_settings.showNumbers() != 0))
     {
       string healthString = makeHealthString(targetHealth, targetMaxHealth);
       int    armor        = target.countInv("BasicArmor");
@@ -486,7 +486,7 @@ class ts_EventHandler : EventHandler
   private ui
   string makeHealthString(int targetHealth, int targetMaxHealth)
   {
-    switch (_settings.showNums())
+    switch (_settings.showNumbers())
     {
     case 1: return string.format("%d/%d", targetHealth, targetMaxHealth);
     case 2: return string.format("%d", targetHealth);
@@ -508,7 +508,7 @@ class ts_EventHandler : EventHandler
     }
     }
 
-    Console.printf("Unknown settings.showNums() result: %d", _settings.showNums());
+    Console.printf("Unknown settings.showNumbers() result: %d", _settings.showNumbers());
     return "";
   }
 

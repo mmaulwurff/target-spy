@@ -59,7 +59,7 @@ class ts_Settings
   bool   showBar             () { return _showBar             .getBool(); }
   bool   showName            () { return _showName            .getBool(); }
   bool   showNameAndTag      () { return _showNameAndTag      .getBool(); }
-  int    showNums            () { return _showNums            .getInt(); }
+  int    showNumbers         () { return _showNumbers         .getInt(); }
   bool   showInfo            () { return _showInfo            .getBool(); }
   bool   showCorps           () { return _showCorps           .getBool(); }
   bool   crossOn             () { return _crossOn             .getBool(); }
@@ -136,7 +136,7 @@ class ts_Settings
     _showBar              = makeCvar("m8f_ts_show_bar");
     _showName             = makeCvar("m8f_ts_show_name");
     _showNameAndTag       = makeCvar("m8f_ts_show_name_tag");
-    _showNums             = makeCvar("m8f_ts_show_numbers");
+    _showNumbers          = makeCvar("m8f_ts_show_numbers");
     _showInfo             = makeCvar("m8f_ts_show_info");
     _showCorps            = makeCvar("m8f_ts_show_corpses");
     _crossOn              = makeCvar("m8f_ts_crosshair_on");
@@ -215,7 +215,7 @@ class ts_Settings
   private ts_Cvar _showBar;
   private ts_Cvar _showName;
   private ts_Cvar _showNameAndTag;
-  private ts_Cvar _showNums;
+  private ts_Cvar _showNumbers;
   private ts_Cvar _showInfo;
   private ts_Cvar _showCorps;
   private ts_Cvar _crossOn;
