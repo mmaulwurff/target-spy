@@ -376,7 +376,8 @@ class ts_EventHandler : EventHandler
     }
 
     int targetHealth = target.health;
-    if (targetHealth < 1 && !_settings.showCorps()) // target is dead
+    bool isTargetDead = targetHealth < 1;
+    if (isTargetDead && !_settings.showCorps())
     {
       drawCrosshairs(target, crossCol, crossFont);
       return;
@@ -398,7 +399,7 @@ class ts_EventHandler : EventHandler
     if (percent < 0) { percent = 0; }
     int targetColor = _settings.colors(percent);
     if (targetHealth < 35 && _settings.almDeadCr()) targetColor = _settings.crAlmDead();
-    if (targetHealth < 1)                           targetColor = _settings.crAlmDead();
+    if (isTargetDead)                               targetColor = _settings.crAlmDead();
 
     drawCrosshairs(target, targetColor, crossFont);
 
@@ -422,14 +423,14 @@ class ts_EventHandler : EventHandler
     }
 
     int nameColor = tagColor;
-    if (targetHealth < 1) { nameColor = targetColor; }
+    if (isTargetDead) { nameColor = targetColor; }
 
     if (_settings.showName())
     {
       string targetName = getTargetName(target);
       targetName = enableExtendedColorCode(targetName);
 
-      if (targetHealth < 1)
+      if (isTargetDead)
       {
         targetName = string.format("Remains of %s", targetName);
         nameColor  = targetColor;

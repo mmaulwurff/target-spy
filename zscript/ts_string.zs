@@ -41,12 +41,12 @@ class ts_String
     int nPips;
     if (maxHealth < 1)
     {
-      nPips = 1;
+      nPips = 0;
     }
     else
     {
       nPips = int(round(double(health) * length / maxHealth));
-      nPips = clamp(nPips, 1, length);
+      nPips = clamp(nPips, 0, length);
     }
 
     string pipColor;

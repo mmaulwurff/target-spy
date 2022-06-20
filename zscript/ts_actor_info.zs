@@ -46,8 +46,7 @@ class ts_ActorInfo
   static ui
   int getActorMaxHealth(Actor a)
   {
-    if (a == null)     { return 0; }
-    if (!a.bSHOOTABLE) { return 0; }
+    if (a == NULL) { return 0; }
 
     if (a.player && a.player.mo) { return a.player.mo.getMaxHealth(); }
 
@@ -72,7 +71,7 @@ class ts_ActorInfo
   static ui
   bool isIdle(Actor a)
   {
-    return a.target == null;
+    return a.target == NULL;
   }
 
   static ui
