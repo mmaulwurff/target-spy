@@ -1,4 +1,4 @@
-/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2019-2021
+/* Copyright Alexander Kromm (mmaulwurff@gmail.com) 2019-2022
  *
  * This file is part of Target Spy.
  *
