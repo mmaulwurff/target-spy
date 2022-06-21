@@ -19,6 +19,8 @@ version 4.5
 
 #include "zscript/ts_cvar.zs"
 
+#include "zscript/ts_blank_line.zs"
+
 // libeye by KeksDose //////////////////////////////////////////////////////////
 // https://forum.zdoom.org/viewtopic.php?f=105&t=64566#p1102157
 

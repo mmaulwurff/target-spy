@@ -110,12 +110,11 @@ OptionMenu ts_VisualOptions
 {
   Title      "Target Spy Visual Options"
 
-  StaticText ""
   Option     "Font"               , m8f_ts_font         , ts_font_values
   Slider     "Scale"              , m8f_ts_text_scale   , 0.5, 3.0, 0.1, 1
   Option     "Names:"             , m8f_class_as_tag    , ts_class_as_tag_values
 
-  StaticText ""
+  BlankLine
   StaticText "Show:"               , 1
   Option "Health bar"              , m8f_ts_show_bar     , OnOff
   Option "Health numbers"          , m8f_ts_show_numbers , ts_health_numbers_values
@@ -127,13 +126,13 @@ OptionMenu ts_VisualOptions
   StaticText "Includes: friendly, invulnerable, boss,"     , Black
   StaticText "dormant, buddha, nodamage, DoomRPG level."   , Black
 
-  StaticText ""
+  BlankLine
   StaticText "Health bar"          , 1
   TextField "Filled bar symbol"    , m8f_ts_pip
   TextField "Empty bar symbol"     , m8f_ts_empty_pip
   Submenu   "Extra characters"     , ts_ExtraCharactersOptions
 
-  StaticText ""
+  BlankLine
   Option     "Health bar log scale" , m8f_ts_bar_log_scale , OnOff
   Option     "Vertical position"    , m8f_ts_y             , ts_y_values
   Slider     "Offset"               , m8f_ts_y_offset      , -0.2, 0.2, 0.0025, 4
@@ -158,7 +157,7 @@ OptionMenu ts_ExtraCharactersOptions
   StaticText "These characters work only for New Small Font"
   Command    "Set New Small Font", ts_set_new_small_font
 
-  StaticText ""
+  BlankLine
   Option     "Select character", ts_extra_character, ts_extra_character_values
   Command    "Use selected character as filled bar symbol" , ts_set_selected_as_filled
   Command    "Use selected character as empty bar symbol"  , ts_set_selected_as_empty
@@ -168,7 +167,6 @@ OptionMenu ts_Filters
 {
   Title "Target Filters"
 
-  StaticText ""
   Option "Stealth/shadow monsters" , m8f_ts_show_hidden  , OnOff
   Option "Friendly targets"        , m8f_ts_show_friends , OnOff
   Option "Dormant targets"         , m8f_ts_show_dormant , OnOff
@@ -177,7 +175,7 @@ OptionMenu ts_Filters
   Option "Idle targets"            , m8f_ts_show_idle    , OnOff
   StaticText "Recommended: OFF if the game contains mimics.", Black
 
-  StaticText ""
+  BlankLine
   Option "Hide targets in darkness", m8f_ts_hide_in_dark , OnOff
   Slider "Minimal light level"     , m8f_ts_light_level  , 0, 250, 10, 0
   StaticText "Targets are hidden if the light level is less than this.", Black
@@ -187,7 +185,6 @@ OptionMenu ts_BehaviorOptions
 {
   Title      "Target Spy Behavior Options"
 
-  StaticText ""
   TextField  "Minimal health"                   , m8f_ts_min_health
   StaticText "Target spy will hide for targets" , Black
   StaticText "with max health less than this."  , Black
@@ -197,7 +194,6 @@ OptionMenu ts_CrossOptions
 {
   Title      "Target Spy Cross-mod Options"
 
-  StaticText ""
   Option     "Special names for Champions" , m8f_ts_show_champion, OnOff
   StaticText "Champions is a monster mod by Mikk-.", Black
 }
@@ -207,7 +203,7 @@ OptionMenu ts_Controls
   Title      "Target Spy Controls"
   StaticTextSwitchable "$CNTRLMNU_SwitchText1", "$CNTRLMNU_SwitchText2", ControlMessage
 
-  StaticText ""
+  BlankLine
   Control    "Toggle"       , "m8f_ts_toggle"
   Control    "Hold to show" , "+m8f_ts_hold"
 }
@@ -216,16 +212,15 @@ OptionMenu ts_Options
 {
   Title      "Target Spy Options"
 
-  StaticText ""
   Option     "Target Spy enabled" , m8f_ts_enabled , OnOff
 
-  StaticText ""
+  BlankLine
   SubMenu    "Visuals"            , ts_VisualOptions
   SubMenu    "Target Filters"     , ts_Filters
   SubMenu    "Colors"             , ts_ColorSetup
   SubMenu    "Behavior"           , ts_BehaviorOptions
 
-  StaticText ""
+  BlankLine
   SubMenu    "Frame"              , ts_Frame
   SubMenu    "Crosshairs"         , ts_Crosshairs
   SubMenu    "Controls"           , ts_Controls
@@ -242,27 +237,27 @@ OptionMenu ts_Crosshairs
   Option "Change color on hit" , m8f_ts_hit_confirm   , OnOff
   Option "Hit color"           , m8f_ts_hit_color     , TextColors
 
-  StaticText ""
+  BlankLine
   Slider "Scale"               , m8f_ts_cross_scale  , 0.5, 3.0, 0.1, 1
   Slider "Opacity"             , m8f_ts_cr_opacity   , 0.0, 1.0, 0.05, 2
   Option "Font"                , m8f_ts_cr_font      , ts_crosshair_font_values
   SubMenu "Crosshair Pieces Reference", ts_cr_pieces_ref
 
-  StaticText ""
+  BlankLine
   Slider "Top part offset"       , m8f_ts_top_offset   , -50, 50, 1, 0
   Slider "Middle part offset"    , m8f_ts_cross_offset , -50, 50, 1, 0
   Slider "Bottom part offset"    , m8f_ts_bot_offset   , -50, 50, 1, 0
   Slider "Horizontal adjustment" , m8f_ts_x_adjustment , -50, 50, 1, 0
 
-  StaticText ""
+  BlankLine
   TextField "Top"    , m8f_ts_cross_top
   Command "Clear"    , "m8f_ts_cross_top \"\""
 
-  StaticText ""
+  BlankLine
   TextField "Center" , m8f_ts_crosshair
   Command "Clear"    , "m8f_ts_crosshair \"\""
 
-  StaticText ""
+  BlankLine
   TextField "Bottom" , m8f_ts_cross_bottom
   Command "Clear"    , "m8f_ts_cross_bottom \"\""
 }
@@ -277,16 +272,15 @@ OptionMenu ts_ColorSetup
 {
   Title "Target Spy Color Setup"
 
-  StaticText ""
   Option "Default crosshair color" , m8f_ts_def_color_crs , TextColors
   Option "Tag color"               , m8f_ts_def_color_tag , TextColors
   Option "Weaker enemy tag color"  , m8f_ts_def_cl_tag_wk , TextColors
 
-  StaticText ""
+  BlankLine
   Option "Show special color for almost dead" , m8f_ts_alm_dead_cr, OnOff
   Option "Dead/Almost dead color", m8f_ts_cr_alm_dead, TextColors
 
-  StaticText ""
+  BlankLine
   StaticText "Color for %", 1
   Option "  0%"       , m8f_ts_cr_0  , TextColors
   Option " 10%"       , m8f_ts_cr_1  , TextColors
@@ -301,7 +295,7 @@ OptionMenu ts_ColorSetup
   Option "100%"       , m8f_ts_cr_10 , TextColors
   Option "Overhealed" , m8f_ts_cr_11 , TextColors
 
-  StaticText ""
+  BlankLine
   StaticText "Alternative two-color theme", 1
   Option "Enabled"      , m8f_ts_alt_hp_color , OnOff
   Option "Filled color" , m8f_ts_green_color  , TextColors
