@@ -140,14 +140,15 @@ OptionMenu ts_VisualOptions
   Slider     "Opacity"              , m8f_ts_opacity       , 0.0, 1.0, 0.05, 2
   Slider     "Length Multiplier"    , m8f_ts_length_mult   , 0.5, 10.0, 0.1
   Option     "Position on target"   , m8f_ts_on_target     , ts_on_target_values
+}
 
-  StaticText ""
-  StaticText "Target Frame", 1
+OptionMenu ts_Frame
+{
+  Title      "Target Spy Frame Options"
+
   Option     "Style" , m8f_ts_frame_style , ts_frame_style_values
   Slider     "Scale" , m8f_ts_frame_scale , 0.5,  3.0, 0.1, 1
   Slider     "Size"  , m8f_ts_frame_size  , 0.25, 4.0, 0.1, 1
-
-  StaticText ""
 }
 
 OptionMenu ts_ExtraCharactersOptions
@@ -225,6 +226,7 @@ OptionMenu ts_Options
   SubMenu    "Behavior"           , ts_BehaviorOptions
 
   StaticText ""
+  SubMenu    "Frame"              , ts_Frame
   SubMenu    "Crosshairs"         , ts_Crosshairs
   SubMenu    "Controls"           , ts_Controls
   SubMenu    "Cross-mod options"  , ts_CrossOptions
