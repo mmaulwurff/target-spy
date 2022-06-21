@@ -162,7 +162,7 @@ class ts_EventHandler : EventHandler
     Vector2 topRight    = (right.x, top.y);
     Vector2 bottomLeft  = (left.x,  bottom.y);
     Vector2 bottomRight = (right.x, bottom.y);
-    double  scale       = 0.5 / settings.frameScale();
+    double  scale       = settings.frameScale();
     int     frameStyle  = settings.frameStyle();
 
     switch (frameStyle)
@@ -171,32 +171,32 @@ class ts_EventHandler : EventHandler
         break;
 
       case settings.FRAME_SLASH:
-        drawCleanText(topLeft,     "/", f, color, scale);
-        drawCleanText(bottomRight, "/", f, color, scale);
+        drawText("/", color, scale, topLeft, f);
+        drawText("/", color, scale, bottomRight, f);
         break;
 
       case settings.FRAME_DOTS:
-        drawCleanText(topLeft,     ".", f, color, scale);
-        drawCleanText(topRight,    ".", f, color, scale);
-        drawCleanText(bottomLeft,  ".", f, color, scale);
-        drawCleanText(bottomRight, ".", f, color, scale);
+        drawText(".", color, scale, topLeft, f);
+        drawText(".", color, scale, topRight, f);
+        drawText(".", color, scale, bottomLeft, f);
+        drawText(".", color, scale, bottomRight, f);
         break;
 
       case settings.FRAME_LESS_GREATER:
-        drawCleanText(left,  "<", f, color, scale);
-        drawCleanText(right, ">", f, color, scale);
+        drawText("<", color, scale, left, f);
+        drawText(">", color, scale, right, f);
         break;
 
       case settings.FRAME_GREATER_LESS:
-        drawCleanText(left,  ">", f, color, scale);
-        drawCleanText(right, "<", f, color, scale);
+        drawText(">", color, scale, left, f);
+        drawText("<", color, scale, right, f);
         break;
 
       case settings.FRAME_BARS:
-        drawCleanText(top,    ".", f, color, scale);
-        drawCleanText(left,   "I", f, color, scale);
-        drawCleanText(right,  "I", f, color, scale);
-        drawCleanText(bottom, ".", f, color, scale);
+        drawText(".", color, scale, top, f);
+        drawText("I", color, scale, left, f);
+        drawText("I", color, scale, right, f);
+        drawText(".", color, scale, bottom, f);
         break;
 
       case settings.FRAME_GRAPHIC:
@@ -226,21 +226,32 @@ class ts_EventHandler : EventHandler
   }
 
   private static ui
-  void drawCleanText(Vector2 pos, string str, Font f, int color, double scale)
+  void drawText( string  text
+               , int     color
+               , double  scale
+               , Vector2 absolutePosition
+               , Font    font
+               , double  opacity = 1.0
+               )
   {
-    int width  = int(scale * Screen.getWidth());
-    int height = int(scale * (Screen.getHeight() - f.getHeight()));
+    absolutePosition.x -= scale * font.stringWidth(text) / 2;
+    absolutePosition.y -= scale * font.getHeight() / 2;
 
-    Screen.drawText( f
+    Screen.drawText( font
                    , color
-                   , (pos.x - (f.stringWidth(str) * cleanXFac / 2.0)) * scale
-                   , (pos.y - (f.getHeight()      * cleanYFac / 2.0)) * scale
-                   , str
-                   , DTA_CleanNoMove   , true
-                   , DTA_KeepRatio     , true
-                   , DTA_VirtualWidth  , width
-                   , DTA_VirtualHeight , height
+                   , absolutePosition.x
+                   , absolutePosition.y
+                   , text
+                   , DTA_ScaleX      , scale
+                   , DTA_ScaleY      , scale
+                   , DTA_Alpha       , opacity
                    );
+  }
+
+  private static ui
+  Vector2 toAbsolute(Vector2 relativePosition)
+  {
+    return (relativePosition.x * screen.getWidth(), relativePosition.y * screen.getHeight());
   }
 
   private ui
@@ -274,38 +285,36 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  void drawCrosshairs( Actor target
-                     , int   crosshairColor
-                     , Font  font
-                     )
+  void drawCrosshairs(Actor target, int crosshairColor)
   {
     if (!_settings.crossOn()) return;
     if (_settings.noCrossOnSlot1() && isSlot1Weapon()) return;
 
-    if (_settings.hitConfirmation())
+    if (_settings.hitConfirmation()
+        && isLastTargetExisting()
+        && _lastTargetInfo.hurtTime != -1
+        && (level.time < _lastTargetInfo.hurtTime + 10))
     {
-      if (isLastTargetExisting()
-          && _lastTargetInfo.hurtTime != -1
-          && (level.time < _lastTargetInfo.hurtTime + 10))
-      {
-        crosshairColor = _settings.hitColor();
-      }
+      crosshairColor = _settings.hitColor();
     }
 
-    double scale           = 0.5 / _settings.crossScale();
-    double baseCenterY     = readY(font, scale);
-    double topBottomShift  = 0.02;
+    double opacity = _settings.crossOpacity();
+    double scale   = _settings.crossScale();
+    Font   aFont   = Font.getFont(_settings.crossFontName());
 
-    double topY            = baseCenterY - topBottomShift + _settings.topOff();
-    double topX            = 0.5;
-    double centerY         = baseCenterY                  + _settings.crossOff();
-    double bottomY         = baseCenterY + topBottomShift + _settings.botOff();
-    double dx              = _settings.xAdjustment();
-    double opacity         = _settings.crossOpacity();
+    if (crosshairgrow) scale *= StatusBar.CrosshairSize;
 
-    drawTextCenter(_settings.crossTop(),  crosshairColor, scale, topX, topY   , font, dx, opacity);
-    drawTextCenter(_settings.crosshair(), crosshairColor, scale, topX, centerY, font, dx, opacity);
-    drawTextCenter(_settings.crossBot(),  crosshairColor, scale, topX, bottomY, font, dx, opacity);
+    double baseCenterY     = readY(aFont, scale);
+    double topBottomShift  = 0.02 * Screen.getHeight();
+    double crosshairX      = 0.5  * Screen.getWidth() + _settings.xAdjustment();
+
+    Vector2 topPosition    = (crosshairX, baseCenterY - topBottomShift + _settings.topOff());
+    Vector2 centerPosition = (crosshairX, baseCenterY                  + _settings.crossOff());
+    Vector2 bottomPosition = (crosshairX, baseCenterY + topBottomShift + _settings.botOff());
+
+    drawText(_settings.crossTop(),  crosshairColor, scale, topPosition,    aFont, opacity);
+    drawText(_settings.crosshair(), crosshairColor, scale, centerPosition, aFont, opacity);
+    drawText(_settings.crossBot(),  crosshairColor, scale, bottomPosition, aFont, opacity);
   }
 
   private ui
@@ -337,24 +346,21 @@ class ts_EventHandler : EventHandler
   {
     bool    isAbove = (_settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE);
     Vector2 xy = getRelativeXY(target, event, isAbove);
-    double  x  = xy.x;
-    double  y  = xy.y;
 
-    double newline = _settings.getNewlineHeight();
-    if ((y >= 0.80 && _settings.barsOnTarget() != ts_Settings.ON_TARGET_BELOW)
+    Font   font      = Font.getFont(_settings.fontName());
+    double textScale = _settings.getTextScale();
+    double newline   = font.getHeight() * textScale / screen.getHeight();
+    if ((xy.y >= 0.80 && _settings.barsOnTarget() != ts_Settings.ON_TARGET_BELOW)
         || _settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE) { newline = -newline; }
 
-    Font font      = Font.getFont(_settings.fontName());
-    Font crossFont = Font.getFont(_settings.crossFontName());
 
     if (_settings.barsOnTarget() == ts_Settings.ON_TARGET_DISABLED)
     {
-      y = drawKillConfirmed(x, y, newline, font);
+      xy.y = drawKillConfirmed(xy, newline, font);
     }
     else
     {
-      Vector2 defaultXy = getDefaultRelativeXY();
-      drawKillConfirmed(defaultXy.x, defaultXy.y, newline, font);
+      drawKillConfirmed(getDefaultRelativeXY(), newline, font);
     }
 
     bool hasTarget = (target != NULL);
@@ -362,7 +368,7 @@ class ts_EventHandler : EventHandler
 
     if (!hasTarget)
     {
-      drawCrosshairs(target, crossCol, crossFont);
+      drawCrosshairs(target, crossCol);
       return;
     }
 
@@ -371,7 +377,7 @@ class ts_EventHandler : EventHandler
 
     if (targetMaxHealth < _settings.minHealth() && targetMaxHealth != 0)
     {
-      drawCrosshairs(target, crossCol, crossFont);
+      drawCrosshairs(target, crossCol);
       return; // not worth showing
     }
 
@@ -379,7 +385,7 @@ class ts_EventHandler : EventHandler
     bool isTargetDead = targetHealth < 1;
     if (isTargetDead && !_settings.showCorps())
     {
-      drawCrosshairs(target, crossCol, crossFont);
+      drawCrosshairs(target, crossCol);
       return;
     }
 
@@ -401,9 +407,8 @@ class ts_EventHandler : EventHandler
     if (targetHealth < 35 && _settings.almDeadCr()) targetColor = _settings.crAlmDead();
     if (isTargetDead)                               targetColor = _settings.crAlmDead();
 
-    drawCrosshairs(target, targetColor, crossFont);
+    drawCrosshairs(target, targetColor);
 
-    double textScale = _settings.getTextScale();
     double opacity   = _settings.opacity();
 
     if (_settings.showBar() && showHealth)
@@ -418,8 +423,8 @@ class ts_EventHandler : EventHandler
                                         , _settings.pip()
                                         , _settings.emptyPip()
                                         );
-      drawTextCenter(hpBar, targetColor, textScale, x, y, font, 0.0, opacity);
-      y += newline;
+      drawText(hpBar, targetColor, textScale, toAbsolute(xy), font, opacity);
+      xy.y += newline;
     }
 
     int nameColor = tagColor;
@@ -436,13 +441,13 @@ class ts_EventHandler : EventHandler
         nameColor  = targetColor;
       }
 
-      drawTextCenter(targetName, nameColor, textScale, x, y, font, 0.0, opacity);
-      y += newline;
+      drawText(targetName, nameColor, textScale, toAbsolute(xy), font, opacity);
+      xy.y += newline;
 
       if (_settings.showNameAndTag() && target.getClassName() != targetName)
       {
-        drawTextCenter(target.getClassName(), nameColor, textScale, x, y, font, 0.0, opacity);
-        y += newline;
+        drawText(target.getClassName(), nameColor, textScale, toAbsolute(xy), font, opacity);
+        xy.y += newline;
       }
     }
 
@@ -451,8 +456,8 @@ class ts_EventHandler : EventHandler
       string targetFlags = ts_ActorInfo.getTargetFlags(target);
       if (targetFlags.length() > 0)
       {
-        drawTextCenter(targetFlags, nameColor, textScale, x, y, font, 0.0, opacity);
-        y += newline;
+        drawText(targetFlags, nameColor, textScale, toAbsolute(xy), font, opacity);
+        xy.y += newline;
       }
     }
 
@@ -461,8 +466,8 @@ class ts_EventHandler : EventHandler
     {
       string externalInfo = _externalInfoProviders[i].getInfo(target);
       if (externalInfo.length() == 0) continue;
-      drawTextCenter(externalInfo, nameColor, textScale, x, y, font, 0.0, opacity);
-      y += newline;
+      drawText(externalInfo, nameColor, textScale, toAbsolute(xy), font, opacity);
+      xy.y += newline;
     }
 
     if (showHealth && (_settings.showNumbers() != 0))
@@ -475,7 +480,8 @@ class ts_EventHandler : EventHandler
         healthString.appendFormat(" Armor: %d", armor);
       }
 
-      y += drawTargetHealth(x, y, healthString, targetColor, font);
+      drawText(healthString, targetColor, textScale, toAbsolute(xy), font, opacity);
+      xy.y += newline;
     }
 
     if (_settings.frameStyle() != ts_Settings.FRAME_DISABLED)
@@ -514,33 +520,11 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  double drawTargetHealth( double x
-                         , double y
-                         , string healthString
-                         , int targetColor
-                         , Font font
-                         )
+  double drawKillConfirmed(Vector2 xy, double newline, Font font)
   {
-    double textScale = _settings.getTextScale();
-    double opacity   = _settings.opacity();
+    if (!_settings.showKillConfirmation()) return xy.y;
 
-    drawTextCenter(healthString, targetColor, textScale, x, y, font, 0.0, opacity);
-
-    double newlineHeight = _settings.getNewlineHeight();
-
-    return y + newlineHeight;
-  }
-
-  private ui
-  double drawKillConfirmed( double x
-                          , double y
-                          , double newline
-                          , Font   font
-                          )
-  {
-    if (!_settings.showKillConfirmation()) return y;
-
-    if (!isLastTargetExisting() || _lastTargetInfo.killTime == -1) return y;
+    if (!isLastTargetExisting() || _lastTargetInfo.killTime == -1) return xy.y;
 
     if (level.time < _lastTargetInfo.killTime + 35 * 1)
     {
@@ -551,41 +535,11 @@ class ts_EventHandler : EventHandler
         ? _lastTargetInfo.killName .. " killed"
         : "Kill Confirmed";
 
-      drawTextCenter(text, nameColor, scale, x, y, font, 0.0, opacity);
-      y += newline;
+      drawText(text, nameColor, scale, toAbsolute(xy), font, opacity);
+      xy.y += newline;
     }
 
-    return y;
-  }
-
-  private ui
-  void drawTextCenter( string text
-                     , int    color
-                     , double scale
-                     , double relativeX
-                     , double relativeY
-                     , Font   font
-                     , double xAdjustment
-                     , double opacity
-                     )
-  {
-    int width    = int(scale * Screen.getWidth());
-    int height   = int(scale * (Screen.getHeight() - font.getHeight()));
-    int position = width - font.stringWidth(text);
-
-    double x = position * relativeX + xAdjustment;
-    double y = height   * relativeY;
-
-    Screen.drawText( font
-                   , color
-                   , x
-                   , y
-                   , text
-                   , DTA_KeepRatio     , true
-                   , DTA_VirtualWidth  , width
-                   , DTA_VirtualHeight , height
-                   , DTA_Alpha         , opacity
-                   );
+    return xy.y;
   }
 
   private ui
@@ -728,16 +682,14 @@ class ts_EventHandler : EventHandler
   }
 
   private play
-  double readY(Font f, double scale) const
+  double readY(Font aFont, double scale) const
   {
-    int    x, y, width, height;
-    [x, y, width, height]          = Screen.getViewWindow();
-    int    screenHeight            = Screen.getHeight();
-    int    statusBarHeight         = screenHeight - height - x;
-    double relativeStatusBarHeight = double(statusBarHeight) * scale / screenHeight;
+    int viewStartX, viewStartY, viewWidth, viewHeight;
+    [viewStartX, viewStartY, viewWidth, viewHeight] = Screen.getViewWindow();
+
     double screenY = isPreciseYAvailable()
-      ? (_preciseY.getFloat() - f.getHeight() / 2) / (Screen.getHeight() - relativeStatusBarHeight)
-      : 0.51 - relativeStatusBarHeight;
+      ? (_preciseY.getFloat() - aFont.getHeight() / 2)
+      : viewHeight / 2 + viewStartY;
 
     return screenY;
   }

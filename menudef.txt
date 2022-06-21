@@ -112,8 +112,7 @@ OptionMenu ts_VisualOptions
 
   StaticText ""
   Option     "Font"               , m8f_ts_font         , ts_font_values
-  Slider     "Newline step"       , m8f_ts_step_mult    , 0.1, 10.0, 0.1, 1
-  Slider     "Scale"              , m8f_ts_text_scale   , 0.5, 3.0, 0.05, 2
+  Slider     "Scale"              , m8f_ts_text_scale   , 0.5, 3.0, 0.1, 1
   Option     "Names:"             , m8f_class_as_tag    , ts_class_as_tag_values
 
   StaticText ""
@@ -145,8 +144,8 @@ OptionMenu ts_VisualOptions
   StaticText ""
   StaticText "Target Frame", 1
   Option     "Style" , m8f_ts_frame_style , ts_frame_style_values
-  Slider     "Scale" , m8f_ts_frame_scale , 0.5,  3.0, 0.05, 2
-  Slider     "Size"  , m8f_ts_frame_size  , 0.25, 4.0, 0.25, 2
+  Slider     "Scale" , m8f_ts_frame_scale , 0.5,  3.0, 0.1, 1
+  Slider     "Size"  , m8f_ts_frame_size  , 0.25, 4.0, 0.1, 1
 
   StaticText ""
 }
@@ -224,7 +223,9 @@ OptionMenu ts_Options
   SubMenu    "Target Filters"     , ts_Filters
   SubMenu    "Colors"             , ts_ColorSetup
   SubMenu    "Behavior"           , ts_BehaviorOptions
-  SubMenu    "Crosshairs Setup"   , ts_Crosshairs
+
+  StaticText ""
+  SubMenu    "Crosshairs"         , ts_Crosshairs
   SubMenu    "Controls"           , ts_Controls
   SubMenu    "Cross-mod options"  , ts_CrossOptions
 }
@@ -233,36 +234,33 @@ OptionMenu ts_Crosshairs
 {
   Title "Target Spy Crosshairs Setup"
 
-  StaticText ""
   Option "Enabled"             , m8f_ts_crosshair_on  , OnOff
   Option "Only on target"      , m8f_ts_cross_only_tg , OnOff
   Option "Hide for Slot 1"     , m8f_ts_no_cross_on_1 , OnOff
   Option "Change color on hit" , m8f_ts_hit_confirm   , OnOff
   Option "Hit color"           , m8f_ts_hit_color     , TextColors
 
-  Slider "Top part offset"     , m8f_ts_top_offset   , -0.1, 0.1, 0.005, 3
-  Slider "Middle part offset"  , m8f_ts_cross_offset , -0.1, 0.1, 0.005, 3
-  Slider "Bottom part offset"  , m8f_ts_bot_offset   , -0.1, 0.1, 0.005, 3
-  Slider "X Adjustment"        , m8f_ts_x_adjustment , -50, 50, 0.5, 1
-  Slider "Scale"               , m8f_ts_cross_scale  , 0.5, 3.0, 0.05, 2
+  StaticText ""
+  Slider "Scale"               , m8f_ts_cross_scale  , 0.5, 3.0, 0.1, 1
   Slider "Opacity"             , m8f_ts_cr_opacity   , 0.0, 1.0, 0.05, 2
   Option "Font"                , m8f_ts_cr_font      , ts_crosshair_font_values
   SubMenu "Crosshair Pieces Reference", ts_cr_pieces_ref
 
   StaticText ""
-  StaticText ""
-  StaticText ""
-  StaticText ""
+  Slider "Top part offset"       , m8f_ts_top_offset   , -50, 50, 1, 0
+  Slider "Middle part offset"    , m8f_ts_cross_offset , -50, 50, 1, 0
+  Slider "Bottom part offset"    , m8f_ts_bot_offset   , -50, 50, 1, 0
+  Slider "Horizontal adjustment" , m8f_ts_x_adjustment , -50, 50, 1, 0
 
   StaticText ""
   TextField "Top"    , m8f_ts_cross_top
   Command "Clear"    , "m8f_ts_cross_top \"\""
-  StaticText ""
 
+  StaticText ""
   TextField "Center" , m8f_ts_crosshair
   Command "Clear"    , "m8f_ts_crosshair \"\""
-  StaticText ""
 
+  StaticText ""
   TextField "Bottom" , m8f_ts_cross_bottom
   Command "Clear"    , "m8f_ts_cross_bottom \"\""
 }

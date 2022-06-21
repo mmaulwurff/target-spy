@@ -87,7 +87,7 @@ class ts_Settings
   bool   hideInDarkness      () { return _hideInDarkness      .getBool(); }
   int    minimalLightLevel   () { return _minimalLightLevel   .getInt(); }
 
-  double crossScale          () { return protectedFromZero(_crossScale.getDouble()); }
+  double crossScale          () { return notZero(_crossScale.getDouble()); }
   double crossOpacity        () { return _crossOpacity        .getDouble(); }
 
   bool   hitConfirmation     () { return _hitConfirmation     .getBool(); }
@@ -97,7 +97,7 @@ class ts_Settings
   bool   noCrossOnSlot1      () { return _noCrossOnSlot1      .getBool(); }
 
   int    frameStyle          () { return _frameStyle          .getInt(); }
-  double frameScale          () { return protectedFromZero(_frameScale.getDouble()); }
+  double frameScale          () { return notZero(_frameScale.getDouble()); }
   double frameSize           () { return _frameSize           .getDouble(); }
 
   double opacity             () { return _opacity             .getDouble(); }
@@ -112,13 +112,12 @@ class ts_Settings
   string crossBot            () { return _crossBot            .getString(); }
   string crossFontName       () { return _crossFontName       .getString(); }
 
-  double getTextScale()     { return 0.5 / protectedFromZero(_textScale.getDouble()); }
-  double getNewlineHeight() { return 0.03 * _stepMultiplier.getDouble(); }
+  double getTextScale        () { return notZero(_textScale.getDouble()); }
 
 // private: ////////////////////////////////////////////////////////////////////////////////////////
 
   private static
-  double protectedFromZero(double value)
+  double notZero(double value)
   {
     return value ? value : 1;
   }
@@ -144,7 +143,6 @@ class ts_Settings
     _nameCol              = makeCvar("m8f_ts_def_color_tag");
     _weakCol              = makeCvar("m8f_ts_def_cl_tag_wk");
     _altHpCols            = makeCvar("m8f_ts_alt_hp_color");
-    _stepMultiplier       = makeCvar("m8f_ts_step_mult");
 
     _crAlmDead            = makeCvar("m8f_ts_cr_alm_dead");
     _almDeadCr            = makeCvar("m8f_ts_alm_dead_cr");
@@ -223,7 +221,6 @@ class ts_Settings
   private ts_Cvar _nameCol;
   private ts_Cvar _weakCol;
   private ts_Cvar _altHpCols;
-  private ts_Cvar _stepMultiplier;
   private ts_Cvar _almDeadCr;
   private ts_Cvar _crAlmDead;
   private ts_Cvar _crossOff;
