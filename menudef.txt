@@ -246,10 +246,10 @@ OptionMenu ts_Crosshairs
   SubMenu "Crosshair Pieces Reference", ts_cr_pieces_ref
 
   BlankLine
-  Slider "Top part offset"       , m8f_ts_top_offset   , -50, 50, 1, 0
-  Slider "Middle part offset"    , m8f_ts_cross_offset , -50, 50, 1, 0
-  Slider "Bottom part offset"    , m8f_ts_bot_offset   , -50, 50, 1, 0
-  Slider "Horizontal adjustment" , m8f_ts_x_adjustment , -50, 50, 1, 0
+  Slider "Top part offset"       , ts_cross_top_offset    , -50, 50, 1, 0
+  Slider "Middle part offset"    , ts_cross_middle_offset , -50, 50, 1, 0
+  Slider "Bottom part offset"    , ts_cross_bottom_offset , -50, 50, 1, 0
+  Slider "Horizontal adjustment" , ts_cross_x_adjustment  , -50, 50, 1, 0
 
   BlankLine
   TextField "Top"    , m8f_ts_cross_top

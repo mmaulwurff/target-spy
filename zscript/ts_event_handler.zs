@@ -319,9 +319,9 @@ class ts_EventHandler : EventHandler
     double topBottomShift  = 0.02 * Screen.getHeight();
     double crosshairX      = 0.5  * Screen.getWidth() + _settings.xAdjustment();
 
-    Vector2 topPosition    = (crosshairX, baseCenterY - topBottomShift + _settings.topOff());
-    Vector2 centerPosition = (crosshairX, baseCenterY                  + _settings.crossOff());
-    Vector2 bottomPosition = (crosshairX, baseCenterY + topBottomShift + _settings.botOff());
+    Vector2 topPosition    = (crosshairX, baseCenterY - topBottomShift + _settings.crossTopOffset());
+    Vector2 centerPosition = (crosshairX, baseCenterY                  + _settings.crossMiddleOffset());
+    Vector2 bottomPosition = (crosshairX, baseCenterY + topBottomShift + _settings.crossBottomOffset());
 
     drawText(_settings.crossTop(),  crosshairColor, scale, topPosition,    aFont, opacity);
     drawText(_settings.crosshair(), crosshairColor, scale, centerPosition, aFont, opacity);

@@ -71,9 +71,10 @@ class ts_Settings
   int    crAlmDead           () { return _crAlmDead           .getInt(); }
   bool   isBackgroundEnabled () { return _isBackgroundEnabled .getBool(); }
 
-  double crossOff            () { return _crossOff            .getDouble(); }
-  double topOff              () { return _topOff              .getDouble(); }
-  double botOff              () { return _botOff              .getDouble(); }
+  int    crossTopOffset      () { return _crossTopOffset      .getInt(); }
+  int    crossMiddleOffset   () { return _crossMiddleOffset   .getInt(); }
+  int    crossBottomOffset   () { return _crossBottomOffset   .getInt(); }
+  int    xAdjustment         () { return _xAdjustment         .getInt(); }
 
   int    greenCr             () { return _greenCr             .getInt(); }
   int    redCr               () { return _redCr               .getInt(); }
@@ -94,7 +95,6 @@ class ts_Settings
   bool   hitConfirmation     () { return _hitConfirmation     .getBool(); }
   int    hitColor            () { return _hitColor            .getInt(); }
 
-  double xAdjustment         () { return _xAdjustment         .getDouble(); }
   bool   noCrossOnSlot1      () { return _noCrossOnSlot1      .getBool(); }
   bool   isCrossTargetColor  () { return _isCrossTargetColor  .getBool(); }
 
@@ -149,9 +149,10 @@ class ts_Settings
     _crAlmDead            = makeCvar("m8f_ts_cr_alm_dead");
     _almDeadCr            = makeCvar("m8f_ts_alm_dead_cr");
 
-    _crossOff             = makeCvar("m8f_ts_cross_offset");
-    _topOff               = makeCvar("m8f_ts_top_offset");
-    _botOff               = makeCvar("m8f_ts_bot_offset");
+    _crossTopOffset       = makeCvar("ts_cross_top_offset");
+    _crossMiddleOffset    = makeCvar("ts_cross_middle_offset");
+    _crossBottomOffset    = makeCvar("ts_cross_bottom_offset");
+    _xAdjustment          = makeCvar("ts_cross_x_adjustment");
 
     _greenCr              = makeCvar("m8f_ts_green_color");
     _redCr                = makeCvar("m8f_ts_red_color");
@@ -173,7 +174,6 @@ class ts_Settings
     _hitColor             = makeCvar("m8f_ts_hit_color");
 
     _textScale            = makeCvar("m8f_ts_text_scale");
-    _xAdjustment          = makeCvar("m8f_ts_x_adjustment");
     _noCrossOnSlot1       = makeCvar("m8f_ts_no_cross_on_1");
     _isCrossTargetColor   = makeCvar("ts_cross_show_target");
 
@@ -228,9 +228,11 @@ class ts_Settings
   private ts_Cvar _altHpCols;
   private ts_Cvar _almDeadCr;
   private ts_Cvar _crAlmDead;
-  private ts_Cvar _crossOff;
-  private ts_Cvar _topOff;
-  private ts_Cvar _botOff;
+
+  private ts_Cvar _crossMiddleOffset;
+  private ts_Cvar _crossTopOffset;
+  private ts_Cvar _crossBottomOffset;
+
   private ts_Cvar _greenCr;
   private ts_Cvar _redCr;
   private ts_Cvar _isBackgroundEnabled;
