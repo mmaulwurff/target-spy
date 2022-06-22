@@ -53,16 +53,18 @@ class ts_ActorInfo
     int maxHealth = a.spawnHealth();
 
     string drpgToken = "DRPGMonsterStatsHandler";
-    if (a.countInv(drpgToken) > 0)
+    bool isDRPG = (a.countInv(drpgToken) > 0);
+    if (isDRPG)
     {
       ts_ActorInfoHelper helper;
       maxHealth = helper.getDrpgMaxHealth(a);
     }
 
     string legendaryToken = "LDLegendaryMonsterToken";
-    if (a.countInv(legendaryToken) > 0)
+    bool isLegenDoom = (a.countInv(legendaryToken) > 0);
+    if (isLegenDoom && !isDRPG)
     {
-      maxHealth = maxHealth * Cvar.getCvar("LD_legendaryHealth").getInt() / 100;
+      maxHealth *= Cvar.getCvar("LD_legendaryHealth").getInt() / 100;
     }
 
     return maxHealth;
