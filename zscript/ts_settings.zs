@@ -63,7 +63,7 @@ class ts_Settings
   bool   showInfo            () { return _showInfo            .getBool(); }
   bool   showCorps           () { return _showCorps           .getBool(); }
   bool   crossOn             () { return _crossOn             .getBool(); }
-  int    crossCol            () { return _crossCol            .getInt(); }
+  int    crosshairColor      () { return _crosshairColor      .getInt(); }
   int    nameCol             () { return _nameCol             .getInt(); }
   int    weakCol             () { return _weakCol             .getInt(); }
   bool   altHpCols           () { return _altHpCols           .getBool(); }
@@ -96,6 +96,7 @@ class ts_Settings
 
   double xAdjustment         () { return _xAdjustment         .getDouble(); }
   bool   noCrossOnSlot1      () { return _noCrossOnSlot1      .getBool(); }
+  bool   isCrossTargetColor  () { return _isCrossTargetColor  .getBool(); }
 
   int    frameStyle          () { return _frameStyle          .getInt(); }
   double frameScale          () { return notZero(_frameScale.getDouble()); }
@@ -140,7 +141,7 @@ class ts_Settings
     _showInfo             = makeCvar("m8f_ts_show_info");
     _showCorps            = makeCvar("m8f_ts_show_corpses");
     _crossOn              = makeCvar("m8f_ts_crosshair_on");
-    _crossCol             = makeCvar("m8f_ts_def_color_crs");
+    _crosshairColor       = makeCvar("m8f_ts_def_color_crs");
     _nameCol              = makeCvar("m8f_ts_def_color_tag");
     _weakCol              = makeCvar("m8f_ts_def_cl_tag_wk");
     _altHpCols            = makeCvar("m8f_ts_alt_hp_color");
@@ -174,6 +175,7 @@ class ts_Settings
     _textScale            = makeCvar("m8f_ts_text_scale");
     _xAdjustment          = makeCvar("m8f_ts_x_adjustment");
     _noCrossOnSlot1       = makeCvar("m8f_ts_no_cross_on_1");
+    _isCrossTargetColor   = makeCvar("ts_cross_show_target");
 
     _frameStyle           = makeCvar("m8f_ts_frame_style");
     _frameScale           = makeCvar("m8f_ts_frame_scale");
@@ -220,7 +222,7 @@ class ts_Settings
   private ts_Cvar _showInfo;
   private ts_Cvar _showCorps;
   private ts_Cvar _crossOn;
-  private ts_Cvar _crossCol;
+  private ts_Cvar _crosshairColor;
   private ts_Cvar _nameCol;
   private ts_Cvar _weakCol;
   private ts_Cvar _altHpCols;
@@ -252,6 +254,7 @@ class ts_Settings
   private ts_Cvar _textScale;
   private ts_Cvar _xAdjustment;
   private ts_Cvar _noCrossOnSlot1;
+  private ts_Cvar _isCrossTargetColor;
 
   private ts_Cvar _frameStyle;
   private ts_Cvar _frameScale;

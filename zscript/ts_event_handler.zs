@@ -375,11 +375,11 @@ class ts_EventHandler : EventHandler
     }
 
     bool hasTarget = (target != NULL);
-    int  crossCol  = _settings.crossCol();
+    int  crosshairColor = _settings.crosshairColor();
 
     if (!hasTarget)
     {
-      drawCrosshairs(target, crossCol);
+      drawCrosshairs(target, crosshairColor);
       return;
     }
 
@@ -388,7 +388,7 @@ class ts_EventHandler : EventHandler
 
     if (targetMaxHealth < _settings.minHealth() && targetMaxHealth != 0)
     {
-      drawCrosshairs(target, crossCol);
+      drawCrosshairs(target, crosshairColor);
       return; // not worth showing
     }
 
@@ -396,7 +396,7 @@ class ts_EventHandler : EventHandler
     bool isTargetDead = targetHealth < 1;
     if (isTargetDead && !_settings.showCorps())
     {
-      drawCrosshairs(target, crossCol);
+      drawCrosshairs(target, crosshairColor);
       return;
     }
 
@@ -418,7 +418,7 @@ class ts_EventHandler : EventHandler
     if (targetHealth < 35 && _settings.almDeadCr()) targetColor = _settings.crAlmDead();
     if (isTargetDead)                               targetColor = _settings.crAlmDead();
 
-    drawCrosshairs(target, targetColor);
+    drawCrosshairs(target, _settings.isCrossTargetColor() ? targetColor : crosshairColor);
 
     double opacity = _settings.opacity();
     bool   isBackgroundEnabled = _settings.isBackgroundEnabled();

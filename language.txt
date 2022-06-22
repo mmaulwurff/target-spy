@@ -3,3 +3,4 @@
 TS_OPTIONS_TITLE = "\cd⌖\c- Target Spy Options";
 
 TS_BACKGROUND = "Background";
+TS_CROSSHAIR_SHOW_TARGET_COLOR = "Show target color";

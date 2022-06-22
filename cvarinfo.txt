@@ -47,6 +47,7 @@ user bool   m8f_ts_hide_in_dark  = false;
 user int    m8f_ts_light_level   = 120;
 user float  m8f_ts_opacity       = 1.0;
 user bool   ts_background        = false;
+user bool   ts_cross_show_target = true;
 
 user int    m8f_ts_cr_0          =  6; // red
 user int    m8f_ts_cr_1          =  6; // red

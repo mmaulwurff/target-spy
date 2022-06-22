@@ -237,6 +237,7 @@ OptionMenu ts_Crosshairs
   Option "Hide for Slot 1"     , m8f_ts_no_cross_on_1 , OnOff
   Option "Change color on hit" , m8f_ts_hit_confirm   , OnOff
   Option "Hit color"           , m8f_ts_hit_color     , TextColors
+  Option "$TS_CROSSHAIR_SHOW_TARGET_COLOR" , ts_cross_show_target , OnOff
 
   BlankLine
   Slider "Scale"               , m8f_ts_cross_scale  , 0.5, 4.0, 0.1, 1
