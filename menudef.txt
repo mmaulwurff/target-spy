@@ -110,9 +110,8 @@ OptionMenu ts_VisualOptions
 {
   Title      "Target Spy Visual Options"
 
-  Option     "Font"               , m8f_ts_font         , ts_font_values
-  Slider     "Scale"              , m8f_ts_text_scale   , 0.5, 3.0, 0.1, 1
-  Option     "Names:"             , m8f_class_as_tag    , ts_class_as_tag_values
+  Option     "Font"                , m8f_ts_font         , ts_font_values
+  Option     "Names:"              , m8f_class_as_tag    , ts_class_as_tag_values
 
   BlankLine
   StaticText "Show:"               , 1
@@ -136,9 +135,11 @@ OptionMenu ts_VisualOptions
   Option     "Health bar log scale" , m8f_ts_bar_log_scale , OnOff
   Option     "Vertical position"    , m8f_ts_y             , ts_y_values
   Slider     "Offset"               , m8f_ts_y_offset      , -0.2, 0.2, 0.0025, 4
+  Slider     "Scale"                , m8f_ts_text_scale    , 0.5, 4.0, 0.1, 1
   Slider     "Opacity"              , m8f_ts_opacity       , 0.0, 1.0, 0.05, 2
   Slider     "Length Multiplier"    , m8f_ts_length_mult   , 0.5, 10.0, 0.1
   Option     "Position on target"   , m8f_ts_on_target     , ts_on_target_values
+  Option     "$TS_BACKGROUND"       , ts_background        , OnOff
 }
 
 OptionMenu ts_Frame
@@ -146,7 +147,7 @@ OptionMenu ts_Frame
   Title      "Target Spy Frame Options"
 
   Option     "Style" , m8f_ts_frame_style , ts_frame_style_values
-  Slider     "Scale" , m8f_ts_frame_scale , 0.5,  3.0, 0.1, 1
+  Slider     "Scale" , m8f_ts_frame_scale , 0.5,  4.0, 0.1, 1
   Slider     "Size"  , m8f_ts_frame_size  , 0.25, 4.0, 0.1, 1
 }
 
@@ -238,7 +239,7 @@ OptionMenu ts_Crosshairs
   Option "Hit color"           , m8f_ts_hit_color     , TextColors
 
   BlankLine
-  Slider "Scale"               , m8f_ts_cross_scale  , 0.5, 3.0, 0.1, 1
+  Slider "Scale"               , m8f_ts_cross_scale  , 0.5, 4.0, 0.1, 1
   Slider "Opacity"             , m8f_ts_cr_opacity   , 0.0, 1.0, 0.05, 2
   Option "Font"                , m8f_ts_cr_font      , ts_crosshair_font_values
   SubMenu "Crosshair Pieces Reference", ts_cr_pieces_ref

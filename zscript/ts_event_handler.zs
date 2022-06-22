@@ -232,15 +232,26 @@ class ts_EventHandler : EventHandler
                , Vector2 absolutePosition
                , Font    font
                , double  opacity = 1.0
+               , bool    isBackgroundEnabled = BackgroundDisabled
                )
   {
-    absolutePosition.x -= scale * font.stringWidth(text) / 2;
-    absolutePosition.y -= scale * font.getHeight() / 2;
+    int stringWidth  = int(round(scale * font.stringWidth(text)));
+    int stringHeight = int(round(scale * font.getHeight()));
+
+    int x = int(round(absolutePosition.x)) - stringWidth  / 2;
+    int y = int(round(absolutePosition.y)) - stringHeight / 2;
+
+    int border = int(round(5 * scale));
+
+    if (isBackgroundEnabled)
+    {
+      Screen.dim("000000", 0.5, x - border, y, stringWidth + border * 2, stringHeight);
+    }
 
     Screen.drawText( font
                    , color
-                   , absolutePosition.x
-                   , absolutePosition.y
+                   , x
+                   , y
                    , text
                    , DTA_ScaleX      , scale
                    , DTA_ScaleY      , scale
@@ -409,7 +420,8 @@ class ts_EventHandler : EventHandler
 
     drawCrosshairs(target, targetColor);
 
-    double opacity   = _settings.opacity();
+    double opacity = _settings.opacity();
+    bool   isBackgroundEnabled = _settings.isBackgroundEnabled();
 
     if (_settings.showBar() && showHealth)
     {
@@ -423,7 +435,7 @@ class ts_EventHandler : EventHandler
                                         , _settings.pip()
                                         , _settings.emptyPip()
                                         );
-      drawText(hpBar, targetColor, textScale, toAbsolute(xy), font, opacity);
+      drawText(hpBar, targetColor, textScale, toAbsolute(xy), font, opacity, isBackgroundEnabled);
       xy.y += newline;
     }
 
@@ -441,12 +453,19 @@ class ts_EventHandler : EventHandler
         nameColor  = targetColor;
       }
 
-      drawText(targetName, nameColor, textScale, toAbsolute(xy), font, opacity);
+      drawText(targetName, nameColor, textScale, toAbsolute(xy), font, opacity, isBackgroundEnabled);
       xy.y += newline;
 
       if (_settings.showNameAndTag() && target.getClassName() != targetName)
       {
-        drawText(target.getClassName(), nameColor, textScale, toAbsolute(xy), font, opacity);
+        drawText( target.getClassName()
+                , nameColor
+                , textScale
+                , toAbsolute(xy)
+                , font
+                , opacity
+                , isBackgroundEnabled
+                );
         xy.y += newline;
       }
     }
@@ -456,7 +475,7 @@ class ts_EventHandler : EventHandler
       string targetFlags = ts_ActorInfo.getTargetFlags(target);
       if (targetFlags.length() > 0)
       {
-        drawText(targetFlags, nameColor, textScale, toAbsolute(xy), font, opacity);
+        drawText(targetFlags, nameColor, textScale, toAbsolute(xy), font, opacity, isBackgroundEnabled);
         xy.y += newline;
       }
     }
@@ -466,7 +485,7 @@ class ts_EventHandler : EventHandler
     {
       string externalInfo = _externalInfoProviders[i].getInfo(target);
       if (externalInfo.length() == 0) continue;
-      drawText(externalInfo, nameColor, textScale, toAbsolute(xy), font, opacity);
+      drawText(externalInfo, nameColor, textScale, toAbsolute(xy), font, opacity, isBackgroundEnabled);
       xy.y += newline;
     }
 
@@ -480,7 +499,14 @@ class ts_EventHandler : EventHandler
         healthString.appendFormat(" Armor: %d", armor);
       }
 
-      drawText(healthString, targetColor, textScale, toAbsolute(xy), font, opacity);
+      drawText( healthString
+              , targetColor
+              , textScale
+              , toAbsolute(xy)
+              , font
+              , opacity
+              , isBackgroundEnabled
+              );
       xy.y += newline;
     }
 
@@ -531,11 +557,12 @@ class ts_EventHandler : EventHandler
       double scale     = _settings.getTextScale();
       double opacity   = _settings.opacity();
       int    nameColor = _settings.nameCol();
+      bool   isBackgroundEnabled = _settings.isBackgroundEnabled();
       string text = (_settings.namedConfirmation())
         ? _lastTargetInfo.killName .. " killed"
         : "Kill Confirmed";
 
-      drawText(text, nameColor, scale, toAbsolute(xy), font, opacity);
+      drawText(text, nameColor, scale, toAbsolute(xy), font, opacity, isBackgroundEnabled);
       xy.y += newline;
     }
 
@@ -761,6 +788,12 @@ class ts_EventHandler : EventHandler
         _externalInfoProviders.push(provider);
       }
     }
+  }
+
+  enum Background
+  {
+    BackgroundDisabled,
+    BackgroundEnabled
   }
 
   private ts_Settings       _settings;

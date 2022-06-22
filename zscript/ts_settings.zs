@@ -69,6 +69,7 @@ class ts_Settings
   bool   altHpCols           () { return _altHpCols           .getBool(); }
   bool   almDeadCr           () { return _almDeadCr           .getBool(); }
   int    crAlmDead           () { return _crAlmDead           .getInt(); }
+  bool   isBackgroundEnabled () { return _isBackgroundEnabled .getBool(); }
 
   double crossOff            () { return _crossOff            .getDouble(); }
   double topOff              () { return _topOff              .getDouble(); }
@@ -190,6 +191,8 @@ class ts_Settings
     _crossBot             = makeCvar("m8f_ts_cross_bottom");
     _crossFontName        = makeCvar("m8f_ts_cr_font");
 
+    _isBackgroundEnabled  = makeCvar("ts_background");
+
     for (int i = 0; i < 12; ++i)
     {
       _colors[i] = makeCvar(string.format("m8f_ts_cr_%d", i));
@@ -228,6 +231,7 @@ class ts_Settings
   private ts_Cvar _botOff;
   private ts_Cvar _greenCr;
   private ts_Cvar _redCr;
+  private ts_Cvar _isBackgroundEnabled;
 
   private ts_Cvar _showChampion;
   private ts_Cvar _showObjects;
