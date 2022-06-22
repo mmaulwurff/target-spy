@@ -63,6 +63,6 @@ Texture "ts_framr_bottom_right", 64, 64
 Texture "tscp_graph_scaled", 878, 514
 {
   Patch  tscpgrph, 0, 0
-  XScale 4.0
-  YScale 4.0
+  XScale 3.0
+  YScale 3.0
 }
