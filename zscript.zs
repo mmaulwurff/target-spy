@@ -6,7 +6,6 @@ version 4.5
 #include "zscript/ts_settings.zs"
 
 #include "zscript/ts_api.zs"
-#include "zscript/ts_external_actor_info_provider.zs"
 
 #include "zscript/ts_last_target_info.zs"
 #include "zscript/ts_play_to_ui_translator.zs"

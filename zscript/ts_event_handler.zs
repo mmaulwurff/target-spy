@@ -15,6 +15,43 @@
  * Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * Target Spy will call getStringUI and getDouble on any service that has
+ * "TargetSpyService" in its name.
+ *
+ * Object argument is Target Spy target, it is guaranteed to be a non-null Actor.
+ *
+ * getStringUI is expected to return additional information about the target for "text" request.
+ * getStringUI is expected to return a font for the target for "font" request.
+ * getDoubleUI is expected to return text scale relative to user-configured text scale.
+ */
+//*
+class ts_ExampleTargetSpyService : Service
+{
+  override
+  string getStringUI(string request, string _1, int _2, double _3, Object targetObject)
+  {
+    let target = Actor(targetObject);
+
+    if (request == "text")
+      return (target is "Zombieman") ? "\cdZombo\c- Bob" : "Some kind of thing";
+
+    if (request == "font")
+      return (target is "Zombieman") ? "BigFont" : "";
+
+    return "";
+  }
+
+  override
+  double getDoubleUI(string _, string _1, int _2, double _3, Object targetObject)
+  {
+    let target = Actor(targetObject);
+    if (target is "Zombieman") return 1.0;
+    return 2.0;
+  }
+}
+//*/
+
 class ts_EventHandler : EventHandler
 {
 
@@ -35,7 +72,7 @@ class ts_EventHandler : EventHandler
     _translator     = NULL;
     _data           = ts_Data.from();
 
-    findExternalInfoProviders();
+    initService();
   }
 
   override
@@ -226,26 +263,26 @@ class ts_EventHandler : EventHandler
   }
 
   private static ui
-  void drawText( string  text
-               , int     color
-               , double  scale
-               , Vector2 absolutePosition
-               , Font    font
-               , double  opacity = 1.0
-               , bool    isBackgroundEnabled = BackgroundDisabled
-               )
+  int drawText( string  text
+              , int     color
+              , double  scale
+              , Vector2 absolutePosition
+              , Font    font
+              , double  opacity = 1.0
+              , bool    isBackgroundEnabled = BackgroundDisabled
+              )
   {
     int stringWidth  = int(round(scale * font.stringWidth(text)));
     int stringHeight = int(round(scale * font.getHeight()));
+    int border       = int(round(stringHeight / 4 * scale));
+    int border2      = border * 2;
 
     int x = int(round(absolutePosition.x)) - stringWidth  / 2;
-    int y = int(round(absolutePosition.y)) - stringHeight / 2;
-
-    int border = int(round(5 * scale));
+    int y = int(round(absolutePosition.y));
 
     if (isBackgroundEnabled)
     {
-      Screen.dim("000000", 0.5, x - border, y, stringWidth + border * 2, stringHeight);
+      Screen.dim("000000", 0.5, x - border, y - border, stringWidth + border2, stringHeight + border2);
     }
 
     Screen.drawText( font
@@ -257,6 +294,8 @@ class ts_EventHandler : EventHandler
                    , DTA_ScaleY      , scale
                    , DTA_Alpha       , opacity
                    );
+
+    return stringHeight + border2;
   }
 
   private static ui
@@ -315,7 +354,7 @@ class ts_EventHandler : EventHandler
 
     if (crosshairgrow) scale *= StatusBar.CrosshairSize;
 
-    double baseCenterY     = readY(aFont, scale);
+    double baseCenterY     = readY(aFont, scale) - aFont.getHeight() / 2;
     double topBottomShift  = 0.02 * Screen.getHeight();
     double crosshairX      = 0.5  * Screen.getWidth() + _settings.xAdjustment();
 
@@ -356,22 +395,18 @@ class ts_EventHandler : EventHandler
   void draw(Actor target, RenderEvent event)
   {
     bool    isAbove = (_settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE);
-    Vector2 xy = getRelativeXY(target, event, isAbove);
+    Vector2 xy = toAbsolute(getRelativeXY(target, event, isAbove));
 
     Font   font      = Font.getFont(_settings.fontName());
     double textScale = _settings.getTextScale();
-    double newline   = font.getHeight() * textScale / screen.getHeight();
-    if ((xy.y >= 0.80 && _settings.barsOnTarget() != ts_Settings.ON_TARGET_BELOW)
-        || _settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE) { newline = -newline; }
-
 
     if (_settings.barsOnTarget() == ts_Settings.ON_TARGET_DISABLED)
     {
-      xy.y = drawKillConfirmed(xy, newline, font);
+      xy.y = drawKillConfirmed(xy, font);
     }
     else
     {
-      drawKillConfirmed(getDefaultRelativeXY(), newline, font);
+      drawKillConfirmed(toAbsolute(getDefaultRelativeXY()), font);
     }
 
     bool hasTarget = (target != NULL);
@@ -435,8 +470,7 @@ class ts_EventHandler : EventHandler
                                         , _settings.pip()
                                         , _settings.emptyPip()
                                         );
-      drawText(hpBar, targetColor, textScale, toAbsolute(xy), font, opacity, isBackgroundEnabled);
-      xy.y += newline;
+      xy.y += drawText(hpBar, targetColor, textScale, xy, font, opacity, isBackgroundEnabled);
     }
 
     int nameColor = tagColor;
@@ -453,20 +487,18 @@ class ts_EventHandler : EventHandler
         nameColor  = targetColor;
       }
 
-      drawText(targetName, nameColor, textScale, toAbsolute(xy), font, opacity, isBackgroundEnabled);
-      xy.y += newline;
+      xy.y += drawText(targetName, nameColor, textScale, xy, font, opacity, isBackgroundEnabled);
 
       if (_settings.showNameAndTag() && target.getClassName() != targetName)
       {
-        drawText( target.getClassName()
-                , nameColor
-                , textScale
-                , toAbsolute(xy)
-                , font
-                , opacity
-                , isBackgroundEnabled
-                );
-        xy.y += newline;
+        xy.y += drawText( target.getClassName()
+                        , nameColor
+                        , textScale
+                        , xy
+                        , font
+                        , opacity
+                        , isBackgroundEnabled
+                        );
       }
     }
 
@@ -475,18 +507,8 @@ class ts_EventHandler : EventHandler
       string targetFlags = ts_ActorInfo.getTargetFlags(target);
       if (targetFlags.length() > 0)
       {
-        drawText(targetFlags, nameColor, textScale, toAbsolute(xy), font, opacity, isBackgroundEnabled);
-        xy.y += newline;
+        xy.y += drawText(targetFlags, nameColor, textScale, xy, font, opacity, isBackgroundEnabled);
       }
-    }
-
-    uint nExternalInfoProviders = _externalInfoProviders.size();
-    for (uint i = 0; i < nExternalInfoProviders; ++i)
-    {
-      string externalInfo = _externalInfoProviders[i].getInfo(target);
-      if (externalInfo.length() == 0) continue;
-      drawText(externalInfo, nameColor, textScale, toAbsolute(xy), font, opacity, isBackgroundEnabled);
-      xy.y += newline;
     }
 
     if (showHealth && (_settings.showNumbers() != 0))
@@ -499,15 +521,35 @@ class ts_EventHandler : EventHandler
         healthString.appendFormat(" Armor: %d", armor);
       }
 
-      drawText( healthString
-              , targetColor
-              , textScale
-              , toAbsolute(xy)
-              , font
-              , opacity
-              , isBackgroundEnabled
-              );
-      xy.y += newline;
+      xy.y += drawText( healthString
+                      , targetColor
+                      , textScale
+                      , xy
+                      , font
+                      , opacity
+                      , isBackgroundEnabled
+                      );
+    }
+
+    uint extraInformationServicesCount = _extraInformationServices.size();
+    for (uint i = 0; i < extraInformationServicesCount; ++i)
+    {
+      Service targetService = _extraInformationServices[i];
+      string extraText = targetService.getStringUI("text", objectArg: target);
+      if (extraText.length() == 0) continue;
+
+      string fontString = targetService.getStringUI("font", objectArg: target);
+      Font extraTextFont = (fontString.length() == 0)  ? font : Font.getFont(fontString);
+
+      double extraScale = targetService.getDoubleUI("", objectArg: target);
+      xy.y += drawText( extraText
+                      , nameColor
+                      , textScale * extraScale
+                      , xy
+                      , extraTextFont
+                      , opacity
+                      , isBackgroundEnabled
+                      );
     }
 
     if (_settings.frameStyle() != ts_Settings.FRAME_DISABLED)
@@ -546,7 +588,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  double drawKillConfirmed(Vector2 xy, double newline, Font font)
+  double drawKillConfirmed(Vector2 xy, Font font)
   {
     if (!_settings.showKillConfirmation()) return xy.y;
 
@@ -562,8 +604,7 @@ class ts_EventHandler : EventHandler
         ? _lastTargetInfo.killName .. " killed"
         : "Kill Confirmed";
 
-      drawText(text, nameColor, scale, toAbsolute(xy), font, opacity, isBackgroundEnabled);
-      xy.y += newline;
+      xy.y += drawText(text, nameColor, scale, xy, font, opacity, isBackgroundEnabled);
     }
 
     return xy.y;
@@ -776,17 +817,13 @@ class ts_EventHandler : EventHandler
   }
 
   private
-  void findExternalInfoProviders()
+  void initService()
   {
-    uint nClasses = AllClasses.size();
-    for (uint i = 0; i < nClasses; ++i)
+    let i = ServiceIterator.find("TargetSpyService");
+    Service aService;
+    while (aService = i.next())
     {
-      class aClass = AllClasses[i];
-      if (aClass is "ts_ExternalActorInfoProvider" && aClass != "ts_ExternalActorInfoProvider")
-      {
-        let provider = ts_ExternalActorInfoProvider(new(aClass));
-        _externalInfoProviders.push(provider);
-      }
+      _extraInformationServices.push(aService);
     }
   }
 
@@ -815,6 +852,6 @@ class ts_EventHandler : EventHandler
   private ts_Le_GlScreen   _glProjection;
   private ts_Le_SwScreen   _swProjection;
 
-  private Array<ts_ExternalActorInfoProvider> _externalInfoProviders;
+  private Array<Service> _extraInformationServices;
 
 } // class ts_EventHandler
