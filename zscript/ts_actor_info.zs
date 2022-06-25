@@ -43,7 +43,7 @@ class ts_ActorInfo
     return result;
   }
 
-  static ui
+  static
   int getActorMaxHealth(Actor a)
   {
     if (a == NULL) { return 0; }
@@ -74,14 +74,6 @@ class ts_ActorInfo
   bool isIdle(Actor a)
   {
     return a.target == NULL;
-  }
-
-  static ui
-  int customTargetColor(Actor target)
-  {
-    string customColorTokenClass = "tr_color_token";
-    int customColor = target.countInv(customColorTokenClass);
-    return customColor;
   }
 
 } // class ts_ActorInfo

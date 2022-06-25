@@ -24,6 +24,7 @@
  * getStringUI is expected to return additional information about the target for "text" request.
  * getStringUI is expected to return a font for the target for "font" request.
  * getDoubleUI is expected to return text scale relative to user-configured text scale.
+ * getInt is expected to return target color, or Font.CR_UNDEFINED if none specified.
  */
 //*
 class ts_ExampleTargetSpyService : Service
@@ -49,8 +50,25 @@ class ts_ExampleTargetSpyService : Service
     if (target is "Zombieman") return 1.0;
     return 2.0;
   }
+
+  override
+  int getInt(string _, string _1, int _2, double _3, Object targetObject)
+  {
+    return Font.CR_UNDEFINED;
+  }
 }
 //*/
+
+struct ts_View
+{
+  Actor target;
+  bool  isShowingHealth;
+  int   targetHealth;
+  int   targetMaxHealth;
+  bool  isTargetDead;
+  int   customTargetColor;
+  int   percent;
+}
 
 class ts_EventHandler : EventHandler
 {
@@ -79,18 +97,35 @@ class ts_EventHandler : EventHandler
   void worldTick()
   {
     if (!_isInitialized) { initialize(); }
+
+    if (  automapActive
+       || players[consolePlayer].mo == NULL
+       || !_settings.isEnabled()
+       )
+    {
+      return;
+    }
+
     prepareProjection();
 
-    _target = getTarget();
+    _view.target            = getTarget();
+    _view.targetMaxHealth   = ts_ActorInfo.getActorMaxHealth(_view.target);
+    _view.isShowingHealth   = (_view.targetMaxHealth != 0);
+    _view.targetHealth      = (_view.target == NULL) ? 0 : _view.target.health;
+    _view.isTargetDead      = _view.targetHealth < 1;
+    _view.customTargetColor = readCustomColor(_view.target);
+    _view.percent           = _view.isShowingHealth
+      ? clamp(_view.targetHealth * 10 / _view.targetMaxHealth, 0, 11)
+      : 10;
 
-    bool hasTarget = (_target != NULL);
+    bool hasTarget = (_view.target != NULL);
 
     _api.setHasTarget(hasTarget);
-    _api.setIsFriendlyTarget(hasTarget && _target.bFRIENDLY);
+    _api.setIsFriendlyTarget(hasTarget && _view.target.bFRIENDLY);
 
     if (hasTarget)
     {
-      setLastTarget(_target);
+      setLastTarget(_view.target);
     }
   }
 
@@ -130,22 +165,181 @@ class ts_EventHandler : EventHandler
        || !_isPrepared
        || automapActive
        || players[consolePlayer].mo == NULL
+       || !_settings.isEnabled()
        )
     {
       return;
     }
 
-    drawEverything(event);
+    Actor target          = _view.target;
+    int   targetMaxHealth = _view.targetMaxHealth;
+    bool  isShowingHealth = _view.isShowingHealth;
+    int   targetHealth    = _view.targetHealth;
+    bool  isTargetDead    = _view.isTargetDead;
+    int   customColor     = _view.customTargetColor;
+
+    bool    isAbove        = (_settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE);
+    Font    font           = Font.getFont(_settings.fontName());
+    double  textScale      = _settings.getTextScale();
+    int     crosshairColor = _settings.crosshairColor();
+
+    Vector2 xy = toAbsolute(getRelativeXY(target, event, isAbove));
+    int tagColor;
+    if (customColor != Font.CR_UNDEFINED) { tagColor = customColor; }
+    else if (targetMaxHealth < 100)       { tagColor = _settings.weakCol(); }
+    else                                  { tagColor = _settings.nameCol(); }
+
+    if (_settings.barsOnTarget() == ts_Settings.ON_TARGET_DISABLED)
+    {
+      xy.y = drawKillConfirmed(xy, font);
+    }
+    else
+    {
+      drawKillConfirmed(toAbsolute(getDefaultRelativeXY()), font);
+    }
+
+    if (target == NULL)
+    {
+      drawCrosshairs(target, crosshairColor);
+      return;
+    }
+
+    if (targetMaxHealth < _settings.minHealth() && targetMaxHealth != 0)
+    {
+      drawCrosshairs(target, crosshairColor);
+      return; // not worth showing
+    }
+
+    if (isTargetDead && !_settings.showCorps())
+    {
+      drawCrosshairs(target, crosshairColor);
+      return;
+    }
+
+    int targetColor = _settings.colors(_view.percent);
+    if (targetHealth < 35 && _settings.almDeadCr()) targetColor = _settings.crAlmDead();
+    if (isTargetDead)                               targetColor = _settings.crAlmDead();
+
+    drawCrosshairs(target, _settings.isCrossTargetColor() ? targetColor : crosshairColor);
+
+    double opacity = _settings.opacity();
+    bool   isBackgroundEnabled = _settings.isBackgroundEnabled();
+
+    if (_settings.showBar() && isShowingHealth)
+    {
+      string hpBar = ts_String.makeHpBar( targetHealth
+                                        , targetMaxHealth
+                                        , _settings.logScale()
+                                        , _settings.altHpCols()
+                                        , _settings.greenCr()
+                                        , _settings.redCr()
+                                        , _settings.lengthMultiplier()
+                                        , _settings.pip()
+                                        , _settings.emptyPip()
+                                        );
+      xy.y += drawText(hpBar, targetColor, textScale, xy, font, opacity, isBackgroundEnabled);
+    }
+
+    int nameColor = tagColor;
+    if (isTargetDead) { nameColor = targetColor; }
+
+    if (_settings.showName())
+    {
+      string targetName = getTargetName(target);
+      targetName = enableExtendedColorCode(targetName);
+
+      if (isTargetDead)
+      {
+        targetName = string.format("Remains of %s", targetName);
+        nameColor  = targetColor;
+      }
+
+      xy.y += drawText(targetName, nameColor, textScale, xy, font, opacity, isBackgroundEnabled);
+
+      if (_settings.showNameAndTag() && target.getClassName() != targetName)
+      {
+        xy.y += drawText( target.getClassName()
+                        , nameColor
+                        , textScale
+                        , xy
+                        , font
+                        , opacity
+                        , isBackgroundEnabled
+                        );
+      }
+    }
+
+    if (_settings.showInfo())
+    {
+      string targetFlags = ts_ActorInfo.getTargetFlags(target);
+      if (targetFlags.length() > 0)
+      {
+        xy.y += drawText(targetFlags, nameColor, textScale, xy, font, opacity, isBackgroundEnabled);
+      }
+    }
+
+    if (isShowingHealth && (_settings.showNumbers() != 0))
+    {
+      string healthString = makeHealthString(targetHealth, targetMaxHealth);
+      int    armor        = target.countInv("BasicArmor");
+
+      if (armor)
+      {
+        healthString.appendFormat(" Armor: %d", armor);
+      }
+
+      xy.y += drawText( healthString
+                      , targetColor
+                      , textScale
+                      , xy
+                      , font
+                      , opacity
+                      , isBackgroundEnabled
+                      );
+    }
+
+    uint extraInformationServicesCount = _extraInformationServices.size();
+    for (uint i = 0; i < extraInformationServicesCount; ++i)
+    {
+      Service targetService = _extraInformationServices[i];
+      string extraText = targetService.getStringUI("text", objectArg: target);
+      if (extraText.length() == 0) continue;
+
+      string fontString = targetService.getStringUI("font", objectArg: target);
+      Font extraTextFont = (fontString.length() == 0)  ? font : Font.getFont(fontString);
+
+      double extraScale = targetService.getDoubleUI("", objectArg: target);
+      xy.y += drawText( extraText
+                      , nameColor
+                      , textScale * extraScale
+                      , xy
+                      , extraTextFont
+                      , opacity
+                      , isBackgroundEnabled
+                      );
+    }
+
+    if (_settings.frameStyle() != ts_Settings.FRAME_DISABLED)
+    {
+      drawFrame(event, target, targetColor);
+    }
   }
 
 // private: ////////////////////////////////////////////////////////////////////////////////////////
 
-  private ui
-  void drawEverything(RenderEvent event)
+  private
+  int readCustomColor(Actor target)
   {
-    if (!_settings.isEnabled()) return;
+    if (target == NULL) return Font.CR_UNDEFINED;
 
-    draw(_target, event);
+    int result = Font.CR_UNDEFINED;
+    uint extraInformationServicesCount = _extraInformationServices.size();
+    for (uint i = 0; i < extraInformationServicesCount; ++i)
+    {
+      int customColor = _extraInformationServices[i].getInt("", objectArg: target);
+      if (customColor != Font.CR_UNDEFINED) return customColor;
+    }
+    return result;
   }
 
   private ui
@@ -390,173 +584,6 @@ class ts_EventHandler : EventHandler
                         , clamp(centerPos.y / Screen.getHeight(), 0.1, 0.9)
                         );
     return result;
-  }
-
-  private ui
-  void draw(Actor target, RenderEvent event)
-  {
-    bool    isAbove = (_settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE);
-    Vector2 xy = toAbsolute(getRelativeXY(target, event, isAbove));
-
-    Font   font      = Font.getFont(_settings.fontName());
-    double textScale = _settings.getTextScale();
-
-    if (_settings.barsOnTarget() == ts_Settings.ON_TARGET_DISABLED)
-    {
-      xy.y = drawKillConfirmed(xy, font);
-    }
-    else
-    {
-      drawKillConfirmed(toAbsolute(getDefaultRelativeXY()), font);
-    }
-
-    bool hasTarget = (target != NULL);
-    int  crosshairColor = _settings.crosshairColor();
-
-    if (!hasTarget)
-    {
-      drawCrosshairs(target, crosshairColor);
-      return;
-    }
-
-    int  targetMaxHealth = ts_ActorInfo.getActorMaxHealth(target);
-    bool showHealth      = (targetMaxHealth != 0);
-
-    if (targetMaxHealth < _settings.minHealth() && targetMaxHealth != 0)
-    {
-      drawCrosshairs(target, crosshairColor);
-      return; // not worth showing
-    }
-
-    int targetHealth = target.health;
-    bool isTargetDead = targetHealth < 1;
-    if (isTargetDead && !_settings.showCorps())
-    {
-      drawCrosshairs(target, crosshairColor);
-      return;
-    }
-
-    int tagColor;
-    if (targetMaxHealth < 100) { tagColor = _settings.weakCol(); }
-    else                       { tagColor = _settings.nameCol(); }
-    int customColor = ts_ActorInfo.customTargetColor(target);
-    if (customColor)           { tagColor = customColor; }
-
-    int percent = 10;
-    if (showHealth)
-    {
-      if (targetHealth > targetMaxHealth) { percent = 11; }
-      else { percent = targetHealth * 10 / targetMaxHealth; }
-    }
-
-    if (percent < 0) { percent = 0; }
-    int targetColor = _settings.colors(percent);
-    if (targetHealth < 35 && _settings.almDeadCr()) targetColor = _settings.crAlmDead();
-    if (isTargetDead)                               targetColor = _settings.crAlmDead();
-
-    drawCrosshairs(target, _settings.isCrossTargetColor() ? targetColor : crosshairColor);
-
-    double opacity = _settings.opacity();
-    bool   isBackgroundEnabled = _settings.isBackgroundEnabled();
-
-    if (_settings.showBar() && showHealth)
-    {
-      string hpBar = ts_String.makeHpBar( targetHealth
-                                        , targetMaxHealth
-                                        , _settings.logScale()
-                                        , _settings.altHpCols()
-                                        , _settings.greenCr()
-                                        , _settings.redCr()
-                                        , _settings.lengthMultiplier()
-                                        , _settings.pip()
-                                        , _settings.emptyPip()
-                                        );
-      xy.y += drawText(hpBar, targetColor, textScale, xy, font, opacity, isBackgroundEnabled);
-    }
-
-    int nameColor = tagColor;
-    if (isTargetDead) { nameColor = targetColor; }
-
-    if (_settings.showName())
-    {
-      string targetName = getTargetName(target);
-      targetName = enableExtendedColorCode(targetName);
-
-      if (isTargetDead)
-      {
-        targetName = string.format("Remains of %s", targetName);
-        nameColor  = targetColor;
-      }
-
-      xy.y += drawText(targetName, nameColor, textScale, xy, font, opacity, isBackgroundEnabled);
-
-      if (_settings.showNameAndTag() && target.getClassName() != targetName)
-      {
-        xy.y += drawText( target.getClassName()
-                        , nameColor
-                        , textScale
-                        , xy
-                        , font
-                        , opacity
-                        , isBackgroundEnabled
-                        );
-      }
-    }
-
-    if (_settings.showInfo())
-    {
-      string targetFlags = ts_ActorInfo.getTargetFlags(target);
-      if (targetFlags.length() > 0)
-      {
-        xy.y += drawText(targetFlags, nameColor, textScale, xy, font, opacity, isBackgroundEnabled);
-      }
-    }
-
-    if (showHealth && (_settings.showNumbers() != 0))
-    {
-      string healthString = makeHealthString(targetHealth, targetMaxHealth);
-      int    armor        = target.countInv("BasicArmor");
-
-      if (armor)
-      {
-        healthString.appendFormat(" Armor: %d", armor);
-      }
-
-      xy.y += drawText( healthString
-                      , targetColor
-                      , textScale
-                      , xy
-                      , font
-                      , opacity
-                      , isBackgroundEnabled
-                      );
-    }
-
-    uint extraInformationServicesCount = _extraInformationServices.size();
-    for (uint i = 0; i < extraInformationServicesCount; ++i)
-    {
-      Service targetService = _extraInformationServices[i];
-      string extraText = targetService.getStringUI("text", objectArg: target);
-      if (extraText.length() == 0) continue;
-
-      string fontString = targetService.getStringUI("font", objectArg: target);
-      Font extraTextFont = (fontString.length() == 0)  ? font : Font.getFont(fontString);
-
-      double extraScale = targetService.getDoubleUI("", objectArg: target);
-      xy.y += drawText( extraText
-                      , nameColor
-                      , textScale * extraScale
-                      , xy
-                      , extraTextFont
-                      , opacity
-                      , isBackgroundEnabled
-                      );
-    }
-
-    if (_settings.frameStyle() != ts_Settings.FRAME_DISABLED)
-    {
-      drawFrame(event, target, targetColor);
-    }
   }
 
   private ui
@@ -855,6 +882,6 @@ class ts_EventHandler : EventHandler
 
   private Array<Service> _extraInformationServices;
 
-  private Actor _target;
+  private ts_View _view;
 
 } // class ts_EventHandler
