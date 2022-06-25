@@ -70,7 +70,7 @@ class ts_ActorInfo
     return maxHealth;
   }
 
-  static ui
+  static
   bool isIdle(Actor a)
   {
     return a.target == NULL;

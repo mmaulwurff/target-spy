@@ -80,6 +80,18 @@ class ts_EventHandler : EventHandler
   {
     if (!_isInitialized) { initialize(); }
     prepareProjection();
+
+    _target = getTarget();
+
+    bool hasTarget = (_target != NULL);
+
+    _api.setHasTarget(hasTarget);
+    _api.setIsFriendlyTarget(hasTarget && _target.bFRIENDLY);
+
+    if (hasTarget)
+    {
+      setLastTarget(_target);
+    }
   }
 
   override
@@ -133,18 +145,7 @@ class ts_EventHandler : EventHandler
   {
     if (!_settings.isEnabled()) return;
 
-    Actor target = getTarget();
-
-    draw(target, event);
-
-    bool hasTarget = (target != NULL);
-    _api.setHasTarget(hasTarget);
-    _api.setIsFriendlyTarget(hasTarget && target.bFRIENDLY);
-
-    if (hasTarget)
-    {
-      setLastTarget(target);
-    }
+    draw(_target, event);
   }
 
   private ui
@@ -304,7 +305,7 @@ class ts_EventHandler : EventHandler
     return (relativePosition.x * screen.getWidth(), relativePosition.y * screen.getHeight());
   }
 
-  private ui
+  private
   void setLastTarget(Actor newLastTarget)
   {
     if (!isLastTargetExisting()) return;
@@ -610,7 +611,7 @@ class ts_EventHandler : EventHandler
     return xy.y;
   }
 
-  private ui
+  private
   Actor getTarget()
   {
     PlayerInfo player = players[consolePlayer];
@@ -694,7 +695,7 @@ class ts_EventHandler : EventHandler
     return target;
   }
 
-  private ui
+  private clearscope
   string getTargetName(Actor target)
   {
     if (target.player) return target.player.getUserName();
@@ -703,7 +704,7 @@ class ts_EventHandler : EventHandler
     return addAdditionalInfo(target, target.getTag());
   }
 
-  private ui
+  private clearscope
   string addAdditionalInfo(Actor target, string name)
   {
     Inventory inv = Inventory(target);
@@ -722,7 +723,7 @@ class ts_EventHandler : EventHandler
     return prependChampionColor(target, name);
   }
 
-  private ui
+  private clearscope
   string prependChampionColor(Actor target, string name)
   {
     if (!_settings.showChampion()) return name;
@@ -762,7 +763,7 @@ class ts_EventHandler : EventHandler
     return screenY;
   }
 
-  private ui
+  private clearscope
   string enableExtendedColorCode(string str)
   {
     str.replace('\c', string.format("%c", 28));
@@ -853,5 +854,7 @@ class ts_EventHandler : EventHandler
   private ts_Le_SwScreen   _swProjection;
 
   private Array<Service> _extraInformationServices;
+
+  private Actor _target;
 
 } // class ts_EventHandler
