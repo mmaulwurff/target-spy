@@ -104,7 +104,6 @@ class ts_Settings
 
   double opacity             () { return _opacity             .getDouble(); }
   double lengthMultiplier    () { return _lengthMultiplier    .getDouble(); }
-  int    barsOnTarget        () { return _barsOnTarget        .getInt(); }
 
   string pip                 () { return _pip                 .getString(); }
   string emptyPip            () { return _emptyPip            .getString(); }
@@ -115,6 +114,14 @@ class ts_Settings
   string crossFontName       () { return _crossFontName       .getString(); }
 
   double getTextScale        () { return notZero(_textScale.getDouble()); }
+
+  int barsOnTarget()
+  {
+    double yStart = _yStart.getDouble();
+    if (yStart == -2) return ON_TARGET_ABOVE;
+    if (yStart == -1) return ON_TARGET_BELOW;
+    return ON_TARGET_DISABLED;
+  }
 
 // private: ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -183,7 +190,6 @@ class ts_Settings
 
     _opacity              = makeCvar("m8f_ts_opacity");
     _lengthMultiplier     = makeCvar("m8f_ts_length_mult");
-    _barsOnTarget         = makeCvar("m8f_ts_on_target");
 
     _pip                  = makeCvar("m8f_ts_pip");
     _emptyPip             = makeCvar("m8f_ts_empty_pip");
@@ -264,7 +270,6 @@ class ts_Settings
 
   private ts_Cvar _opacity;
   private ts_Cvar _lengthMultiplier;
-  private ts_Cvar _barsOnTarget;
 
   private ts_Cvar _pip;
   private ts_Cvar _emptyPip;

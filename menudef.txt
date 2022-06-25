@@ -2,11 +2,13 @@
 
 OptionValue ts_y_values
 {
-  0.02, "Top"
-  0.10, "Below top"
+  -2,   "Above target"
+  -1,   "Below target"
+  0.02, "Screen top"
+  0.10, "Below screen top"
   0.35, "Above crosshair"
   0.60, "Below crosshair"
-  0.90, "Bottom"
+  0.90, "Screen bottom"
 }
 
 OptionString ts_font_values
@@ -75,13 +77,6 @@ OptionValue ts_frame_style_values
   7, "Red frame"
 }
 
-OptionValue ts_on_target_values
-{
-  0, "Disabled"
-  1, "Above"
-  2, "Below"
-}
-
 OptionString ts_extra_character_values
 {
   "❤" , "❤"
@@ -138,7 +133,6 @@ OptionMenu ts_VisualOptions
   Slider     "Scale"                , m8f_ts_text_scale    , 0.5, 4.0, 0.1, 1
   Slider     "Opacity"              , m8f_ts_opacity       , 0.0, 1.0, 0.05, 2
   Slider     "Length Multiplier"    , m8f_ts_length_mult   , 0.5, 10.0, 0.1
-  Option     "Position on target"   , m8f_ts_on_target     , ts_on_target_values
   Option     "$TS_BACKGROUND"       , ts_background        , OnOff
 }
 
