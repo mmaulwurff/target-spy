@@ -37,6 +37,15 @@ class ts_Settings
     ON_TARGET_BELOW,
   }
 
+  enum ShowNameOptions
+  {
+    NAME_DISABLED,
+    NAME_TAG,
+    NAME_CLASS,
+    NAME_TAG_AND_CLASS,
+    NAME_TAG_AND_CLASS_IF_DIFFERENT,
+  }
+
   static
   ts_Settings from()
   {
@@ -57,8 +66,7 @@ class ts_Settings
   double yOffset             () { return _yOffset             .getDouble(); }
   bool   logScale            () { return _logScale            .getBool(); }
   bool   showBar             () { return _showBar             .getBool(); }
-  bool   showName            () { return _showName            .getBool(); }
-  bool   showNameAndTag      () { return _showNameAndTag      .getBool(); }
+  int    showName            () { return _showName            .getInt(); }
   int    showNumbers         () { return _showNumbers         .getInt(); }
   bool   showInfo            () { return _showInfo            .getBool(); }
   bool   showCorps           () { return _showCorps           .getBool(); }
@@ -79,9 +87,7 @@ class ts_Settings
   int    greenCr             () { return _greenCr             .getInt(); }
   int    redCr               () { return _redCr               .getInt(); }
 
-  bool   showChampion        () { return _showChampion        .getBool(); }
   int    showObjects         () { return _showObjects         .getInt(); }
-  int    showInternalNames   () { return _showInternalNames   .getInt(); }
   bool   showHidden          () { return _showHidden          .getBool(); }
   bool   showFriends         () { return _showFriends         .getBool(); }
   bool   showDormant         () { return _showDormant         .getBool(); }
@@ -142,8 +148,7 @@ class ts_Settings
     _yOffset              = makeCvar("m8f_ts_y_offset");
     _logScale             = makeCvar("m8f_ts_bar_log_scale");
     _showBar              = makeCvar("m8f_ts_show_bar");
-    _showName             = makeCvar("m8f_ts_show_name");
-    _showNameAndTag       = makeCvar("m8f_ts_show_name_tag");
+    _showName             = makeCvar("ts_name");
     _showNumbers          = makeCvar("m8f_ts_show_numbers");
     _showInfo             = makeCvar("m8f_ts_show_info");
     _showCorps            = makeCvar("m8f_ts_show_corpses");
@@ -164,9 +169,7 @@ class ts_Settings
     _greenCr              = makeCvar("m8f_ts_green_color");
     _redCr                = makeCvar("m8f_ts_red_color");
 
-    _showChampion         = makeCvar("m8f_ts_show_champion");
     _showObjects          = makeCvar("m8f_ts_show_objects");
-    _showInternalNames    = makeCvar("m8f_class_as_tag");
     _showHidden           = makeCvar("m8f_ts_show_hidden");
     _showFriends          = makeCvar("m8f_ts_show_friends");
     _showDormant          = makeCvar("m8f_ts_show_dormant");
@@ -223,7 +226,6 @@ class ts_Settings
   private ts_Cvar _logScale;
   private ts_Cvar _showBar;
   private ts_Cvar _showName;
-  private ts_Cvar _showNameAndTag;
   private ts_Cvar _showNumbers;
   private ts_Cvar _showInfo;
   private ts_Cvar _showCorps;
@@ -243,9 +245,7 @@ class ts_Settings
   private ts_Cvar _redCr;
   private ts_Cvar _isBackgroundEnabled;
 
-  private ts_Cvar _showChampion;
   private ts_Cvar _showObjects;
-  private ts_Cvar _showInternalNames;
   private ts_Cvar _showHidden;
   private ts_Cvar _showFriends;
   private ts_Cvar _showDormant;

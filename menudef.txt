@@ -59,10 +59,13 @@ OptionValue ts_show_objects_values
   4, "EVERYTHING"
 }
 
-OptionValue ts_class_as_tag_values
+OptionValue ts_name_values
 {
-  0, "Tags"
-  1, "Class Names"
+  0, "$TS_NAME_NOTHING"
+  1, "$TS_NAME_TAG"
+  2, "$TS_NAME_CLASS"
+  3, "$TS_NAME_TAG_AND_CLASS"
+  4, "$TS_NAME_TAG_AND_CLASS_IF_DIFFERENT"
 }
 
 OptionValue ts_frame_style_values
@@ -106,14 +109,12 @@ OptionMenu ts_VisualOptions
   Title      "Target Spy Visual Options"
 
   Option     "Font"                , m8f_ts_font         , ts_font_values
-  Option     "Names:"              , m8f_class_as_tag    , ts_class_as_tag_values
 
   BlankLine
   StaticText "Show:"               , 1
   Option "Health bar"              , m8f_ts_show_bar     , OnOff
   Option "Health numbers"          , m8f_ts_show_numbers , ts_health_numbers_values
-  Option "Name"                    , m8f_ts_show_name    , OnOff
-  Option "And class name, if different" , m8f_ts_show_name_tag, OnOff
+  Option "Name"                    , ts_name             , ts_name_values
   Option "Kill Confirmation"       , m8f_ts_show_confirm , OnOff
   Option "Named Confirmation"      , m8f_ts_named_confirm, OnOff
   Option "Additional info"         , m8f_ts_show_info    , OnOff
@@ -185,14 +186,6 @@ OptionMenu ts_BehaviorOptions
   StaticText "with max health less than this."  , Black
 }
 
-OptionMenu ts_CrossOptions
-{
-  Title      "Target Spy Cross-mod Options"
-
-  Option     "Special names for Champions" , m8f_ts_show_champion, OnOff
-  StaticText "Champions is a monster mod by Mikk-.", Black
-}
-
 OptionMenu ts_Controls
 {
   Title      "Target Spy Controls"
@@ -219,7 +212,6 @@ OptionMenu ts_Options
   SubMenu    "Frame"              , ts_Frame
   SubMenu    "Crosshairs"         , ts_Crosshairs
   SubMenu    "Controls"           , ts_Controls
-  SubMenu    "Cross-mod options"  , ts_CrossOptions
 }
 
 OptionMenu ts_Crosshairs

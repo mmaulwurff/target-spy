@@ -61,13 +61,16 @@ class ts_ExampleTargetSpyService : Service
 
 struct ts_View
 {
-  Actor target;
-  bool  isShowingHealth;
-  int   targetHealth;
-  int   targetMaxHealth;
-  bool  isTargetDead;
-  int   customTargetColor;
-  int   percent;
+  Actor  target;
+  int    targetHealth;
+  int    targetMaxHealth;
+  bool   isShowingHealth;
+  string targetName;
+  string targetNameDecoration;
+  string targetClass;
+  bool   isTargetDead;
+  int    customTargetColor;
+  int    percent;
 }
 
 class ts_EventHandler : EventHandler
@@ -108,13 +111,18 @@ class ts_EventHandler : EventHandler
 
     prepareProjection();
 
-    _view.target            = getTarget();
-    _view.targetMaxHealth   = ts_ActorInfo.getActorMaxHealth(_view.target);
-    _view.isShowingHealth   = (_view.targetMaxHealth != 0);
-    _view.targetHealth      = (_view.target == NULL) ? 0 : _view.target.health;
-    _view.isTargetDead      = _view.targetHealth < 1;
-    _view.customTargetColor = readCustomColor(_view.target);
-    _view.percent           = _view.isShowingHealth
+    _view.target    = getTarget();
+    bool isNoTarget = _view.target == NULL;
+
+    _view.targetHealth         = isNoTarget ? 0 : _view.target.health;
+    _view.targetMaxHealth      = ts_ActorInfo.getActorMaxHealth(_view.target);
+    _view.isShowingHealth      = (_view.targetMaxHealth != 0);
+    _view.targetName           = isNoTarget ? "" : getTargetName(_view.target);
+    _view.targetClass          = isNoTarget ? "" : string.format("%s", _view.target.getClassName());
+    _view.targetNameDecoration = isNoTarget ? "" : getNameDecoration(_view.target, _view.isTargetDead);
+    _view.isTargetDead         = _view.targetHealth < 1;
+    _view.customTargetColor    = readCustomColor(_view.target);
+    _view.percent              = _view.isShowingHealth
       ? clamp(_view.targetHealth * 10 / _view.targetMaxHealth, 0, 11)
       : 10;
 
@@ -125,7 +133,7 @@ class ts_EventHandler : EventHandler
 
     if (hasTarget)
     {
-      setLastTarget(_view.target);
+      setLastTarget(_view.target, _view.targetName);
     }
   }
 
@@ -240,33 +248,35 @@ class ts_EventHandler : EventHandler
       xy.y += drawText(hpBar, targetColor, textScale, xy, font, opacity, isBackgroundEnabled);
     }
 
-    int nameColor = tagColor;
-    if (isTargetDead) { nameColor = targetColor; }
+    int nameColor = isTargetDead ? targetColor : tagColor;
 
-    if (_settings.showName())
+    if (_settings.showName() != ts_Settings.NAME_DISABLED)
     {
-      string targetName = getTargetName(target);
-      targetName = enableExtendedColorCode(targetName);
+      string targetName = _view.targetName;
 
-      if (isTargetDead)
+      switch(_settings.showName())
       {
-        targetName = string.format("Remains of %s", targetName);
-        nameColor  = targetColor;
+      case ts_Settings.NAME_TAG:
+        targetName = _view.targetName;
+        break;
+      case ts_Settings.NAME_CLASS:
+        targetName = _view.targetClass;
+        break;
+      case ts_Settings.NAME_TAG_AND_CLASS_IF_DIFFERENT:
+        if (_view.targetName == _view.targetClass)
+        {
+          targetName = _view.targetName;
+          break;
+        }
+        // fall through
+      case ts_Settings.NAME_TAG_AND_CLASS:
+        targetName = string.format("%s (%s)", _view.targetName, _view.targetClass);
+        break;
       }
+
+      targetName = string.format(_view.targetNameDecoration, targetName);
 
       xy.y += drawText(targetName, nameColor, textScale, xy, font, opacity, isBackgroundEnabled);
-
-      if (_settings.showNameAndTag() && target.getClassName() != targetName)
-      {
-        xy.y += drawText( target.getClassName()
-                        , nameColor
-                        , textScale
-                        , xy
-                        , font
-                        , opacity
-                        , isBackgroundEnabled
-                        );
-      }
     }
 
     if (_settings.showInfo())
@@ -500,13 +510,12 @@ class ts_EventHandler : EventHandler
   }
 
   private
-  void setLastTarget(Actor newLastTarget)
+  void setLastTarget(Actor newLastTarget, string targetName)
   {
     if (!isLastTargetExisting()) return;
 
     _lastTargetInfo.a    = newLastTarget;
-    _lastTargetInfo.name = getTargetName(newLastTarget);
-    _lastTargetInfo.name = enableExtendedColorCode(_lastTargetInfo.name);
+    _lastTargetInfo.name = targetName;
   }
 
   private play
@@ -722,18 +731,19 @@ class ts_EventHandler : EventHandler
     return target;
   }
 
-  private clearscope
+  private
   string getTargetName(Actor target)
   {
+    if (target == NULL) return "";
     if (target.player) return target.player.getUserName();
-    if (_settings.showInternalNames()) return target.getClassName();
 
-    return addAdditionalInfo(target, target.getTag());
+    return target.getTag();
   }
 
-  private clearscope
-  string addAdditionalInfo(Actor target, string name)
+  private
+  string getNameDecoration(Actor target, bool isTargetDead)
   {
+    string result = "%s";
     Inventory inv = Inventory(target);
     if (inv)
     {
@@ -743,27 +753,28 @@ class ts_EventHandler : EventHandler
         BasicArmorPickup armor = BasicArmorPickup(inv);
         if (armor) { amount = armor.saveAmount; }
       }
-      if (amount == 1) return name;
-      else             return string.format("%s (%i)", name, amount);
+      if (amount != 1) result.appendFormat(" (%i)", amount);
+      return result;
     }
 
-    return prependChampionColor(target, name);
+    string championTag = getChampionTag(target);
+    if (championTag != "") result = championTag .. " " .. result;
+    if (isTargetDead)      result = StringTable.localize("$TS_REMAINS") .. result;
+
+    return result;
   }
 
-  private clearscope
-  string prependChampionColor(Actor target, string name)
+  private
+  string getChampionTag(Actor target)
   {
-    if (!_settings.showChampion()) return name;
-
     string tokenClass = "champion_Token";
     Inventory   token = target.findInventory(tokenClass, true);
-    if (!token) return name;
+    if (!token) return "";
 
     string tokenClassName = token.getClassName();
     string championTag    = _data.championTokens.at(tokenClassName);
     if (championTag.length() == 0) { championTag = "Champion"; }
 
-    championTag.appendFormat(" %s", name);
     return championTag;
   }
 
@@ -788,13 +799,6 @@ class ts_EventHandler : EventHandler
       : viewHeight / 2 + viewStartY;
 
     return screenY;
-  }
-
-  private clearscope
-  string enableExtendedColorCode(string str)
-  {
-    str.replace('\c', string.format("%c", 28));
-    return str;
   }
 
   private

@@ -3,8 +3,6 @@ user float  m8f_ts_y             = 0.02;
 user float  m8f_ts_y_offset      = 0.0;
 user bool   m8f_ts_enabled       = true;
 user int    m8f_ts_min_health    = 0;
-user bool   m8f_ts_show_name     = true;
-user bool   m8f_ts_show_name_tag = false;
 user int    m8f_ts_show_numbers  = 0;
 user bool   m8f_ts_show_bar      = true;
 user bool   m8f_ts_show_info     = false;
@@ -27,10 +25,10 @@ user bool   m8f_ts_show_dormant  = false;
 user bool   m8f_ts_cross_only_tg = false;
 user bool   m8f_ts_show_confirm  = false;
 user bool   m8f_ts_named_confirm = false;
-user bool   m8f_ts_show_champion = true;
 user bool   m8f_ts_show_corpses  = false;
 user bool   m8f_ts_alm_dead_cr   = true;
-user int    m8f_class_as_tag     = 0; // 0 - tag, 1 - class
+
+user int    ts_name = 1; // 0 - nothing, 1 - tag, 2 - class, 3 - both, 4 - both if different.
 
 user int    ts_cross_top_offset    = 0;
 user int    ts_cross_middle_offset = 0;
