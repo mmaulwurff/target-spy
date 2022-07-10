@@ -330,7 +330,7 @@ class ts_EventHandler : EventHandler
 // private: ////////////////////////////////////////////////////////////////////////////////////////
 
   private
-  int readCustomColor(Actor target)
+  int readCustomColor(Actor target) const
   {
     if (target == NULL) return Font.CR_UNDEFINED;
 
@@ -345,7 +345,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  Vector2 makeDrawPos(RenderEvent event, Actor target, double offset)
+  Vector2 makeDrawPos(RenderEvent event, Actor target, double offset) const
   {
     PlayerInfo player = players[consolePlayer];
 
@@ -365,7 +365,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  void drawFrame(RenderEvent event, Actor target, int color)
+  void drawFrame(RenderEvent event, Actor target, int color) const
   {
     PlayerInfo player = players[consolePlayer];
     Vector2 centerPos = makeDrawPos(event, target, target.height / 2.0);
@@ -509,7 +509,7 @@ class ts_EventHandler : EventHandler
     _lastTargetInfo.name = targetName;
   }
 
-  private play
+  private
   bool isSlot1Weapon() const
   {
     PlayerInfo player = players[consolePlayer];
@@ -523,14 +523,14 @@ class ts_EventHandler : EventHandler
     return (slot == 1);
   }
 
-  private play
+  private
   bool isLastTargetExisting() const
   {
     return _lastTargetInfo != NULL;
   }
 
   private ui
-  void drawCrosshairs(Actor target, int crosshairColor)
+  void drawCrosshairs(Actor target, int crosshairColor) const
   {
     if (!_uiSettings.crossOn()) return;
     if (_uiSettings.noCrossOnSlot1() && isSlot1Weapon()) return;
@@ -563,7 +563,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  Vector2 getDefaultRelativeXY()
+  Vector2 getDefaultRelativeXY() const
   {
     Vector2 result;
     result.x = 0.5;
@@ -572,7 +572,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  Vector2 getRelativeXY(Actor target, RenderEvent event, bool isAbove)
+  Vector2 getRelativeXY(Actor target, RenderEvent event, bool isAbove) const
   {
     if (target == NULL || !_uiSettings.barsOnTarget()) return getDefaultRelativeXY();
 
@@ -587,7 +587,7 @@ class ts_EventHandler : EventHandler
   }
 
   private ui
-  string makeHealthString(int targetHealth, int targetMaxHealth)
+  string makeHealthString(int targetHealth, int targetMaxHealth) const
   {
     switch (_uiSettings.showNumbers())
     {
@@ -639,10 +639,9 @@ class ts_EventHandler : EventHandler
   }
 
   private
-  Actor getTarget()
+  Actor getTarget() const
   {
     PlayerInfo player = players[consolePlayer];
-    if (player.mo == NULL) return NULL;
 
     // try an easy way to get a target (also works with autoaim)
     Actor target = player.mo.aimTarget();
@@ -737,7 +736,7 @@ class ts_EventHandler : EventHandler
   }
 
   private
-  string getTargetName(Actor target)
+  string getTargetName(Actor target) const
   {
     if (target == NULL) return "";
     if (target.player) return target.player.getUserName();
@@ -746,7 +745,7 @@ class ts_EventHandler : EventHandler
   }
 
   private
-  string getNameDecoration(Actor target, bool isTargetDead)
+  string getNameDecoration(Actor target, bool isTargetDead) const
   {
     string result = "%s";
     Inventory inv = Inventory(target);
@@ -770,7 +769,7 @@ class ts_EventHandler : EventHandler
   }
 
   private
-  string getChampionTag(Actor target)
+  string getChampionTag(Actor target) const
   {
     string tokenClass = "champion_Token";
     Inventory   token = target.findInventory(tokenClass, true);
@@ -783,8 +782,8 @@ class ts_EventHandler : EventHandler
     return championTag;
   }
 
-  private play
-  bool isPreciseYAvailable() const
+  private ui
+  bool isPreciseYAvailable()
   {
     if (_preciseY != NULL) return true;
 
@@ -793,8 +792,8 @@ class ts_EventHandler : EventHandler
     return (_preciseY != NULL);
   }
 
-  private play
-  double readY(Font aFont, double scale) const
+  private ui
+  double readY(Font aFont, double scale)
   {
     int viewStartX, viewStartY, viewWidth, viewHeight;
     [viewStartX, viewStartY, viewWidth, viewHeight] = Screen.getViewWindow();
@@ -881,7 +880,7 @@ class ts_EventHandler : EventHandler
 
   private ts_Data _data;
 
-  private transient Cvar _preciseY;
+  private transient ui Cvar _preciseY;
 
   private transient bool   _isInitialized;
   private transient bool   _isPrepared;
