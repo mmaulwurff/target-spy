@@ -90,7 +90,6 @@ class ts_EventHandler : EventHandler
     _settings       = ts_Settings.from();
     _api            = ts_Api.from();
     _lastTargetInfo = ts_LastTargetInfo.from();
-    _translator     = NULL;
     _data           = ts_Data.from();
 
     initService();
@@ -100,14 +99,7 @@ class ts_EventHandler : EventHandler
   void worldTick()
   {
     if (!_isInitialized) { initialize(); }
-
-    if (  automapActive
-       || players[consolePlayer].mo == NULL
-       || !_settings.isEnabled()
-       )
-    {
-      return;
-    }
+    if (automapActive || players[consolePlayer].mo == NULL) return;
 
     prepareProjection();
 
@@ -388,10 +380,9 @@ class ts_EventHandler : EventHandler
     double  visibleRadius = radius * 2000.0 / distance / zoomFactor;
     double  visibleHeight = height * 1000.0 / distance / zoomFactor;
 
-    let  settings         = _settings;
-    let  f                = Font.getFont(settings.fontName());
+    let aFont = Font.getFont(_settings.fontName());
 
-    double  size       = settings.frameSize();
+    double  size       = _settings.frameSize();
     double  halfWidth  = visibleRadius / 2.0 * size;
     double  halfHeight = visibleHeight / 2.0 * size;
 
@@ -404,47 +395,47 @@ class ts_EventHandler : EventHandler
     Vector2 topRight    = (right.x, top.y);
     Vector2 bottomLeft  = (left.x,  bottom.y);
     Vector2 bottomRight = (right.x, bottom.y);
-    double  scale       = settings.frameScale();
-    int     frameStyle  = settings.frameStyle();
+    double  scale       = _settings.frameScale();
+    int     frameStyle  = _settings.frameStyle();
 
     switch (frameStyle)
     {
-      case settings.FRAME_DISABLED:
+      case ts_Settings.FRAME_DISABLED:
         break;
 
-      case settings.FRAME_SLASH:
-        drawText("/", color, scale, topLeft, f);
-        drawText("/", color, scale, bottomRight, f);
+      case ts_Settings.FRAME_SLASH:
+        drawText("/", color, scale, topLeft, aFont);
+        drawText("/", color, scale, bottomRight, aFont);
         break;
 
-      case settings.FRAME_DOTS:
-        drawText(".", color, scale, topLeft, f);
-        drawText(".", color, scale, topRight, f);
-        drawText(".", color, scale, bottomLeft, f);
-        drawText(".", color, scale, bottomRight, f);
+      case ts_Settings.FRAME_DOTS:
+        drawText(".", color, scale, topLeft, aFont);
+        drawText(".", color, scale, topRight, aFont);
+        drawText(".", color, scale, bottomLeft, aFont);
+        drawText(".", color, scale, bottomRight, aFont);
         break;
 
-      case settings.FRAME_LESS_GREATER:
-        drawText("<", color, scale, left, f);
-        drawText(">", color, scale, right, f);
+      case ts_Settings.FRAME_LESS_GREATER:
+        drawText("<", color, scale, left, aFont);
+        drawText(">", color, scale, right, aFont);
         break;
 
-      case settings.FRAME_GREATER_LESS:
-        drawText(">", color, scale, left, f);
-        drawText("<", color, scale, right, f);
+      case ts_Settings.FRAME_GREATER_LESS:
+        drawText(">", color, scale, left, aFont);
+        drawText("<", color, scale, right, aFont);
         break;
 
-      case settings.FRAME_BARS:
-        drawText(".", color, scale, top, f);
-        drawText("I", color, scale, left, f);
-        drawText("I", color, scale, right, f);
-        drawText(".", color, scale, bottom, f);
+      case ts_Settings.FRAME_BARS:
+        drawText(".", color, scale, top, aFont);
+        drawText("I", color, scale, left, aFont);
+        drawText("I", color, scale, right, aFont);
+        drawText(".", color, scale, bottom, aFont);
         break;
 
-      case settings.FRAME_GRAPHIC:
-      case settings.FRAME_GRAPHIC_RED:
+      case ts_Settings.FRAME_GRAPHIC:
+      case ts_Settings.FRAME_GRAPHIC_RED:
         {
-          let  frameName      = (frameStyle == settings.FRAME_GRAPHIC) ? "ts_frame" : "ts_framr";
+          let  frameName      = (frameStyle == ts_Settings.FRAME_GRAPHIC) ? "ts_frame" : "ts_framr";
           let  topLeftTex     = TexMan.checkForTexture(frameName                  , TexMan.TryAny);
           let  topRightTex    = TexMan.checkForTexture(frameName.."_top_right"    , TexMan.TryAny);
           let  bottomLeftTex  = TexMan.checkForTexture(frameName.."_bottom_left"  , TexMan.TryAny);
@@ -654,23 +645,37 @@ class ts_EventHandler : EventHandler
     if (player.mo == NULL) return NULL;
 
     // try an easy way to get a target (also works with autoaim)
-    Actor target   = _translator.aimTargetWrapper(player.mo);
-    let   settings = _settings;
+    Actor target = player.mo.aimTarget();
 
     // if target is not found by easy way, try the difficult way
     if (target == NULL)
     {
-      target = _translator.lineAttackTargetWrapper(player.mo, player.viewheight);
+      FLineTraceData lineTraceData;
+      player.mo.lineTrace( player.mo.angle
+                         , 4000.0
+                         , player.mo.pitch
+                         , 0
+                         , player.viewHeight
+                         , 0.0, 0.0, lineTraceData
+                         );
+      target = lineTraceData.hitActor;
     }
 
-    if (target == NULL && settings.showObjects() > 1)
+    if (target == NULL && _settings.showObjects() > 1)
     {
-      target = _translator.aimLineAttackWrapper(player.mo);
+      FTranslatedLineTarget lineTarget;
+      player.mo.aimLineAttack( player.mo.angle
+                             , 2048.0
+                             , lineTarget
+                             , 0
+                             , ALF_CheckNonShootable | ALF_ForceNoSmart
+                             );
+      target = lineTarget.lineTarget;
     }
 
-    if (target == NULL && settings.showObjects() > 3)
+    if (target == NULL && _settings.showObjects() > 3)
     {
-      target = _translator.lineAttackNoBlockmapWrapper(player.mo, player.viewheight);
+      target = ts_NoblockmapDetection.lineAttackNoBlockmap(player.mo, player.viewheight);
     }
 
     // give up
@@ -679,7 +684,7 @@ class ts_EventHandler : EventHandler
     // target is found
 
     // check sector lighting
-    if (settings.hideInDarkness())
+    if (_settings.hideInDarkness())
     {
       bool noLightAmplifier = (player.mo.findInventory("PowerLightAmp") == NULL)
         && (player.mo.findInventory("PowerInvulnerable") == NULL);
@@ -687,7 +692,7 @@ class ts_EventHandler : EventHandler
       {
         Sector targetSector = target.curSector;
         int    lightLevel   = targetSector.lightLevel;
-        if (lightLevel < settings.minimalLightLevel()) return NULL;
+        if (lightLevel < _settings.minimalLightLevel()) return NULL;
       }
     }
 
@@ -705,16 +710,16 @@ class ts_EventHandler : EventHandler
     if (target.bIsMonster)
     {
       bool targetIsHidden = (target.bShadow || target.bStealth);
-      if (!settings.showHidden()  && targetIsHidden)   return NULL;
-      if (!settings.showFriends() && target.bFriendly) return NULL;
-      if (!settings.showDormant() && target.bDormant)  return NULL;
-      if (!settings.showIdle()    && ts_ActorInfo.isIdle(target)) return NULL;
+      if (!_settings.showHidden()  && targetIsHidden)   return NULL;
+      if (!_settings.showFriends() && target.bFriendly) return NULL;
+      if (!_settings.showDormant() && target.bDormant)  return NULL;
+      if (!_settings.showIdle()    && ts_ActorInfo.isIdle(target)) return NULL;
     }
     else // not monsters
     {
       if (target.player) return target;
 
-      switch (settings.showObjects())
+      switch (_settings.showObjects())
       {
         case 0: return NULL;
         case 1:
@@ -871,8 +876,6 @@ class ts_EventHandler : EventHandler
   private ts_LastTargetInfo _lastTargetInfo;
 
   private ts_Data _data;
-
-  private ts_PlayToUiTranslator _translator;
 
   private transient Cvar _preciseY;
 

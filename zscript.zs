@@ -8,7 +8,6 @@ version 4.5
 #include "zscript/ts_api.zs"
 
 #include "zscript/ts_last_target_info.zs"
-#include "zscript/ts_play_to_ui_translator.zs"
 
 #include "zscript/ts_string.zs"
 #include "zscript/ts_game.zs"
