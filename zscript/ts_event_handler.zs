@@ -87,8 +87,6 @@ class ts_EventHandler : EventHandler
 
     if (event.playerNumber != consolePlayer) return;
 
-    _settings       = ts_Settings.from();
-    _api            = ts_Api.from();
     _lastTargetInfo = ts_LastTargetInfo.from();
     _data           = ts_Data.from();
 
@@ -161,11 +159,13 @@ class ts_EventHandler : EventHandler
   override
   void renderOverlay(RenderEvent event)
   {
+    if (_uiSettings == NULL) _uiSettings = ts_UiSettings.from();
+
     if (  !_isInitialized
        || !_isPrepared
        || automapActive
        || players[consolePlayer].mo == NULL
-       || !_settings.isEnabled()
+       || !_uiSettings.isEnabled()
        )
     {
       return;
@@ -178,18 +178,18 @@ class ts_EventHandler : EventHandler
     bool  isTargetDead    = _view.isTargetDead;
     int   customColor     = _view.customTargetColor;
 
-    bool    isAbove        = (_settings.barsOnTarget() == ts_Settings.ON_TARGET_ABOVE);
-    Font    font           = Font.getFont(_settings.fontName());
-    double  textScale      = _settings.getTextScale();
-    int     crosshairColor = _settings.crosshairColor();
+    bool    isAbove        = (_uiSettings.barsOnTarget() == ts_UiSettings.ON_TARGET_ABOVE);
+    Font    font           = Font.getFont(_uiSettings.fontName());
+    double  textScale      = _uiSettings.getTextScale();
+    int     crosshairColor = _uiSettings.crosshairColor();
 
     Vector2 xy = toAbsolute(getRelativeXY(target, event, isAbove));
     int tagColor;
     if (customColor != Font.CR_UNDEFINED) { tagColor = customColor; }
-    else if (targetMaxHealth < 100)       { tagColor = _settings.weakCol(); }
-    else                                  { tagColor = _settings.nameCol(); }
+    else if (targetMaxHealth < 100)       { tagColor = _uiSettings.weakCol(); }
+    else                                  { tagColor = _uiSettings.nameCol(); }
 
-    if (_settings.barsOnTarget() == ts_Settings.ON_TARGET_DISABLED)
+    if (_uiSettings.barsOnTarget() == ts_UiSettings.ON_TARGET_DISABLED)
     {
       xy.y = drawKillConfirmed(xy, font);
     }
@@ -204,64 +204,64 @@ class ts_EventHandler : EventHandler
       return;
     }
 
-    if (targetMaxHealth < _settings.minHealth() && targetMaxHealth != 0)
+    if (targetMaxHealth < _uiSettings.minHealth() && targetMaxHealth != 0)
     {
       drawCrosshairs(target, crosshairColor);
       return; // not worth showing
     }
 
-    if (isTargetDead && !_settings.showCorps())
+    if (isTargetDead && !_uiSettings.showCorps())
     {
       drawCrosshairs(target, crosshairColor);
       return;
     }
 
-    int targetColor = _settings.colors(_view.percent);
-    if (targetHealth < 35 && _settings.almDeadCr()) targetColor = _settings.crAlmDead();
-    if (isTargetDead)                               targetColor = _settings.crAlmDead();
+    int targetColor = _uiSettings.colors(_view.percent);
+    if (targetHealth < 35 && _uiSettings.almDeadCr()) targetColor = _uiSettings.crAlmDead();
+    if (isTargetDead)                               targetColor = _uiSettings.crAlmDead();
 
-    drawCrosshairs(target, _settings.isCrossTargetColor() ? targetColor : crosshairColor);
+    drawCrosshairs(target, _uiSettings.isCrossTargetColor() ? targetColor : crosshairColor);
 
-    double opacity = _settings.opacity();
-    bool   isBackgroundEnabled = _settings.isBackgroundEnabled();
+    double opacity = _uiSettings.opacity();
+    bool   isBackgroundEnabled = _uiSettings.isBackgroundEnabled();
 
-    if (_settings.showBar() && isShowingHealth)
+    if (_uiSettings.showBar() && isShowingHealth)
     {
       string hpBar = ts_String.makeHpBar( targetHealth
                                         , targetMaxHealth
-                                        , _settings.logScale()
-                                        , _settings.altHpCols()
-                                        , _settings.greenCr()
-                                        , _settings.redCr()
-                                        , _settings.lengthMultiplier()
-                                        , _settings.pip()
-                                        , _settings.emptyPip()
+                                        , _uiSettings.logScale()
+                                        , _uiSettings.altHpCols()
+                                        , _uiSettings.greenCr()
+                                        , _uiSettings.redCr()
+                                        , _uiSettings.lengthMultiplier()
+                                        , _uiSettings.pip()
+                                        , _uiSettings.emptyPip()
                                         );
       xy.y += drawText(hpBar, targetColor, textScale, xy, font, opacity, isBackgroundEnabled);
     }
 
     int nameColor = isTargetDead ? targetColor : tagColor;
 
-    if (_settings.showName() != ts_Settings.NAME_DISABLED)
+    if (_uiSettings.showName() != ts_UiSettings.NAME_DISABLED)
     {
       string targetName = _view.targetName;
 
-      switch(_settings.showName())
+      switch(_uiSettings.showName())
       {
-      case ts_Settings.NAME_TAG:
+      case ts_UiSettings.NAME_TAG:
         targetName = _view.targetName;
         break;
-      case ts_Settings.NAME_CLASS:
+      case ts_UiSettings.NAME_CLASS:
         targetName = _view.targetClass;
         break;
-      case ts_Settings.NAME_TAG_AND_CLASS_IF_DIFFERENT:
+      case ts_UiSettings.NAME_TAG_AND_CLASS_IF_DIFFERENT:
         if (_view.targetName == _view.targetClass)
         {
           targetName = _view.targetName;
           break;
         }
         // fall through
-      case ts_Settings.NAME_TAG_AND_CLASS:
+      case ts_UiSettings.NAME_TAG_AND_CLASS:
         targetName = string.format("%s (%s)", _view.targetName, _view.targetClass);
         break;
       }
@@ -271,7 +271,7 @@ class ts_EventHandler : EventHandler
       xy.y += drawText(targetName, nameColor, textScale, xy, font, opacity, isBackgroundEnabled);
     }
 
-    if (_settings.showInfo())
+    if (_uiSettings.showInfo())
     {
       string targetFlags = ts_ActorInfo.getTargetFlags(target);
       if (targetFlags.length() > 0)
@@ -280,7 +280,7 @@ class ts_EventHandler : EventHandler
       }
     }
 
-    if (isShowingHealth && (_settings.showNumbers() != 0))
+    if (isShowingHealth && (_uiSettings.showNumbers() != 0))
     {
       string healthString = makeHealthString(targetHealth, targetMaxHealth);
       int    armor        = target.countInv("BasicArmor");
@@ -321,7 +321,7 @@ class ts_EventHandler : EventHandler
                       );
     }
 
-    if (_settings.frameStyle() != ts_Settings.FRAME_DISABLED)
+    if (_uiSettings.frameStyle() != ts_UiSettings.FRAME_DISABLED)
     {
       drawFrame(event, target, targetColor);
     }
@@ -380,9 +380,9 @@ class ts_EventHandler : EventHandler
     double  visibleRadius = radius * 2000.0 / distance / zoomFactor;
     double  visibleHeight = height * 1000.0 / distance / zoomFactor;
 
-    let aFont = Font.getFont(_settings.fontName());
+    let aFont = Font.getFont(_uiSettings.fontName());
 
-    double  size       = _settings.frameSize();
+    double  size       = _uiSettings.frameSize();
     double  halfWidth  = visibleRadius / 2.0 * size;
     double  halfHeight = visibleHeight / 2.0 * size;
 
@@ -395,47 +395,47 @@ class ts_EventHandler : EventHandler
     Vector2 topRight    = (right.x, top.y);
     Vector2 bottomLeft  = (left.x,  bottom.y);
     Vector2 bottomRight = (right.x, bottom.y);
-    double  scale       = _settings.frameScale();
-    int     frameStyle  = _settings.frameStyle();
+    double  scale       = _uiSettings.frameScale();
+    int     frameStyle  = _uiSettings.frameStyle();
 
     switch (frameStyle)
     {
-      case ts_Settings.FRAME_DISABLED:
+      case ts_UiSettings.FRAME_DISABLED:
         break;
 
-      case ts_Settings.FRAME_SLASH:
+      case ts_UiSettings.FRAME_SLASH:
         drawText("/", color, scale, topLeft, aFont);
         drawText("/", color, scale, bottomRight, aFont);
         break;
 
-      case ts_Settings.FRAME_DOTS:
+      case ts_UiSettings.FRAME_DOTS:
         drawText(".", color, scale, topLeft, aFont);
         drawText(".", color, scale, topRight, aFont);
         drawText(".", color, scale, bottomLeft, aFont);
         drawText(".", color, scale, bottomRight, aFont);
         break;
 
-      case ts_Settings.FRAME_LESS_GREATER:
+      case ts_UiSettings.FRAME_LESS_GREATER:
         drawText("<", color, scale, left, aFont);
         drawText(">", color, scale, right, aFont);
         break;
 
-      case ts_Settings.FRAME_GREATER_LESS:
+      case ts_UiSettings.FRAME_GREATER_LESS:
         drawText(">", color, scale, left, aFont);
         drawText("<", color, scale, right, aFont);
         break;
 
-      case ts_Settings.FRAME_BARS:
+      case ts_UiSettings.FRAME_BARS:
         drawText(".", color, scale, top, aFont);
         drawText("I", color, scale, left, aFont);
         drawText("I", color, scale, right, aFont);
         drawText(".", color, scale, bottom, aFont);
         break;
 
-      case ts_Settings.FRAME_GRAPHIC:
-      case ts_Settings.FRAME_GRAPHIC_RED:
+      case ts_UiSettings.FRAME_GRAPHIC:
+      case ts_UiSettings.FRAME_GRAPHIC_RED:
         {
-          let  frameName      = (frameStyle == ts_Settings.FRAME_GRAPHIC) ? "ts_frame" : "ts_framr";
+          let  frameName      = (frameStyle == ts_UiSettings.FRAME_GRAPHIC) ? "ts_frame" : "ts_framr";
           let  topLeftTex     = TexMan.checkForTexture(frameName                  , TexMan.TryAny);
           let  topRightTex    = TexMan.checkForTexture(frameName.."_top_right"    , TexMan.TryAny);
           let  bottomLeftTex  = TexMan.checkForTexture(frameName.."_bottom_left"  , TexMan.TryAny);
@@ -532,34 +532,34 @@ class ts_EventHandler : EventHandler
   private ui
   void drawCrosshairs(Actor target, int crosshairColor)
   {
-    if (!_settings.crossOn()) return;
-    if (_settings.noCrossOnSlot1() && isSlot1Weapon()) return;
+    if (!_uiSettings.crossOn()) return;
+    if (_uiSettings.noCrossOnSlot1() && isSlot1Weapon()) return;
 
-    if (_settings.hitConfirmation()
+    if (_uiSettings.hitConfirmation()
         && isLastTargetExisting()
         && _lastTargetInfo.hurtTime != -1
         && (level.time < _lastTargetInfo.hurtTime + 10))
     {
-      crosshairColor = _settings.hitColor();
+      crosshairColor = _uiSettings.hitColor();
     }
 
-    double opacity = _settings.crossOpacity();
-    double scale   = _settings.crossScale();
-    Font   aFont   = Font.getFont(_settings.crossFontName());
+    double opacity = _uiSettings.crossOpacity();
+    double scale   = _uiSettings.crossScale();
+    Font   aFont   = Font.getFont(_uiSettings.crossFontName());
 
     if (crosshairgrow) scale *= StatusBar.CrosshairSize;
 
     double baseCenterY     = readY(aFont, scale) - aFont.getHeight() / 2;
     double topBottomShift  = 0.02 * Screen.getHeight();
-    double crosshairX      = 0.5  * Screen.getWidth() + _settings.xAdjustment();
+    double crosshairX      = 0.5  * Screen.getWidth() + _uiSettings.xAdjustment();
 
-    Vector2 topPosition    = (crosshairX, baseCenterY - topBottomShift + _settings.crossTopOffset());
-    Vector2 centerPosition = (crosshairX, baseCenterY                  + _settings.crossMiddleOffset());
-    Vector2 bottomPosition = (crosshairX, baseCenterY + topBottomShift + _settings.crossBottomOffset());
+    Vector2 topPosition    = (crosshairX, baseCenterY - topBottomShift + _uiSettings.crossTopOffset());
+    Vector2 centerPosition = (crosshairX, baseCenterY                  + _uiSettings.crossMiddleOffset());
+    Vector2 bottomPosition = (crosshairX, baseCenterY + topBottomShift + _uiSettings.crossBottomOffset());
 
-    drawText(_settings.crossTop(),  crosshairColor, scale, topPosition,    aFont, opacity);
-    drawText(_settings.crosshair(), crosshairColor, scale, centerPosition, aFont, opacity);
-    drawText(_settings.crossBot(),  crosshairColor, scale, bottomPosition, aFont, opacity);
+    drawText(_uiSettings.crossTop(),  crosshairColor, scale, topPosition,    aFont, opacity);
+    drawText(_uiSettings.crosshair(), crosshairColor, scale, centerPosition, aFont, opacity);
+    drawText(_uiSettings.crossBot(),  crosshairColor, scale, bottomPosition, aFont, opacity);
   }
 
   private ui
@@ -567,14 +567,14 @@ class ts_EventHandler : EventHandler
   {
     Vector2 result;
     result.x = 0.5;
-    result.y = _settings.yStart() + _settings.yOffset();
+    result.y = _uiSettings.yStart() + _uiSettings.yOffset();
     return result;
   }
 
   private ui
   Vector2 getRelativeXY(Actor target, RenderEvent event, bool isAbove)
   {
-    if (target == NULL || !_settings.barsOnTarget()) return getDefaultRelativeXY();
+    if (target == NULL || !_uiSettings.barsOnTarget()) return getDefaultRelativeXY();
 
     double y = isAbove
              ? target.height * 1.2
@@ -589,7 +589,7 @@ class ts_EventHandler : EventHandler
   private ui
   string makeHealthString(int targetHealth, int targetMaxHealth)
   {
-    switch (_settings.showNumbers())
+    switch (_uiSettings.showNumbers())
     {
     case 1: return string.format("%d/%d", targetHealth, targetMaxHealth);
     case 2: return string.format("%d", targetHealth);
@@ -611,24 +611,24 @@ class ts_EventHandler : EventHandler
     }
     }
 
-    Console.printf("Unknown settings.showNumbers() result: %d", _settings.showNumbers());
+    Console.printf("Unknown settings.showNumbers() result: %d", _uiSettings.showNumbers());
     return "";
   }
 
   private ui
   double drawKillConfirmed(Vector2 xy, Font font)
   {
-    if (!_settings.showKillConfirmation()) return xy.y;
+    if (!_uiSettings.showKillConfirmation()) return xy.y;
 
     if (!isLastTargetExisting() || _lastTargetInfo.killTime == -1) return xy.y;
 
     if (level.time < _lastTargetInfo.killTime + 35 * 1)
     {
-      double scale     = _settings.getTextScale();
-      double opacity   = _settings.opacity();
-      int    nameColor = _settings.nameCol();
-      bool   isBackgroundEnabled = _settings.isBackgroundEnabled();
-      string text = (_settings.namedConfirmation())
+      double scale     = _uiSettings.getTextScale();
+      double opacity   = _uiSettings.opacity();
+      int    nameColor = _uiSettings.nameCol();
+      bool   isBackgroundEnabled = _uiSettings.isBackgroundEnabled();
+      string text = (_uiSettings.namedConfirmation())
         ? _lastTargetInfo.killName .. " killed"
         : "Kill Confirmed";
 
@@ -661,7 +661,7 @@ class ts_EventHandler : EventHandler
       target = lineTraceData.hitActor;
     }
 
-    if (target == NULL && _settings.showObjects() > 1)
+    if (target == NULL && _playSettings.showObjects() > 1)
     {
       FTranslatedLineTarget lineTarget;
       player.mo.aimLineAttack( player.mo.angle
@@ -673,7 +673,7 @@ class ts_EventHandler : EventHandler
       target = lineTarget.lineTarget;
     }
 
-    if (target == NULL && _settings.showObjects() > 3)
+    if (target == NULL && _playSettings.showObjects() > 3)
     {
       target = ts_NoblockmapDetection.lineAttackNoBlockmap(player.mo, player.viewheight);
     }
@@ -684,7 +684,7 @@ class ts_EventHandler : EventHandler
     // target is found
 
     // check sector lighting
-    if (_settings.hideInDarkness())
+    if (_playSettings.hideInDarkness())
     {
       bool noLightAmplifier = (player.mo.findInventory("PowerLightAmp") == NULL)
         && (player.mo.findInventory("PowerInvulnerable") == NULL);
@@ -692,7 +692,7 @@ class ts_EventHandler : EventHandler
       {
         Sector targetSector = target.curSector;
         int    lightLevel   = targetSector.lightLevel;
-        if (lightLevel < _settings.minimalLightLevel()) return NULL;
+        if (lightLevel < _playSettings.minimalLightLevel()) return NULL;
       }
     }
 
@@ -710,16 +710,16 @@ class ts_EventHandler : EventHandler
     if (target.bIsMonster)
     {
       bool targetIsHidden = (target.bShadow || target.bStealth);
-      if (!_settings.showHidden()  && targetIsHidden)   return NULL;
-      if (!_settings.showFriends() && target.bFriendly) return NULL;
-      if (!_settings.showDormant() && target.bDormant)  return NULL;
-      if (!_settings.showIdle()    && ts_ActorInfo.isIdle(target)) return NULL;
+      if (!_playSettings.showHidden()  && targetIsHidden)   return NULL;
+      if (!_playSettings.showFriends() && target.bFriendly) return NULL;
+      if (!_playSettings.showDormant() && target.bDormant)  return NULL;
+      if (!_playSettings.showIdle()    && ts_ActorInfo.isIdle(target)) return NULL;
     }
     else // not monsters
     {
       if (target.player) return target;
 
-      switch (_settings.showObjects())
+      switch (_playSettings.showObjects())
       {
         case 0: return NULL;
         case 1:
@@ -821,6 +821,9 @@ class ts_EventHandler : EventHandler
       _cvarRenderer = Cvar.getCvar("vid_renderer", player);
     }
 
+    _playSettings = ts_PlaySettings.from();
+    _api          = ts_Api.from();
+
     _isInitialized = true;
   }
 
@@ -870,8 +873,9 @@ class ts_EventHandler : EventHandler
     BackgroundEnabled
   }
 
-  private ts_Settings       _settings;
-  private ts_Api            _api;
+  private transient ui ts_UiSettings _uiSettings;
+  private transient ts_PlaySettings  _playSettings;
+  private transient ts_Api           _api;
 
   private ts_LastTargetInfo _lastTargetInfo;
 

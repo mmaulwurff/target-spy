@@ -15,7 +15,7 @@
  * Target Spy.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class ts_Settings
+class ts_UiSettings ui
 {
 
   enum FrameStyles
@@ -47,9 +47,9 @@ class ts_Settings
   }
 
   static
-  ts_Settings from()
+  ts_UiSettings from()
   {
-    let result = new("ts_Settings");
+    let result = new("ts_UiSettings");
     result.initialize();
     return result;
   }
@@ -57,27 +57,27 @@ class ts_Settings
   /// i must be from [0, 11]
   int    colors         (int i) { return _colors[i].getInt(); }
 
-  bool   showKillConfirmation() { return _showKillConfirmation.getBool(); }
-  bool   namedConfirmation   () { return _namedConfirmation   .getBool(); }
-  bool   isEnabled           () { return _isEnabled           .getBool(); }
+  bool   showKillConfirmation() { return _showKillConfirmation.getInt(); }
+  bool   namedConfirmation   () { return _namedConfirmation   .getInt(); }
+  bool   isEnabled           () { return _isEnabled           .getInt(); }
 
   int    minHealth           () { return _minHealth           .getInt(); }
-  double yStart              () { return _yStart              .getDouble(); }
-  double yOffset             () { return _yOffset             .getDouble(); }
-  bool   logScale            () { return _logScale            .getBool(); }
-  bool   showBar             () { return _showBar             .getBool(); }
+  double yStart              () { return _yStart              .getFloat(); }
+  double yOffset             () { return _yOffset             .getFloat(); }
+  bool   logScale            () { return _logScale            .getInt(); }
+  bool   showBar             () { return _showBar             .getInt(); }
   int    showName            () { return _showName            .getInt(); }
   int    showNumbers         () { return _showNumbers         .getInt(); }
-  bool   showInfo            () { return _showInfo            .getBool(); }
-  bool   showCorps           () { return _showCorps           .getBool(); }
-  bool   crossOn             () { return _crossOn             .getBool(); }
+  bool   showInfo            () { return _showInfo            .getInt(); }
+  bool   showCorps           () { return _showCorps           .getInt(); }
+  bool   crossOn             () { return _crossOn             .getInt(); }
   int    crosshairColor      () { return _crosshairColor      .getInt(); }
   int    nameCol             () { return _nameCol             .getInt(); }
   int    weakCol             () { return _weakCol             .getInt(); }
-  bool   altHpCols           () { return _altHpCols           .getBool(); }
-  bool   almDeadCr           () { return _almDeadCr           .getBool(); }
+  bool   altHpCols           () { return _altHpCols           .getInt(); }
+  bool   almDeadCr           () { return _almDeadCr           .getInt(); }
   int    crAlmDead           () { return _crAlmDead           .getInt(); }
-  bool   isBackgroundEnabled () { return _isBackgroundEnabled .getBool(); }
+  bool   isBackgroundEnabled () { return _isBackgroundEnabled .getInt(); }
 
   int    crossTopOffset      () { return _crossTopOffset      .getInt(); }
   int    crossMiddleOffset   () { return _crossMiddleOffset   .getInt(); }
@@ -87,29 +87,21 @@ class ts_Settings
   int    greenCr             () { return _greenCr             .getInt(); }
   int    redCr               () { return _redCr               .getInt(); }
 
-  int    showObjects         () { return _showObjects         .getInt(); }
-  bool   showHidden          () { return _showHidden          .getBool(); }
-  bool   showFriends         () { return _showFriends         .getBool(); }
-  bool   showDormant         () { return _showDormant         .getBool(); }
-  bool   showIdle            () { return _showIdle            .getBool(); }
-  bool   hideInDarkness      () { return _hideInDarkness      .getBool(); }
-  int    minimalLightLevel   () { return _minimalLightLevel   .getInt(); }
+  double crossScale          () { return notZero(_crossScale.getFloat()); }
+  double crossOpacity        () { return _crossOpacity        .getFloat(); }
 
-  double crossScale          () { return notZero(_crossScale.getDouble()); }
-  double crossOpacity        () { return _crossOpacity        .getDouble(); }
-
-  bool   hitConfirmation     () { return _hitConfirmation     .getBool(); }
+  bool   hitConfirmation     () { return _hitConfirmation     .getInt(); }
   int    hitColor            () { return _hitColor            .getInt(); }
 
-  bool   noCrossOnSlot1      () { return _noCrossOnSlot1      .getBool(); }
-  bool   isCrossTargetColor  () { return _isCrossTargetColor  .getBool(); }
+  bool   noCrossOnSlot1      () { return _noCrossOnSlot1      .getInt(); }
+  bool   isCrossTargetColor  () { return _isCrossTargetColor  .getInt(); }
 
   int    frameStyle          () { return _frameStyle          .getInt(); }
-  double frameScale          () { return notZero(_frameScale.getDouble()); }
-  double frameSize           () { return _frameSize           .getDouble(); }
+  double frameScale          () { return notZero(_frameScale.getFloat()); }
+  double frameSize           () { return _frameSize           .getFloat(); }
 
-  double opacity             () { return _opacity             .getDouble(); }
-  double lengthMultiplier    () { return _lengthMultiplier    .getDouble(); }
+  double opacity             () { return _opacity             .getFloat(); }
+  double lengthMultiplier    () { return _lengthMultiplier    .getFloat(); }
 
   string pip                 () { return _pip                 .getString(); }
   string emptyPip            () { return _emptyPip            .getString(); }
@@ -119,11 +111,11 @@ class ts_Settings
   string crossBot            () { return _crossBot            .getString(); }
   string crossFontName       () { return _crossFontName       .getString(); }
 
-  double getTextScale        () { return notZero(_textScale.getDouble()); }
+  double getTextScale        () { return notZero(_textScale.getFloat()); }
 
   int barsOnTarget()
   {
-    double yStart = _yStart.getDouble();
+    double yStart = _yStart.getFloat();
     if (yStart == -2) return ON_TARGET_ABOVE;
     if (yStart == -1) return ON_TARGET_BELOW;
     return ON_TARGET_DISABLED;
@@ -169,14 +161,6 @@ class ts_Settings
     _greenCr              = makeCvar("m8f_ts_green_color");
     _redCr                = makeCvar("m8f_ts_red_color");
 
-    _showObjects          = makeCvar("m8f_ts_show_objects");
-    _showHidden           = makeCvar("m8f_ts_show_hidden");
-    _showFriends          = makeCvar("m8f_ts_show_friends");
-    _showDormant          = makeCvar("m8f_ts_show_dormant");
-    _showIdle             = makeCvar("m8f_ts_show_idle");
-    _hideInDarkness       = makeCvar("m8f_ts_hide_in_dark");
-    _minimalLightLevel    = makeCvar("m8f_ts_light_level");
-
     _crossScale           = makeCvar("m8f_ts_cross_scale");
     _crossOpacity         = makeCvar("m8f_ts_cr_opacity");
 
@@ -211,74 +195,115 @@ class ts_Settings
   }
 
   private static
-  ts_Cvar makeCvar(string cvarName)
+  Cvar makeCvar(string cvarName)
   {
-    return ts_Cvar.from(cvarName);
+    return Cvar.getCvar(cvarName, players[consolePlayer]);
   }
 
-  private ts_Cvar _showKillConfirmation;
-  private ts_Cvar _namedConfirmation;
-  private ts_Cvar _isEnabled;
+  private Cvar _showKillConfirmation;
+  private Cvar _namedConfirmation;
+  private Cvar _isEnabled;
 
-  private ts_Cvar _minHealth;
-  private ts_Cvar _yStart;
-  private ts_Cvar _yOffset;
-  private ts_Cvar _logScale;
-  private ts_Cvar _showBar;
-  private ts_Cvar _showName;
-  private ts_Cvar _showNumbers;
-  private ts_Cvar _showInfo;
-  private ts_Cvar _showCorps;
-  private ts_Cvar _crossOn;
-  private ts_Cvar _crosshairColor;
-  private ts_Cvar _nameCol;
-  private ts_Cvar _weakCol;
-  private ts_Cvar _altHpCols;
-  private ts_Cvar _almDeadCr;
-  private ts_Cvar _crAlmDead;
+  private Cvar _minHealth;
+  private Cvar _yStart;
+  private Cvar _yOffset;
+  private Cvar _logScale;
+  private Cvar _showBar;
+  private Cvar _showName;
+  private Cvar _showNumbers;
+  private Cvar _showInfo;
+  private Cvar _showCorps;
+  private Cvar _crossOn;
+  private Cvar _crosshairColor;
+  private Cvar _nameCol;
+  private Cvar _weakCol;
+  private Cvar _altHpCols;
+  private Cvar _almDeadCr;
+  private Cvar _crAlmDead;
 
-  private ts_Cvar _crossMiddleOffset;
-  private ts_Cvar _crossTopOffset;
-  private ts_Cvar _crossBottomOffset;
+  private Cvar _crossMiddleOffset;
+  private Cvar _crossTopOffset;
+  private Cvar _crossBottomOffset;
 
-  private ts_Cvar _greenCr;
-  private ts_Cvar _redCr;
-  private ts_Cvar _isBackgroundEnabled;
+  private Cvar _greenCr;
+  private Cvar _redCr;
+  private Cvar _isBackgroundEnabled;
 
-  private ts_Cvar _showObjects;
-  private ts_Cvar _showHidden;
-  private ts_Cvar _showFriends;
-  private ts_Cvar _showDormant;
-  private ts_Cvar _showIdle;
-  private ts_Cvar _hideInDarkness;
-  private ts_Cvar _minimalLightLevel;
+  private Cvar _crossScale;
+  private Cvar _crossOpacity;
 
-  private ts_Cvar _crossScale;
-  private ts_Cvar _crossOpacity;
+  private Cvar _hitConfirmation;
+  private Cvar _hitColor;
 
-  private ts_Cvar _hitConfirmation;
-  private ts_Cvar _hitColor;
+  private Cvar _textScale;
+  private Cvar _xAdjustment;
+  private Cvar _noCrossOnSlot1;
+  private Cvar _isCrossTargetColor;
 
-  private ts_Cvar _textScale;
-  private ts_Cvar _xAdjustment;
-  private ts_Cvar _noCrossOnSlot1;
-  private ts_Cvar _isCrossTargetColor;
+  private Cvar _frameStyle;
+  private Cvar _frameScale;
+  private Cvar _frameSize;
 
-  private ts_Cvar _frameStyle;
-  private ts_Cvar _frameScale;
-  private ts_Cvar _frameSize;
+  private Cvar _opacity;
+  private Cvar _lengthMultiplier;
 
-  private ts_Cvar _opacity;
-  private ts_Cvar _lengthMultiplier;
+  private Cvar _pip;
+  private Cvar _emptyPip;
+  private Cvar _fontName;
+  private Cvar _crosshair;
+  private Cvar _crossTop;
+  private Cvar _crossBot;
+  private Cvar _crossFontName;
 
-  private ts_Cvar _pip;
-  private ts_Cvar _emptyPip;
-  private ts_Cvar _fontName;
-  private ts_Cvar _crosshair;
-  private ts_Cvar _crossTop;
-  private ts_Cvar _crossBot;
-  private ts_Cvar _crossFontName;
+  private Cvar _colors[12];
 
-  private ts_Cvar _colors[12];
+} // class ts_UiSettings
 
-} // class ts_Settings
+class ts_PlaySettings
+{
+
+  static
+  ts_PlaySettings from()
+  {
+    let result = new("ts_PlaySettings");
+    result.initialize();
+    return result;
+  }
+
+  int    showObjects         () { return _showObjects         .getInt(); }
+  bool   hideInDarkness      () { return _hideInDarkness      .getInt(); }
+  bool   showHidden          () { return _showHidden          .getInt(); }
+  bool   showFriends         () { return _showFriends         .getInt(); }
+  bool   showDormant         () { return _showDormant         .getInt(); }
+  bool   showIdle            () { return _showIdle            .getInt(); }
+  int    minimalLightLevel   () { return _minimalLightLevel   .getInt(); }
+
+// private: ////////////////////////////////////////////////////////////////////////////////////////
+
+  private
+  void initialize()
+  {
+    _showObjects          = makeCvar("m8f_ts_show_objects");
+    _hideInDarkness       = makeCvar("m8f_ts_hide_in_dark");
+    _showHidden           = makeCvar("m8f_ts_show_hidden");
+    _showFriends          = makeCvar("m8f_ts_show_friends");
+    _showDormant          = makeCvar("m8f_ts_show_dormant");
+    _showIdle             = makeCvar("m8f_ts_show_idle");
+    _minimalLightLevel    = makeCvar("m8f_ts_light_level");
+  }
+
+  private static
+  Cvar makeCvar(string cvarName)
+  {
+    return Cvar.getCvar(cvarName, players[consolePlayer]);
+  }
+
+  private Cvar _showObjects;
+  private Cvar _hideInDarkness;
+  private Cvar _showHidden;
+  private Cvar _showFriends;
+  private Cvar _showDormant;
+  private Cvar _showIdle;
+  private Cvar _minimalLightLevel;
+
+} // class ts_PlaySettings

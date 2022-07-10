@@ -15,8 +15,6 @@ version 4.5
 
 #include "zscript/ts_noblockmap_detection.zs"
 
-#include "zscript/ts_cvar.zs"
-
 #include "zscript/ts_blank_line.zs"
 
 // libeye by KeksDose //////////////////////////////////////////////////////////
