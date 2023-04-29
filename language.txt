@@ -1,14 +1,172 @@
 [enu default]
 
 TS_OPTIONS_TITLE = "\cd⌖\c- Target Spy Options";
+TS_OPTIONS_TITLE_NO_ICON = "Target Spy Options";
 
-TS_BACKGROUND = "Background";
-TS_CROSSHAIR_SHOW_TARGET_COLOR = "Show target color";
+TS_OPT_TS_ENABLED = "Target Spy enabled";
 
-TS_NAME_NOTHING       = "Nothing";
-TS_NAME_TAG           = "Tag";
-TS_NAME_CLASS         = "Class";
-TS_NAME_TAG_AND_CLASS = "Tag (Class)";
-TS_NAME_TAG_AND_CLASS_IF_DIFFERENT = "Tag (Class, only if different)";
+TS_OPTMNU_VISUALS = "Visuals";
+TS_OPTMNU_TARGET_FILTER = "Target Filters";
+TS_OPTMNU_COLORS = "Colors";
+TS_OPTMNU_BEHAVIOR = "Behavior";
+TS_OPTMNU_FRAME = "Frame";
+TS_OPTMNU_CROSSHAIRS = "Crosshairs";
+TS_OPTMNU_CONTROLS = "Controls";
+
+TS_VISUALS_TITLE = "Target Spy Visual Options";
+TS_VISUALS_FONT = "Font";
+TS_VISUALS_SHOWELEMENTS_CAT = "Show:";
+TS_VISUALS_HEALTHNBAR = "Health bar";
+TS_VISUALS_HEALTHNUMBERS = "Health numbers";
+TS_VISUALS_NAME = "Name";
+TS_VISUALS_KILLCONFIRM = "Kill Confirmation";
+TS_VISUALS_NAMEDCONFIRM = "Named Confirmation";
+TS_VISUALS_EXTRAINFO = "Additional info";
+TS_VISUALS_EXTRAINFO_HINT1 = "Includes: friendly, invulnerable, boss,";
+TS_VISUALS_EXTRAINFO_HINT2 = "dormant, buddha, nodamage, DoomRPG level.";
+TS_VISUALS_HEALTHBAR_CAT = "Health bar";
+TS_VISUALS_FILLEDBARSYMBOL = "Filled bar symbol";
+TS_VISUALS_EMPTYBARSYMBOL = "Empty bar symbol";
+TS_VISUALS_EXTRACHARACTERS = "Extra characters";
+TS_VISUALS_HEALTHBARLOGSCALE = "Health bar log scale";
+TS_VISUALS_VERTICALPOS = "Vertical position";
+TS_VISUALS_OFFSET = "Offset";
+TS_VISUALS_SCALE = "Scale";
+TS_VISUALS_OPACITY = "Opacity";
+TS_VISUALS_LENGTHMULTI = "Length Multiplier";
+TS_VISUALS_BACKGROUND = "Background";
+
+TS_VISUALS_EC_TITLE = "Extra Characters";
+TS_VISUALS_EC_SETFONT = "Set New Small Font";
+TS_VISUALS_EC_SETFONT_HINT1 = "These characters work only for New Small Font";
+TS_VISUALS_EC_SELECTCHARACTER = "Select character";
+TS_VISUALS_EC_USESELECTCHARACTER_AS_FILLED = "Use selected character as filled bar symbol";
+TS_VISUALS_EC_USESELECTCHARACTER_AS_EMPTY = "Use selected character as empty bar symbol";
+
+TS_FILTERS_TITLE = "Target Filters";
+TS_FILTERS_HIDDENMONSTERS = "Stealth/shadow monsters";
+TS_FILTERS_FRIEDNLYMONSTERS = "Friendly targets";
+TS_FILTERS_DORMANTTARGET = "Dormant targets";
+TS_FILTERS_OBJECTS = "Objects";
+TS_FILTERS_CORPSES = "Corpses";
+TS_FILTERS_IDLETERGET = "Idle targets";
+TS_FILTERS_IDLETERGET_HINT1 = "Recommended: OFF if the game contains mimics.";
+TS_FILTERS_HIDEINDARK = "Hide targets in darkness";
+TS_FILTERS_LIGHTLEVEL = "Minimal light level";
+TS_FILTERS_LIGHTLEVEL_HINT1 = "Targets are hidden if the light level is less than this.";
+
+TS_COLOR_TITLE = "Target Spy Color Setup";
+TS_COLOR_DEFAULTCROSSHAIRCOLOR = "Default crosshair color";
+TS_COLOR_TAGCOLOR = "Tag color";
+TS_COLOR_WEAKCOLOR = "Weaker enemy tag color";
+TS_COLOR_SPECIALCOLORDEADCR = "Show special color for almost dead";
+TS_COLOR_DEADALMOSTCOLOR = "Dead/Almost dead color";
+TS_COLOR_COLORFORPERCENT = "Color for %";
+TS_COLOR_ZEROPERCENT = "  0%";
+TS_COLOR_TENERCENT = " 10%";
+TS_COLOR_TWENTYPERCENT = " 20%";
+TS_COLOR_THIRTYPERCENT = " 30%";
+TS_COLOR_FORTYPERCENT = " 40%";
+TS_COLOR_FIFTYPERCENT = " 50%";
+TS_COLOR_SIXTYPERCENT = " 60%";
+TS_COLOR_SEVENTYPERCENT = " 70%";
+TS_COLOR_EIGHTYPERCENT = " 80%";
+TS_COLOR_NINETYPERCENT = " 90%";
+TS_COLOR_HUNDREDPERCENT = "100%";
+TS_COLOR_OVERHEAL = "Overhealed";
+TS_COLOR_ALT_TWOCOLORTHEME_CAT = "Alternative two-color theme";
+TS_COLOR_ALT_TWOCOLORTHEME_ENABLED = "Enabled";
+TS_COLOR_ALT_TWOCOLORTHEME_FILLEDCOLOR = "Filled color";
+TS_COLOR_ALT_TWOCOLORTHEME_EMPTYCOLOR = "Empty color";
+
+TS_BEHAVIOR_TITLE = "Target Spy Behavior Options";
+TS_BEHAVIOR_MINHEALTH = "Minimal health";
+TS_BEHAVIOR_MINHEALTH_HINT1 = "Target spy will hide for targets";
+TS_BEHAVIOR_MINHEALTH_HINT2 = "with max health less than this.";
+
+TS_FRAME_TITLE = "Target Spy Frame Options";
+TS_FRAME_STYLE = "Style";
+TS_FRAME_SCALE = "Scale";
+TS_FRAME_SIZE = "Size";
+
+TS_CROSSHAIRS_TITLE = "Target Spy Crosshairs Setup";
+TS_CROSSHAIRS_ENABLED = "Enabled";
+TS_CROSSHAIRS_ONLYTARGET = "Only on target";
+TS_CROSSHAIRS_HIDESLOT1 = "Hide for Slot 1";
+TS_CROSSHAIRS_CHANGECOLORONHIT = "Change color on hit";
+TS_CROSSHAIRS_HITCOLOR = "Hit color";
+TS_CROSSHAIRS_CROSSHAIR_SHOW_TARGET_COLOR = "Show target color";
+TS_CROSSHAIRS_SCALE = "Scale";
+TS_CROSSHAIRS_OPACITY = "Opacity";
+TS_CROSSHAIRS_FONT = "Font";
+TS_CROSSHAIRS_CROSSHAIRPIECES_REF = "Crosshair Pieces Reference";
+TS_CROSSHAIRS_TOPPARTOFFSET = "Top part offset";
+TS_CROSSHAIRS_MIDDLEPARTOFFSET = "Middle part offset";
+TS_CROSSHAIRS_BOTTOMPARTOFFSET = "Bottom part offset";
+TS_CROSSHAIRS_HORIZONTALPARTOFFSET = "Horizontal adjustment";
+TS_CROSSHAIRS_TOP = "Top";
+TS_CROSSHAIRS_CENTER = "Center";
+TS_CROSSHAIRS_BOTTOM = "Bottom";
+TS_CROSSHAIRS_CLEAR = "Clear";
+
+TS_CNTRLMNU_TITLE = "Target Spy Controls";
+TS_TSCNTRLMNU_TOGGLE = "Toggle";
+TS_TSCNTRLMNU_HOLD = "Hold to show";
+
+TS_OPTVALNAME_NOTHING       = "Nothing";
+TS_OPTVALNAME_TAG           = "Tag";
+TS_OPTVALNAME_CLASS         = "Class";
+TS_OPTVALNAME_TAG_AND_CLASS = "Tag (Class)";
+TS_OPTVALNAME_TAG_AND_CLASS_IF_DIFFERENT = "Tag (Class, only if different)";
+
+TS_OPTVALFRAMESTYLE_DISABLED = "Disabled";
+TS_OPTVALFRAMESTYLE_WHITE = "White frame";
+TS_OPTVALFRAMESTYLE_RED = "Red frame";
+
+TS_OPTVALFONT_SMALL = "Small font";
+TS_OPTVALFONT_BIG = "Big font";
+TS_OPTVALFONT_CONSOLE = "Console font";
+TS_OPTVALFONT_MEMENTWO = "Mementwo";
+TS_OPTVALFONT_ENLIGHTENING = "Enlightening";
+TS_OPTVALFONT_CYBERFONTER = "Cyberfonter";
+TS_OPTVALFONT_JENOCIDE = "Jenocide";
+TS_OPTVALFONT_SOLIDSNAKE = "Solid Snake";
+TS_OPTVALFONT_GARGOYLEWING = "Gargoyle Wing";
+TS_OPTVALFONT_NEWSMALL = "New small font";
+TS_OPTVALFONT_CROSSHAIRPIECES = "Crosshair Pieces";
+TS_OPTVALFONT_CROSSHAIRPIECESNOBORDER = "Crosshair Pieces (No Border)";
+
+TS_OPTVALPOSITION_ABOVETARGET = "Above target";
+TS_OPTVALPOSITION_BELOWTARGET = "Below target";
+TS_OPTVALPOSITION_SCREENTOP = "Screen top";
+TS_OPTVALPOSITION_BELOWSCREENTOP = "Below screen top";
+TS_OPTVALPOSITION_ABOVECROSSHAIR = "Above crosshair";
+TS_OPTVALPOSITION_BELOWCROSSHAIR = "Below crosshair";
+TS_OPTVALPOSITION_SCREENBOTTOM = "Screen bottom";
+
+TS_OPTVALHEALTHNUMBER_OFF = "Off";
+TS_OPTVALHEALTHNUMBER_ONCURRENTMAX = "On: current/max";
+TS_OPTVALHEALTHNUMBER_ONCURRENT = "On: current";
+TS_OPTVALHEALTHNUMBER_ONHUNDREDPERCENT = "On: 100%";
+TS_OPTVALHEALTHNUMBER_ONHUNDREDDOTPERCENT = "On: 100.00%";
+
+TS_OPTVALSHOWOBJECTS_OFF = "Off";
+TS_OPTVALSHOWOBJECTS_SHOOTABLE = "Shootable only";
+TS_OPTVALSHOWOBJECTS_NODECORATIONS = "Except decorations";
+TS_OPTVALSHOWOBJECTS_ALLBLOCKING = "Everything blocking";
+TS_OPTVALSHOWOBJECTS_ALL = "EVERYTHING";
+
 
 TS_REMAINS = "Remains of ";
+TS_TAG_ZOMBOBOB = "\cdZombo\c- Bob";
+TS_TAG_SOMETHING = "Some kind of thing";
+TS_TARGET_LVL_X = "LVL %d";
+TS_TARGET_FRIENDLY = "Friendly";
+TS_TARGET_INVULNERABLE = "Invulnerable";
+TS_TARGET_BOSS = "Boss";
+TS_TARGET_DORMANT = "Dormant";
+TS_TARGET_BUDDHA = "Buddha";
+TS_TARGET_UNDAMAGEABLE = "Undamageable";
+TS_TARGET_NOBLOCKMAP = "NoBlockmap";
+TS_TARGET_ARMOR_X = " Armor: %d";
+

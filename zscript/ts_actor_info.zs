@@ -29,16 +29,16 @@ class ts_ActorInfo
     if (target.countInv(drpgToken) > 0)
     {
       ts_ActorInfoHelper helper;
-      result = string.format("LVL %d", helper.getDrpgLevel(target));
+      result = string.format("$TS_TARGET_LVL_X", helper.getDrpgLevel(target));
     }
 
-    if (target.bFRIENDLY && !target.player) result = ts_String.appendWithSpace(result, "Friendly"    );
-    if (target.bINVULNERABLE              ) result = ts_String.appendWithSpace(result, "Invulnerable");
-    if (target.bBOSS                      ) result = ts_String.appendWithSpace(result, "Boss"        );
-    if (target.bDORMANT                   ) result = ts_String.appendWithSpace(result, "Dormant"     );
-    if (target.bBUDDHA                    ) result = ts_String.appendWithSpace(result, "Buddha"      );
-    if (target.bNODAMAGE                  ) result = ts_String.appendWithSpace(result, "Undamageable");
-    if (target.bNoBlockmap                ) result = ts_String.appendWithSpace(result, "NoBlockmap"  );
+    if (target.bFRIENDLY && !target.player) result = ts_String.appendWithSpace(result, "$TS_TARGET_FRIENDLY"    );
+    if (target.bINVULNERABLE              ) result = ts_String.appendWithSpace(result, "$TS_TARGET_INVULNERABLE");
+    if (target.bBOSS                      ) result = ts_String.appendWithSpace(result, "$TS_TARGET_BOSS"        );
+    if (target.bDORMANT                   ) result = ts_String.appendWithSpace(result, "$TS_TARGET_DORMANT"     );
+    if (target.bBUDDHA                    ) result = ts_String.appendWithSpace(result, "$TS_TARGET_BUDDHA"      );
+    if (target.bNODAMAGE                  ) result = ts_String.appendWithSpace(result, "$TS_TARGET_UNDAMAGEABLE");
+    if (target.bNoBlockmap                ) result = ts_String.appendWithSpace(result, "$TS_TARGET_NOBLOCKMAP"  );
 
     return result;
   }
