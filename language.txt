@@ -160,3 +160,13 @@ TS_OPTVALSHOWOBJECTS_ALL = "EVERYTHING";
 TS_REMAINS = "Remains of ";
 TS_TAG_ZOMBOBOB = "\cdZombo\c- Bob";
 TS_TAG_SOMETHING = "Some kind of thing";
+TS_TARGET_LVL_X = "LVL %d";
+TS_TARGET_FRIENDLY = "Friendly";
+TS_TARGET_INVULNERABLE = "Invulnerable";
+TS_TARGET_BOSS = "Boss";
+TS_TARGET_DORMANT = "Dormant";
+TS_TARGET_BUDDHA = "Buddha";
+TS_TARGET_UNDAMAGEABLE = "Undamageable";
+TS_TARGET_NOBLOCKMAP = "NoBlockmap";
+TS_TARGET_ARMOR_X = " Armor: %d";
+

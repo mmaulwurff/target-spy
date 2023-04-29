@@ -287,7 +287,7 @@ class ts_EventHandler : EventHandler
 
       if (armor)
       {
-        healthString.appendFormat(" Armor: %d", armor);
+        healthString.appendFormat("$TS_TARGET_ARMOR_X", armor);
       }
 
       xy.y += drawText( healthString
