@@ -35,7 +35,7 @@ class ts_ExampleTargetSpyService : Service
     let target = Actor(targetObject);
 
     if (request == "text")
-      return (target is "Zombieman") ? "\cdZombo\c- Bob" : "Some kind of thing";
+      return (target is "Zombieman") ? Stringtable.Localize("$TS_TAG_ZOMBOBOB") : Stringtable.Localize("$TS_TAG_SOMETHING");
 
     if (request == "font")
       return (target is "Zombieman") ? "BigFont" : "";

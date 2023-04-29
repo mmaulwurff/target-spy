@@ -14,6 +14,6 @@ alias ts_set_new_small_font     "m8f_ts_font NewSmallFont"
 
 // Keys ////////////////////////////////////////////////////////////////////////////////////////////
 
-AddKeySection "Target Spy Controls" "m8f_ts_Controls"
-AddMenuKey    "Toggle"              "m8f_ts_toggle"
-AddMenuKey    "Hold to show"        "+m8f_ts_hold"
+AddKeySection "$TS_CNTRLMNU_TITLE" "m8f_ts_Controls"
+AddMenuKey    "$TS_TSCNTRLMNU_TOGGLE"              "m8f_ts_toggle"
+AddMenuKey    "$TS_TSCNTRLMNU_HOLD"        "+m8f_ts_hold"
