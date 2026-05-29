@@ -1,3 +1,5 @@
+Project moved to https://github.com/mmaulwurff/doom-toolbox/
+
 # Target Spy
 
 (GZDoom mod)
